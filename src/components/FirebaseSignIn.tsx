@@ -1,4 +1,4 @@
-// src/components/FirebaseSignIn.tsx
+﻿// src/components/FirebaseSignIn.tsx
 // Google Sign-In using Firebase Authentication.
 // Shows sign-in/out controls; degrades gracefully when Firebase is not configured.
 
@@ -11,19 +11,9 @@ import './FirebaseSignIn.css';
 export const FirebaseSignIn: React.FC = () => {
   const { status, user, errorMessage, signIn, signOutUser } = useFirebaseAuth();
 
-  // Not configured — show a quiet notice (not an error, just informational)
+  // Not configured — render nothing (keeps footer clean for visitors)
   if (!firebaseConfigured) {
-    return (
-      <div className="fbsign-unconfigured">
-        <span className="fbsign-setup-hint">
-          Google sign-in available after{' '}
-          <span className="font-mono" style={{ color: 'var(--accent-blue)' }}>
-            Firebase
-          </span>{' '}
-          is configured
-        </span>
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -31,7 +21,7 @@ export const FirebaseSignIn: React.FC = () => {
       {status === 'loading' && (
         <div className="fbsign-loading" aria-live="polite">
           <Loader size={13} className="fbsign-spinner" aria-hidden="true" />
-          <span>Checking sign-in…</span>
+          <span>Checking sign-inâ€¦</span>
         </div>
       )}
 
@@ -63,7 +53,7 @@ export const FirebaseSignIn: React.FC = () => {
             </svg>
             Sign in with Google
           </button>
-          <p className="fbsign-optional">Optional · personalises your visit</p>
+          <p className="fbsign-optional">Optional Â· personalises your visit</p>
         </div>
       )}
 

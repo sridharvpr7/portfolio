@@ -28,7 +28,7 @@ export const DualIdentitySection: React.FC<DualIdentitySectionProps> = ({ skillG
           </p>
         </div>
 
-        <div className={`dual-toggle ${isVisible ? 'revealed' : ''}`}>
+        <div className={`dual-toggle ${isVisible ? 'revealed' : ''}`} role="tablist" aria-label="Choose domain">
           <button
             id="tab-hardware"
             className={`dual-tab ${activeTab === 'hardware' ? 'active' : ''}`}
@@ -58,12 +58,14 @@ export const DualIdentitySection: React.FC<DualIdentitySectionProps> = ({ skillG
           </button>
         </div>
 
-        <div className={`dual-panels ${isVisible ? 'revealed' : ''}`} role="tabpanel">
+        <div className={`dual-panels ${isVisible ? 'revealed' : ''}`}>
           {/* Hardware Panel */}
           <div
             id="panel-hardware"
             className={`dual-panel hardware-panel ${activeTab === 'hardware' ? 'active' : ''}`}
-            aria-label="Hardware domain"
+            role="tabpanel"
+            aria-labelledby="tab-hardware"
+            hidden={activeTab !== 'hardware'}
           >
             <div className="panel-header">
               <div className="panel-icon-wrap hardware-icon-wrap" aria-hidden="true">
@@ -75,7 +77,7 @@ export const DualIdentitySection: React.FC<DualIdentitySectionProps> = ({ skillG
                 </svg>
               </div>
               <div>
-                <h3 className="panel-title">Electronics & Communication</h3>
+                <h3 className="panel-title">Electronics &amp; Communication</h3>
                 <p className="panel-desc">From logic gates to silicon — hardware that thinks</p>
               </div>
             </div>
@@ -109,7 +111,9 @@ export const DualIdentitySection: React.FC<DualIdentitySectionProps> = ({ skillG
           <div
             id="panel-software"
             className={`dual-panel software-panel ${activeTab === 'software' ? 'active' : ''}`}
-            aria-label="Software domain"
+            role="tabpanel"
+            aria-labelledby="tab-software"
+            hidden={activeTab !== 'software'}
           >
             <div className="panel-header">
               <div className="panel-icon-wrap software-icon-wrap" aria-hidden="true">
@@ -126,7 +130,7 @@ export const DualIdentitySection: React.FC<DualIdentitySectionProps> = ({ skillG
                 </svg>
               </div>
               <div>
-                <h3 className="panel-title">Web & Full-Stack Development</h3>
+                <h3 className="panel-title">Web &amp; Full-Stack Development</h3>
                 <p className="panel-desc">From interfaces to APIs — software that users experience</p>
               </div>
             </div>

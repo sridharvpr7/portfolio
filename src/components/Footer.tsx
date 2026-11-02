@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Heart, Shield } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './BrandIcons';
 import { VisitorStats } from './VisitorStats';
 import { GoogleSignIn } from './GoogleSignIn';
 import { FirebaseSignIn } from './FirebaseSignIn';
+import { firebaseConfigured } from '../firebase/config';
 import { LiveViewerCount } from './LiveViewerCount';
 import { PrivacyModal } from './PrivacyModal';
 import type { SiteConfig, SocialLink } from '../services/contentLoader';
@@ -53,24 +54,26 @@ export const Footer: React.FC<FooterProps> = ({
 
   return (
     <footer className="footer" role="contentinfo">
-      {/* Visitor Stats — above footer proper (legacy Neon DB analytics) */}
+      {/* Visitor Stats â€” above footer proper (legacy Neon DB analytics) */}
       <VisitorStats stats={stats} ready={analyticsReady} configEnabled={configEnabled} />
 
-      {/* Firebase live viewer count — shown when Firebase Realtime DB is configured */}
+      {/* Firebase live viewer count â€” shown when Firebase Realtime DB is configured */}
       <div className="footer-presence">
         <div className="container">
           <LiveViewerCount />
         </div>
       </div>
 
-      {/* Firebase Google Sign-In strip */}
-      <div className="footer-firebase-strip">
-        <div className="container footer-firebase-inner">
-          <FirebaseSignIn />
+      {/* Firebase Google Sign-In strip — only when configured */}
+      {firebaseConfigured && (
+        <div className="footer-firebase-strip">
+          <div className="container footer-firebase-inner">
+            <FirebaseSignIn />
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Legacy Google Identity Services strip — shown only if configured via Neon backend */}
+      {/* Legacy Google Identity Services strip â€” shown only if configured via Neon backend */}
       {gsiEnabled && (
         <div className="footer-gsi-strip">
           <div className="container">
@@ -122,12 +125,12 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="container">
           <div className="footer-bottom-inner">
             <span>
-              © {site.copyrightYear} {profileName}. Built with{' '}
+              Â© {site.copyrightYear} {profileName}. Built with{' '}
               <Heart size={12} style={{ display: 'inline', verticalAlign: 'middle', color: 'var(--accent-violet)' }} aria-label="love" />{' '}
               using React + Vite.
             </span>
             <span className="font-mono" style={{ fontSize: '0.72rem', color: 'var(--text-faint)', letterSpacing: '0.05em' }}>
-              ECE × Software — Beyond the Circuit
+              ECE Ã— Software â€” Beyond the Circuit
             </span>
             {configEnabled && (
               <button

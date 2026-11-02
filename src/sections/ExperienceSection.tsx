@@ -53,17 +53,41 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
             <div className="cert-grid" role="list">
               {visibleCerts.map((cert) => (
                 <div key={cert.id} className="cert-card card" role="listitem">
-                  <div className="cert-card-icon" aria-hidden="true">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="8" r="6"/>
-                      <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
-                    </svg>
-                  </div>
+                  {cert.certificateFile && (
+                    <a
+                      href={cert.certificateFile}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cert-thumb-link"
+                      aria-label={`View certificate: ${cert.title}`}
+                    >
+                      <img
+                        src={cert.certificateFile}
+                        alt={`${cert.title} certificate`}
+                        className="cert-thumb"
+                        loading="lazy"
+                        onError={(e) => {
+                          (e.currentTarget.closest('.cert-thumb-link') as HTMLElement | null)?.style.setProperty('display', 'none');
+                        }}
+                      />
+                      <div className="cert-thumb-overlay" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                      </div>
+                    </a>
+                  )}
                   <div className="cert-card-content">
-                    <h4 className="cert-title">{cert.title}</h4>
-                    <div className="cert-meta">
-                      <span className="cert-issuer">{cert.issuer}</span>
-                      {cert.date && <span className="cert-date font-mono">{formatDate(cert.date)}</span>}
+                    <div className="cert-card-icon" aria-hidden="true">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="8" r="6"/>
+                        <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="cert-title">{cert.title}</h4>
+                      <div className="cert-meta">
+                        <span className="cert-issuer">{cert.issuer}</span>
+                        {cert.date && <span className="cert-date font-mono">{formatDate(cert.date)}</span>}
+                      </div>
                     </div>
                     <div className="cert-actions">
                       {cert.credentialUrl && (
@@ -86,9 +110,9 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                           href={cert.certificateFile}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="btn btn-outline btn-sm"
+                          className="btn btn-ghost btn-sm"
                         >
-                          View PDF
+                          View
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                             <polyline points="14 2 14 8 20 8"/>

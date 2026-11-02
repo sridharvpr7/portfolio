@@ -125,9 +125,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ profile, socialLinks }
           </div>
         </div>
 
-        {/* Right side: animated visual */}
-        <div className={`hero-visual ${isVisible ? 'revealed' : ''}`} aria-hidden="true">
-          <HeroVisual />
+        {/* Right side: profile photo or animated visual */}
+        <div className={`hero-visual ${isVisible ? 'revealed' : ''}`}>
+          {profile.profileImage ? (
+            <HeroPhoto src={profile.profileImage} name={profile.name} />
+          ) : (
+            <div aria-hidden="true"><HeroVisual /></div>
+          )}
         </div>
       </div>
 
@@ -141,6 +145,32 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ profile, socialLinks }
     </section>
   );
 };
+
+// Profile photo with morphing border animation
+const HeroPhoto: React.FC<{ src: string; name: string }> = ({ src, name }) => (
+  <div className="hero-photo-wrap">
+    <div className="hero-photo-ring" aria-hidden="true" />
+    <img
+      src={src}
+      alt={`${name} — profile photo`}
+      className="hero-photo"
+      loading="eager"
+      onError={(e) => {
+        // If photo fails to load, hide wrap and show the circuit visual instead
+        const wrap = e.currentTarget.closest('.hero-visual') as HTMLElement | null;
+        if (wrap) {
+          wrap.innerHTML = '<div aria-hidden="true" class="hero-visual-container hero-visual-fallback"></div>';
+        }
+      }}
+    />
+    <div className="hero-photo-decoration" aria-hidden="true">
+      <svg viewBox="0 0 360 360" fill="none" width="100%" height="100%">
+        <circle cx="180" cy="180" r="170" stroke="var(--accent-blue)" strokeWidth="0.5" strokeDasharray="6 4" opacity="0.3"/>
+        <circle cx="180" cy="180" r="145" stroke="var(--accent-violet)" strokeWidth="0.5" strokeDasharray="3 6" opacity="0.2"/>
+      </svg>
+    </div>
+  </div>
+);
 
 // Abstract animated circuit-to-code visual
 const HeroVisual: React.FC = () => {

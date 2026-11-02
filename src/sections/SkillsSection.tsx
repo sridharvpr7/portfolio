@@ -29,7 +29,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ groups, levels }) 
 
         <div className={`skills-header ${isVisible ? 'revealed' : ''}`}>
           <div className="section-label">Technical Stack</div>
-          <h2 className="section-title" id="skills-title">Skills & Technologies</h2>
+          <h2 className="section-title" id="skills-title">Skills &amp; Technologies</h2>
           <p className="section-subtitle">
             A growing toolkit across two engineering disciplines — hardware and software.
           </p>
@@ -83,9 +83,31 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ groups, levels }) 
                       <div className={`skill-level-indicator indicator-${skill.level}`} aria-hidden="true" />
                       <span className="skill-name">{skill.name}</span>
                     </div>
+                    <div
+                      className="skill-bar-wrap"
+                      aria-label={`${skill.name}: ${levels[skill.level]?.label ?? skill.level}`}
+                      role="meter"
+                      aria-valuenow={skill.level === 'comfortable' ? 80 : skill.level === 'beginner' ? 50 : 25}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                    >
+                      <div
+                        className={`skill-bar-fill ${isVisible ? 'visible' : ''}`}
+                        style={{
+                          transitionDelay: `${gi * 0.05 + 0.2}s`,
+                          background: skill.level === 'comfortable'
+                            ? 'var(--accent-violet)'
+                            : skill.level === 'beginner'
+                            ? 'var(--accent-blue)'
+                            : 'var(--accent-cyan)',
+                          width: skill.level === 'comfortable' ? '80%' : skill.level === 'beginner' ? '50%' : '25%',
+                        }}
+                      />
+                    </div>
                     <span
                       className="skill-level-badge"
                       title={levels[skill.level]?.description}
+                      aria-hidden="true"
                     >
                       {levels[skill.level]?.label ?? skill.level}
                     </span>

@@ -270,3 +270,12 @@
   gap: 0.5rem;
   justify-content: center;
 }
+
+/* Switch panel visibility to use HTML hidden attribute (better ARIA) */
+.dual-panel { display: block; }
+.dual-panel[hidden] { display: none !important; }
+/* focus-visible for tab buttons */
+.dual-tab:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}

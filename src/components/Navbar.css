@@ -224,3 +224,10 @@
 @media (max-width: 480px) {
   .navbar-logo-text { display: none; }
 }
+
+/* Keyboard focus ring for nav links */
+.navbar-link:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
