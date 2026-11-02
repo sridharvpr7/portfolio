@@ -1,0 +1,26 @@
+{
+  "links": [
+    {
+      "id": "github",
+      "platform": "GitHub",
+      "label": "GitHub",
+      "url": "https://github.com/sridharvpr7",
+      "icon": "github",
+      "visible": true,
+      "showInHero": true,
+      "showInContact": true,
+      "showInFooter": true
+    },
+    {
+      "id": "linkedin",
+      "platform": "LinkedIn",
+      "label": "LinkedIn",
+      "url": "https://linkedin.com/in/sridhar-manivannan-468ba035b",
+      "icon": "linkedin",
+      "visible": true,
+      "showInHero": true,
+      "showInContact": true,
+      "showInFooter": true
+    }
+  ]
+}

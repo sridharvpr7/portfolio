@@ -1,0 +1,91 @@
+# render.yaml — Render Blueprint for the portfolio web service.
+# https://render.com/docs/blueprint-spec
+#
+# This file provisions a single Render Web Service that serves both the
+# built Vite/React frontend (dist/) and the Node.js API from one origin.
+#
+# ── Service settings ──────────────────────────────────────────────────────────
+# Type:          Web Service
+# Runtime:       Node
+# Build command: npm ci && npm run build
+# Start command: npm start
+# Health-check:  /api/health  (returns 200 JSON)
+#
+# ── After deploying ───────────────────────────────────────────────────────────
+# 1. Google Cloud Console → OAuth 2.0 Credentials → Authorized JavaScript
+#    origins → add your Render service URL (e.g. https://portfolio.onrender.com)
+#
+# 2. Register the Telegram webhook (replace YOUR_RENDER_URL and TOKEN):
+#    curl -X POST \
+#      "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook" \
+#      -H "Content-Type: application/json" \
+#      -d '{"url":"${APP_BASE_URL}/api/telegram/webhook","secret_token":"${TELEGRAM_WEBHOOK_SECRET}"}'
+#
+# 3. All secret variables below MUST be set in the Render Dashboard under
+#    Environment → Environment Variables. NEVER put real values in this file.
+#
+# ── GOOGLE_CLIENT_ID note ─────────────────────────────────────────────────────
+# VITE_GOOGLE_CLIENT_ID  — the OAuth 2.0 Web Client ID, embedded into the
+#                          frontend bundle at build time. Shown in browser.
+# GOOGLE_CLIENT_ID       — same value, used server-side by google-auth-library
+#                          to verify the ID token audience. Not exposed to browser.
+# Both must be the same OAuth Client ID string (NOT a client secret).
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+  - type: web
+    name: portfolio
+    runtime: node
+    region: oregon   # Change to your preferred region (oregon | frankfurt | singapore | ohio)
+    plan: free       # Change to starter/standard for production use
+
+    # Commands
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+
+    # Health check — Render uses this to confirm the service is up
+    healthCheckPath: /api/health
+
+    # Node version — keep in sync with your local environment
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+
+      # ── Build-time variables (available to Vite during `npm run build`) ──
+      # VITE_ prefix exposes variables to the frontend bundle.
+      # Set these BEFORE the first deploy so the build can embed them.
+
+      - key: VITE_GOOGLE_CLIENT_ID
+        sync: false   # Google OAuth 2.0 Web Client ID
+
+      - key: VITE_EMAILJS_SERVICE_ID
+        sync: false   # EmailJS Service ID (from emailjs.com → Email Services)
+
+      - key: VITE_EMAILJS_TEMPLATE_ID
+        sync: false   # EmailJS Template ID (from emailjs.com → Email Templates)
+
+      - key: VITE_EMAILJS_PUBLIC_KEY
+        sync: false   # EmailJS Public Key (from emailjs.com → Account → API Keys)
+
+      # ── Server-side runtime variables (never exposed to the browser) ──
+
+      - key: APP_BASE_URL
+        sync: false   # Full URL of this Render service, e.g. https://portfolio.onrender.com
+
+      - key: DATABASE_URL
+        sync: false   # Neon PostgreSQL connection string (postgres://user:pw@host/db?sslmode=require)
+
+      - key: GOOGLE_CLIENT_ID
+        sync: false   # Same OAuth Client ID as VITE_GOOGLE_CLIENT_ID — server-side verification
+
+      - key: SESSION_SECRET
+        sync: false   # Random 32+ char string — generate: openssl rand -base64 32
+
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false   # Optional — from @BotFather; leave blank to disable Telegram features
+
+      - key: TELEGRAM_CHAT_ID
+        sync: false   # Optional — your numeric Telegram user/chat ID
+
+      - key: TELEGRAM_WEBHOOK_SECRET
+        sync: false   # Optional — random string; must match your setWebhook secret_token

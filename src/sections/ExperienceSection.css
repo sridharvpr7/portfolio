@@ -1,0 +1,254 @@
+.experience-section { background: var(--bg-surface); }
+
+.exp-header {
+  margin-bottom: 4rem;
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.exp-header.revealed { opacity: 1; transform: none; }
+
+.exp-timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 800px;
+  margin: 0 auto;
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s ease 0.1s, transform 0.7s ease 0.1s;
+}
+.exp-timeline.revealed { opacity: 1; transform: none; }
+
+/* Timeline item */
+.timeline-item {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  gap: 0;
+  align-items: start;
+  min-height: 120px;
+  position: relative;
+  opacity: 0;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.timeline-left { transform: translateX(-20px); }
+.timeline-right { transform: translateX(20px); }
+.timeline-item.revealed { opacity: 1; transform: none; }
+
+/* Center column: dot + line */
+.timeline-dot-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 2px solid var(--accent-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-blue);
+  box-shadow: 0 0 16px var(--accent-blue-glow);
+  flex-shrink: 0;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 36px;
+  transform: translateX(-50%);
+  width: 2px;
+  height: calc(100% + 2rem);
+  background: linear-gradient(to bottom, var(--accent-blue), var(--border-subtle));
+  opacity: 0.3;
+}
+
+/* Date badge */
+.timeline-date {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0.65rem 1rem 0 0;
+}
+
+.timeline-right .timeline-date {
+  grid-column: 3;
+  grid-row: 1;
+  justify-content: flex-start;
+  padding: 0.65rem 0 0 1rem;
+}
+
+.timeline-right .timeline-dot-wrap {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.timeline-right .timeline-card {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+/* Card */
+.timeline-card {
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  grid-column: 1;
+}
+
+.timeline-right > .timeline-card { grid-column: 3; }
+
+.timeline-card-header {
+  margin-bottom: 0.6rem;
+}
+
+.timeline-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.2rem;
+}
+
+.timeline-org {
+  font-size: 0.82rem;
+  color: var(--accent-blue);
+  font-weight: 500;
+}
+
+.timeline-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: 0.75rem;
+}
+
+.timeline-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+/* Mobile: single column */
+@media (max-width: 640px) {
+  .timeline-item {
+    grid-template-columns: 32px 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .timeline-dot-wrap { grid-column: 1; grid-row: 1; padding-top: 0.2rem; }
+  .timeline-card { grid-column: 2; grid-row: 1; margin-bottom: 1.5rem; padding: 1rem 1.25rem; }
+  .timeline-date { grid-column: 2; grid-row: 0; display: none; }
+
+  .timeline-right { transform: none; }
+  .timeline-left { transform: none; }
+  .timeline-right .timeline-dot-wrap { grid-column: 1; }
+  .timeline-right .timeline-card { grid-column: 2; }
+  .timeline-right .timeline-date { display: none; }
+
+  .timeline-dot { width: 28px; height: 28px; }
+  .timeline-line { left: 14px; transform: none; }
+}
+
+/* Credentials / Certifications / Achievements sub-sections */
+.exp-credentials-sub {
+  margin-top: 4.5rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.exp-sub-header {
+  margin-bottom: 2rem;
+}
+
+.exp-sub-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 0.35rem;
+}
+
+.cert-grid, .achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.cert-card, .achievement-card {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  padding: 1.5rem;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.cert-card:hover, .achievement-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-focus);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+}
+
+.cert-card-icon, .achievement-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: rgba(83, 167, 255, 0.08);
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-blue);
+  flex-shrink: 0;
+}
+
+.cert-card-content, .achievement-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.cert-title, .achievement-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+
+.cert-meta, .achievement-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.cert-issuer, .achievement-issuer {
+  color: var(--accent-cyan);
+  font-weight: 500;
+}
+
+.cert-date, .achievement-date {
+  color: var(--text-faint);
+  font-size: 0.75rem;
+}
+
+.achievement-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.cert-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+

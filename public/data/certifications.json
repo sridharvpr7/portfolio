@@ -1,0 +1,75 @@
+{
+  "certifications": [
+    {
+      "id": "html5",
+      "title": "HTML5 - The Language",
+      "issuer": "Infosys Springboard",
+      "date": "2026-05-12",
+      "visible": true,
+      "certificateFile": "/assets/certificates/HTML5 - The Language_page-0001.jpg"
+    },
+    {
+      "id": "css3",
+      "title": "CSS3",
+      "issuer": "Infosys Springboard",
+      "date": "2026-05-15",
+      "visible": true,
+      "certificateFile": "/assets/certificates/CSS3_page-0001.jpg"
+    },
+    {
+      "id": "javascript",
+      "title": "JavaScript",
+      "issuer": "Infosys Springboard",
+      "date": "2026-06-16",
+      "visible": true,
+      "certificateFile": "/assets/certificates/JavaScript_page-0001.jpg"
+    },
+    {
+      "id": "digital-electronics",
+      "title": "Digital Electronics",
+      "issuer": "Infosys Springboard",
+      "date": "2026-08-06",
+      "visible": true,
+      "certificateFile": "/assets/certificates/digital electrinics.png"
+    },
+    {
+      "id": "vlsi-verilog",
+      "title": "VLSI Digital Design — Chip Design and Verilog Programming",
+      "issuer": "Infosys Springboard",
+      "date": "2026-08-06",
+      "visible": true,
+      "certificateFile": "/assets/certificates/vlsi.png"
+    },
+    {
+      "id": "iot",
+      "title": "Internet of Things",
+      "issuer": "Infosys Springboard",
+      "date": "2026-05-10",
+      "visible": true,
+      "certificateFile": "/assets/certificates/Internet of Things_page-0001.jpg"
+    },
+    {
+      "id": "mongodb-basics",
+      "title": "MongoDB Basics for Students",
+      "issuer": "MongoDB",
+      "date": "2026-07-20",
+      "visible": true
+    },
+    {
+      "id": "github-copilot",
+      "title": "GitHub Copilot — The Complete Guide",
+      "issuer": "Udemy",
+      "date": "2026-08-10",
+      "visible": true,
+      "certificateFile": "/assets/certificates/github.jpg"
+    },
+    {
+      "id": "cert-5",
+      "title": "Professional Development Course",
+      "issuer": "Infosys Springboard",
+      "date": "2026-07-01",
+      "visible": true,
+      "certificateFile": "/assets/certificates/certificate - 5_page-0001.jpg"
+    }
+  ]
+}

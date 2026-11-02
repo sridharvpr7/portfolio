@@ -1,0 +1,26 @@
+{
+  "intro": {
+    "enabled": true,
+    "duration": 5000,
+    "skipOnReturn": true
+  },
+  "reveals": {
+    "enabled": true,
+    "threshold": 0.15,
+    "stagger": 0.08
+  },
+  "parallax": {
+    "enabled": true,
+    "intensity": 0.3
+  },
+  "cursor": {
+    "enabled": true,
+    "desktopOnly": true
+  },
+  "reducedMotion": {
+    "disableIntro": true,
+    "disableParallax": true,
+    "simplifyTransitions": true
+  },
+  "intensity": "normal"
+}

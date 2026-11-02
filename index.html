@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary Meta -->
+    <title>Beyond the Circuit — Sridhar | ECE & Full-Stack Developer</title>
+    <meta name="description" content="Electronics and Communication Engineering student building real products — from Verilog RTL designs to full-stack web applications. Bridging the world of circuits and code." />
+    <meta name="keywords" content="ECE, electronics engineering, full-stack developer, Verilog, React, TypeScript, web development, VLSI, embedded systems, IoT, portfolio, Tamil Nadu" />
+    <meta name="author" content="Sridhar" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#080A0F" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Beyond the Circuit" />
+    <meta property="og:title" content="Beyond the Circuit — Sridhar | ECE & Full-Stack Developer" />
+    <meta property="og:description" content="Bridging the world of circuits and code — ECE student and full-stack developer building real products from signal to software." />
+    <meta property="og:image" content="/assets/profile/og-image.jpg" />
+    <meta property="og:url" content="https://portfolio.onrender.com" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Beyond the Circuit — Sridhar" />
+    <meta name="twitter:description" content="ECE student & full-stack developer. Circuits to code." />
+    <meta name="twitter:image" content="/assets/profile/og-image.jpg" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Preconnect for Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!--
+      Prevent flash of wrong theme — runs before the browser paints.
+      First-visit default is always dark. If the visitor has previously
+      selected a theme, that choice is restored from localStorage.
+      Storage errors are caught silently so the page always loads.
+    -->
+    <script>
+      try {
+        var t = localStorage.getItem('portfolio-theme');
+        document.documentElement.setAttribute('data-theme', (t === 'light' || t === 'dark') ? t : 'dark');
+      } catch(e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Skip to main content (accessibility) -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

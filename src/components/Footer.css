@@ -1,0 +1,168 @@
+.footer {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle);
+  position: relative;
+}
+
+.footer-top {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-blue), var(--accent-violet), transparent);
+  opacity: 0.4;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-top: 2rem;
+  padding-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-logo-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.footer-tagline {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+
+.footer-social {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.footer-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.footer-social-link:hover {
+  color: var(--accent-blue);
+  border-color: var(--accent-blue);
+  background: var(--accent-blue-dim);
+}
+
+.footer-top-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.footer-top-btn:hover {
+  color: var(--accent-blue);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--border-subtle);
+  padding: 1rem 0;
+}
+
+.footer-bottom-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .footer-inner { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .footer-bottom-inner { flex-direction: column; gap: 0.4rem; }
+}
+
+/* GSI strip — separates analytics bar from footer branding */
+.footer-gsi-strip {
+  border-top: 1px solid var(--border-subtle);
+  padding: 0.25rem 0;
+}
+
+/* Privacy button in footer bottom */
+.footer-privacy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  padding: 0;
+  transition: color var(--transition-fast);
+  margin-left: auto;
+}
+
+.footer-privacy-btn:hover {
+  color: var(--text-muted);
+}
+
+.footer-privacy-btn:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Firebase sign-in strip */
+.footer-firebase-strip {
+  border-top: 1px solid var(--border-subtle);
+  padding: 0.6rem 0;
+}
+
+.footer-firebase-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 32px;
+}
+
+/* Presence / live count strip */
+.footer-presence {
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.footer-presence .container {
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,172 @@
+{
+  "projects": [
+    {
+      "id": "elders-veil",
+      "title": "Elder's Veil",
+      "shortSummary": "A comic and manga reading platform with immersive reading, user accounts, and content management.",
+      "problem": "Readers need a comfortable comic-reading experience without unnecessary interface clutter.",
+      "solution": "Developing a responsive comic platform with comic discovery, reading features, authentication, and administration tools.",
+      "features": [
+        "Comic and manga browsing",
+        "Responsive comic reader",
+        "Email OTP authentication",
+        "Creator submission and review workflow",
+        "Admin dashboard",
+        "Premium membership controls",
+        "Progressive Web App support"
+      ],
+      "technologies": [
+        "JavaScript",
+        "HTML5",
+        "CSS3",
+        "Node.js",
+        "Express.js",
+        "PostgreSQL",
+        "REST API"
+      ],
+      "category": "full-stack",
+      "status": "In Development",
+      "featured": true,
+      "visible": true,
+      "order": 1,
+      "coverImage": "/assets/projects/elders-veil/elders-veil.png",
+      "gallery": [
+        "/assets/projects/elders-veil/1.png",
+        "/assets/projects/elders-veil/2.png",
+        "/assets/projects/elders-veil/3.png",
+        "/assets/projects/elders-veil/4.png",
+        "/assets/projects/elders-veil/5.png",
+        "/assets/projects/elders-veil/6.png",
+        "/assets/projects/elders-veil/7.png",
+        "/assets/projects/elders-veil/8.png"
+      ],
+      "githubUrl": "https://github.com/sridharvpr7/Elders-veil",
+      "liveDemoUrl": "https://elders-veil1.onrender.com",
+      "startDate": null,
+      "tags": ["web", "full-stack", "comics", "postgresql"]
+    },
+    {
+      "id": "portfolio-site",
+      "title": "ECE \u00d7 Dev Portfolio",
+      "shortSummary": "A cinematic personal portfolio showcasing Electronics and Communication Engineering and web development.",
+      "problem": "Generic portfolio templates do not effectively communicate both engineering knowledge and software development skills.",
+      "solution": "A personalized portfolio combining ECE and web development sections, cinematic visuals, and JSON-driven content.",
+      "features": [
+        "Dedicated ECE and web development sections",
+        "Cinematic circuit-to-code concept",
+        "JSON-driven content management",
+        "Dark and light themes",
+        "Responsive design",
+        "Project and education showcases",
+        "Visitor analytics and notifications"
+      ],
+      "technologies": [
+        "React",
+        "TypeScript",
+        "Vite",
+        "CSS",
+        "JSON",
+        "Render"
+      ],
+      "category": "frontend",
+      "status": "In Development",
+      "featured": true,
+      "visible": true,
+      "order": 2,
+      "coverImage": "",
+      "gallery": [],
+      "githubUrl": "https://github.com/sridharvpr7/Portfolio",
+      "liveDemoUrl": "",
+      "startDate": null,
+      "tags": ["portfolio", "ece", "web-development", "react"]
+    },
+    {
+      "id": "kabaddi-pro",
+      "title": "Kabaddi Pro",
+      "shortSummary": "A kabaddi-focused sports platform concept for tracking matches, teams, players, and game statistics.",
+      "problem": "Kabaddi fans need an accessible way to follow teams, match progress, and player performance.",
+      "solution": "A sports application concept designed to organize kabaddi match information, team details, and player statistics.",
+      "features": [
+        "Team and player profiles",
+        "Match information and score tracking",
+        "Player statistics",
+        "Match history",
+        "Responsive sports dashboard"
+      ],
+      "technologies": [],
+      "category": "frontend",
+      "status": "In Development",
+      "featured": false,
+      "visible": true,
+      "order": 3,
+      "coverImage": "",
+      "gallery": [],
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "startDate": null,
+      "tags": ["kabaddi", "sports", "web-app"]
+    },
+    {
+      "id": "music-player",
+      "title": "Music Player",
+      "shortSummary": "A personal music player concept for listening to tracks through a clean, modern interface.",
+      "problem": "Listeners want a simple interface to browse music and control playback without unnecessary distractions.",
+      "solution": "A music player application concept focused on track navigation, playback controls, and a responsive listening experience.",
+      "features": [
+        "Play and pause controls",
+        "Next and previous track navigation",
+        "Track list and selection",
+        "Playback progress display",
+        "Volume controls",
+        "Responsive music interface"
+      ],
+      "technologies": [],
+      "category": "frontend",
+      "status": "In Development",
+      "featured": false,
+      "visible": true,
+      "order": 4,
+      "coverImage": "",
+      "gallery": [],
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "startDate": null,
+      "tags": ["music", "audio", "web-app", "frontend"]
+    },
+    {
+      "id": "expense-tracker",
+      "title": "Expense Tracker",
+      "shortSummary": "A personal finance application concept for recording expenses, organizing transactions, and monitoring spending.",
+      "problem": "Tracking daily expenses manually makes it difficult to understand spending habits and manage a budget.",
+      "solution": "An expense tracking application concept designed to organize transactions and provide a clear overview of personal spending.",
+      "features": [
+        "Add and manage transactions",
+        "Categorize income and expenses",
+        "View transaction history",
+        "Calculate total income and expenses",
+        "Monitor remaining balance",
+        "Monthly spending summaries"
+      ],
+      "technologies": [],
+      "category": "full-stack",
+      "status": "In Development",
+      "featured": false,
+      "visible": true,
+      "order": 5,
+      "coverImage": "",
+      "gallery": [],
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "startDate": null,
+      "tags": ["expense-tracker", "finance", "budgeting", "web-app"]
+    }
+  ],
+  "categories": [
+    { "id": "all", "label": "All Projects" },
+    { "id": "full-stack", "label": "Full-Stack" },
+    { "id": "frontend", "label": "Frontend" },
+    { "id": "vlsi", "label": "VLSI & Verilog" },
+    { "id": "embedded", "label": "Embedded" },
+    { "id": "ece", "label": "ECE" }
+  ]
+}

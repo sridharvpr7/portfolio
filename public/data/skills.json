@@ -1,0 +1,192 @@
+{
+  "groups": [
+    {
+      "id": "web-frontend",
+      "label": "Web & Frontend",
+      "domain": "software",
+      "icon": "monitor",
+      "skills": [
+        {
+          "id": "html",
+          "name": "HTML5",
+          "level": "comfortable",
+          "icon": "html5",
+          "description": "Semantic markup, forms, accessibility"
+        },
+        {
+          "id": "css",
+          "name": "CSS3",
+          "level": "comfortable",
+          "icon": "css3",
+          "description": "Layouts, animations, responsive design"
+        },
+        {
+          "id": "js",
+          "name": "JavaScript",
+          "level": "comfortable",
+          "icon": "javascript",
+          "description": "ES2022+, DOM, async/await"
+        },
+        {
+          "id": "react",
+          "name": "React",
+          "level": "beginner",
+          "icon": "react",
+          "description": "Components, hooks, state management",
+          "relatedProjectIds": ["portfolio-site", "elders-veil"]
+        },
+        {
+          "id": "typescript",
+          "name": "TypeScript",
+          "level": "beginner",
+          "icon": "typescript",
+          "description": "Type safety, interfaces, generics",
+          "relatedProjectIds": ["portfolio-site"]
+        }
+      ]
+    },
+    {
+      "id": "backend",
+      "label": "Backend & Databases",
+      "domain": "software",
+      "icon": "server",
+      "skills": [
+        {
+          "id": "nodejs",
+          "name": "Node.js",
+          "level": "beginner",
+          "icon": "nodejs",
+          "description": "HTTP servers, REST APIs",
+          "relatedProjectIds": ["elders-veil"]
+        },
+        {
+          "id": "expressjs",
+          "name": "Express.js",
+          "level": "beginner",
+          "icon": "express",
+          "description": "Routing, middleware, REST APIs",
+          "relatedProjectIds": ["elders-veil"]
+        },
+        {
+          "id": "postgresql",
+          "name": "PostgreSQL",
+          "level": "beginner",
+          "icon": "postgresql",
+          "description": "SQL queries, schema design",
+          "relatedProjectIds": ["elders-veil"]
+        },
+        {
+          "id": "mongodb",
+          "name": "MongoDB",
+          "level": "beginner",
+          "icon": "mongodb",
+          "description": "Document stores, aggregations"
+        }
+      ]
+    },
+    {
+      "id": "ece-digital",
+      "label": "Electronics & Digital Systems",
+      "domain": "hardware",
+      "icon": "cpu",
+      "skills": [
+        {
+          "id": "digital-electronics",
+          "name": "Digital Electronics",
+          "level": "comfortable",
+          "icon": "chip",
+          "description": "Combinational & sequential logic, gates, flip-flops"
+        },
+        {
+          "id": "analog-circuits",
+          "name": "Analog Circuits",
+          "level": "beginner",
+          "description": "Op-amps, filters, signal analysis"
+        },
+        {
+          "id": "microcontrollers",
+          "name": "Microcontrollers",
+          "level": "beginner",
+          "description": "Architecture fundamentals, interfacing"
+        }
+      ]
+    },
+    {
+      "id": "vlsi-hdl",
+      "label": "VLSI & HDL",
+      "domain": "hardware",
+      "icon": "layers",
+      "skills": [
+        {
+          "id": "verilog",
+          "name": "Verilog HDL",
+          "level": "beginner",
+          "icon": "chip",
+          "description": "RTL descriptions, combinational & sequential modules"
+        },
+        {
+          "id": "vlsi-fundamentals",
+          "name": "VLSI Digital Design",
+          "level": "learning",
+          "icon": "layers",
+          "description": "CMOS design, standard cells, design flow"
+        }
+      ]
+    },
+    {
+      "id": "embedded-iot",
+      "label": "IoT & Embedded Systems",
+      "domain": "hardware",
+      "icon": "microchip",
+      "skills": [
+        {
+          "id": "iot",
+          "name": "Internet of Things",
+          "level": "beginner",
+          "icon": "cpu",
+          "description": "Sensor integration, communication protocols"
+        }
+      ]
+    },
+    {
+      "id": "shared-tools",
+      "label": "Tools & Practices",
+      "domain": "both",
+      "icon": "tool",
+      "skills": [
+        {
+          "id": "git",
+          "name": "Git & GitHub",
+          "level": "comfortable",
+          "description": "Version control, branching, pull requests"
+        },
+        {
+          "id": "vscode",
+          "name": "VS Code",
+          "level": "comfortable",
+          "description": "Primary development environment"
+        },
+        {
+          "id": "linux-cli",
+          "name": "Linux / CLI",
+          "level": "beginner",
+          "description": "Terminal, shell scripting basics"
+        }
+      ]
+    }
+  ],
+  "levels": {
+    "learning": {
+      "label": "Learning",
+      "description": "Currently exploring — actively studying concepts"
+    },
+    "beginner": {
+      "label": "Beginner",
+      "description": "Can build with guidance — have completed projects"
+    },
+    "comfortable": {
+      "label": "Comfortable",
+      "description": "Build independently — my go-to tools"
+    }
+  }
+}
