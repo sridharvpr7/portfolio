@@ -62,14 +62,6 @@
       "date": "2026-08-10",
       "visible": true,
       "certificateFile": "/assets/certificates/github.jpg"
-    },
-    {
-      "id": "cert-5",
-      "title": "Professional Development Course",
-      "issuer": "Infosys Springboard",
-      "date": "2026-07-01",
-      "visible": true,
-      "certificateFile": "/assets/certificates/certificate - 5_page-0001.jpg"
     }
   ]
 }

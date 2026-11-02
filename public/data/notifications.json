@@ -1,12 +1,12 @@
 {
-  "enabled": false,
+  "enabled": true,
   "_comment": "Set enabled=true only after configuring all required environment variables in Render Dashboard (DATABASE_URL, SESSION_SECRET, etc.). Missing or invalid config fails closed — nothing breaks when disabled. For Firebase-based features (sign-in and live count), set the VITE_FIREBASE_* env vars instead.",
   "visitorAnalytics": {
-    "enabled": false,
-    "liveCounterEnabled": false,
-    "totalVisitsEnabled": false,
-    "uniqueVisitorsEnabled": false,
-    "todayVisitsEnabled": false,
+    "enabled": true,
+    "liveCounterEnabled": true,
+    "totalVisitsEnabled": true,
+    "uniqueVisitorsEnabled": true,
+    "todayVisitsEnabled": true,
     "activeTimeoutSeconds": 120,
     "heartbeatIntervalSeconds": 30,
     "pollIntervalMs": 30000,
@@ -14,23 +14,23 @@
     "retentionDays": 365
   },
   "googleSignIn": {
-    "enabled": false,
+    "enabled": true,
     "promptLocation": "footer"
   },
   "telegram": {
-    "enabled": false,
-    "anonymousNotificationsEnabled": false,
-    "repeatVisitNotificationsEnabled": false,
+    "enabled": true,
+    "anonymousNotificationsEnabled": true,
+    "repeatVisitNotificationsEnabled": true,
     "deduplicationWindowSeconds": 3600
   },
   "emailGreeting": {
-    "enabled": false,
+    "enabled": true,
     "requiresExplicitConsent": true,
     "sendOnlyOnce": true,
     "subject": "Welcome to my portfolio!"
   },
   "privacy": {
-    "showPrivacyNotice": false,
+    "showPrivacyNotice": true,
     "deletionContactEmail": "sridharvpr7@gmail.com",
     "retentionPolicyDays": 365
   }

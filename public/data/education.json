@@ -10,7 +10,9 @@
       "status": "Completed",
       "location": "Thiruvarur, Tamil Nadu, India",
       "description": "Completed 10th Standard under the Tamil Nadu State Board of School Examinations, securing 419 total marks.",
-      "highlights": ["83.8% — Tamil Nadu State Board"],
+      "highlights": [
+        "83.8% — Tamil Nadu State Board"
+      ],
       "type": "education",
       "order": 1
     },
@@ -24,7 +26,9 @@
       "status": "Completed",
       "location": "Thiruvarur, Tamil Nadu, India",
       "description": "Completed Higher Secondary First Year under the Tamil Nadu State Board, securing 452 total marks.",
-      "highlights": ["75.3% — Tamil Nadu State Board"],
+      "highlights": [
+        "75.3% — Tamil Nadu State Board"
+      ],
       "type": "education",
       "order": 2
     },
@@ -38,9 +42,25 @@
       "status": "Completed",
       "location": "Thiruvarur, Tamil Nadu, India",
       "description": "Completed Higher Secondary Second Year under the Tamil Nadu State Board, securing 502 total marks. Focus on Physics, Chemistry, Computer Science, and Mathematics.",
-      "highlights": ["83.67% — Tamil Nadu State Board"],
+      "highlights": [
+        "83.67% — Tamil Nadu State Board"
+      ],
       "type": "education",
       "order": 3
+    },
+    {
+      "id": "edu-3",
+      "institution": "J.N.N. Institute of Engineering",
+      "degree": "Bachelor of Engineering",
+      "field": "Electronics and Communication Engineering",
+      "startYear": 2025,
+      "endYear": 2029,
+      "status": "Pursuing",
+      "location": "Tamil Nadu, India",
+      "description": "Currently pursuing a Bachelor of Engineering in Electronics and Communication Engineering.",
+      "highlights": [],
+      "type": "education",
+      "order": 4
     }
   ]
 }

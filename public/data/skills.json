@@ -60,14 +60,6 @@
           "relatedProjectIds": ["elders-veil"]
         },
         {
-          "id": "expressjs",
-          "name": "Express.js",
-          "level": "beginner",
-          "icon": "express",
-          "description": "Routing, middleware, REST APIs",
-          "relatedProjectIds": ["elders-veil"]
-        },
-        {
           "id": "postgresql",
           "name": "PostgreSQL",
           "level": "beginner",
@@ -102,12 +94,6 @@
           "name": "Analog Circuits",
           "level": "beginner",
           "description": "Op-amps, filters, signal analysis"
-        },
-        {
-          "id": "microcontrollers",
-          "name": "Microcontrollers",
-          "level": "beginner",
-          "description": "Architecture fundamentals, interfacing"
         }
       ]
     },
@@ -117,20 +103,7 @@
       "domain": "hardware",
       "icon": "layers",
       "skills": [
-        {
-          "id": "verilog",
-          "name": "Verilog HDL",
-          "level": "beginner",
-          "icon": "chip",
-          "description": "RTL descriptions, combinational & sequential modules"
-        },
-        {
-          "id": "vlsi-fundamentals",
-          "name": "VLSI Digital Design",
-          "level": "learning",
-          "icon": "layers",
-          "description": "CMOS design, standard cells, design flow"
-        }
+        
       ]
     },
     {
@@ -165,12 +138,6 @@
           "name": "VS Code",
           "level": "comfortable",
           "description": "Primary development environment"
-        },
-        {
-          "id": "linux-cli",
-          "name": "Linux / CLI",
-          "level": "beginner",
-          "description": "Terminal, shell scripting basics"
         }
       ]
     }
