@@ -103,6 +103,28 @@ export async function dispatchApi(
 
   res.setHeader('Cache-Control', 'no-store');
 
+  // CORS allowed origins configuration
+  const allowedOrigins = new Set([
+    'https://portfolio-0ao8.onrender.com',
+    'http://localhost:5173',
+    'http://localhost:3000',
+    process.env.APP_BASE_URL,
+  ].filter(Boolean));
+
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.has(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
   // Health-check endpoint — always available, no DB required
   if (path === '/api/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });

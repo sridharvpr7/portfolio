@@ -14,7 +14,7 @@ All portfolio content lives in `public/data/`. Edit these JSON files to update t
 {
   "siteName": "Beyond the Circuit — Sridhar",  // Browser tab title prefix
   "siteTagline": "ECE × Software",             // Short tagline
-  "siteUrl": "https://portfolio.onrender.com", // Your deployed URL (for OG tags)
+  "siteUrl": "https://portfolio-0ao8.onrender.com", // Your deployed URL (for OG tags)
   "copyrightYear": 2026,                       // Footer copyright year
   "locale": "en-IN"
 }
