@@ -1,0 +1,589 @@
+/* ══════════════════════════════════════════════════
+   MOBILE OPTIMIZATION — Portfolio
+   Target: 320px – 430px (mobile-first additions)
+   Desktop styles are NOT overridden here.
+   All rules use max-width guards.
+   ══════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────
+   GLOBAL MOBILE BASE
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  :root {
+    --container-padding: 1rem;
+    --section-padding: clamp(3rem, 7vw, 4.5rem);
+    --nav-height: 60px;
+  }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-width: 100%;
+  }
+
+  .section { padding: var(--section-padding) 0; }
+}
+
+/* ──────────────────────────────────────────────────
+   HERO SECTION — MOBILE
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  .hero-section {
+    padding-top: calc(var(--nav-height) + 1.25rem);
+    padding-bottom: 3.5rem;
+    min-height: 100svh;
+  }
+
+  /* Profile photo — glow + float */
+  .hero-photo {
+    box-shadow:
+      0 0 0 2px rgba(83, 167, 255, 0.2),
+      0 0 28px rgba(83, 167, 255, 0.18),
+      0 0 60px rgba(83, 167, 255, 0.07) !important;
+    animation: morphPhoto 12s ease-in-out infinite,
+               mobilePhotoFloat 5s ease-in-out infinite !important;
+  }
+}
+
+@keyframes mobilePhotoFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-photo { animation: none !important; }
+}
+
+@media (max-width: 430px) {
+  .hero-photo-ring {
+    border-color: rgba(83, 167, 255, 0.18) !important;
+  }
+
+  /* Eyebrow: center */
+  .hero-eyebrow { justify-content: center !important; }
+
+  /* Hero name */
+  .hero-name {
+    font-size: clamp(1.85rem, 8vw, 2.2rem) !important;
+    line-height: 1.0 !important;
+    letter-spacing: -0.02em !important;
+    text-align: center !important;
+  }
+
+  /* Headline */
+  .hero-headline {
+    font-size: clamp(1rem, 4.5vw, 1.2rem) !important;
+    line-height: 1.3 !important;
+    text-align: center !important;
+  }
+
+  /* Sub text */
+  .hero-sub {
+    font-size: 0.875rem !important;
+    line-height: 1.7 !important;
+    text-align: center !important;
+    max-width: 92% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Action buttons row */
+  .hero-actions {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 0.6rem !important;
+    width: 100% !important;
+    margin-top: 0.75rem !important;
+  }
+
+  /* Primary & secondary hero buttons */
+  .hero-btn-primary,
+  .hero-btn-secondary {
+    padding: 0.75rem 1.125rem !important;
+    font-size: 0.875rem !important;
+    min-height: 44px !important;
+    flex: 1 1 135px !important;
+    max-width: 175px !important;
+    justify-content: center !important;
+  }
+
+  /* Social links */
+  .hero-social-links {
+    justify-content: center !important;
+    gap: 1rem !important;
+    margin-top: 0.5rem !important;
+  }
+
+  .hero-social-link {
+    font-size: 0.82rem !important;
+    min-height: 44px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+
+  /* Scroll hint */
+  .hero-scroll-hint {
+    width: 36px !important;
+    height: 36px !important;
+    bottom: 1.25rem !important;
+  }
+
+  /* Availability badge */
+  .hero-availability { font-size: 0.68rem !important; }
+
+  /* Availability + eyebrow: center on mobile */
+  .hero-content { align-items: center !important; text-align: center !important; }
+}
+
+/* ──────────────────────────────────────────────────
+   SHARE BUTTON — MOBILE ONLY
+   On mobile: Share trigger button matches the secondary (View) button visually.
+   Desktop styles are unchanged.
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  /* Hero share button — matches .btn-secondary / .hero-btn-secondary */
+  .share-btn-wrapper--hero .share-trigger-btn {
+    background: var(--bg-surface-2) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-light) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.75rem 1.125rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    min-height: 44px !important;
+    flex: 1 1 135px !important;
+    max-width: 175px !important;
+    justify-content: center !important;
+    gap: 0.4rem !important;
+    letter-spacing: 0 !important;
+    /* Reset the blue pill style */
+    box-shadow: none !important;
+  }
+
+  .share-btn-wrapper--hero .share-trigger-btn:hover {
+    border-color: var(--accent-blue) !important;
+    color: var(--accent-blue) !important;
+    transform: translateY(-2px) !important;
+    background: var(--bg-surface-2) !important;
+    box-shadow: none !important;
+  }
+
+  .share-btn-wrapper--hero .share-trigger-btn:active {
+    transform: scale(0.97) !important;
+  }
+
+  [data-theme="light"] .share-btn-wrapper--hero .share-trigger-btn {
+    background: var(--bg-surface-2) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-light) !important;
+  }
+
+  /* Share wrapper in hero actions — match flex sizing */
+  .share-btn-wrapper--hero {
+    flex: 1 1 135px !important;
+    max-width: 175px !important;
+  }
+
+  /* Featured project share button — matches .btn-secondary */
+  .featured-actions .share-btn-wrapper .share-trigger-btn {
+    background: var(--bg-surface-2) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-light) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.7rem 1rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    min-height: 44px !important;
+    flex: 1 1 130px !important;
+    max-width: 180px !important;
+    justify-content: center !important;
+    gap: 0.4rem !important;
+    letter-spacing: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .featured-actions .share-btn-wrapper .share-trigger-btn:hover {
+    border-color: var(--accent-blue) !important;
+    color: var(--accent-blue) !important;
+    background: var(--bg-surface-2) !important;
+    box-shadow: none !important;
+  }
+
+  .featured-actions .share-btn-wrapper {
+    flex: 1 1 130px !important;
+    max-width: 180px !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   NAVBAR — MOBILE
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  .navbar-inner { padding: 0 1rem !important; gap: 0.5rem !important; }
+
+  .navbar-icon-btn {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+  }
+
+  /* Mobile drawer — full width on small phones */
+  .mobile-nav {
+    width: 100vw !important;
+    border-left: none !important;
+    border-top: 1px solid var(--border-subtle) !important;
+  }
+
+  .mobile-nav-inner {
+    padding: 1.5rem 1.25rem !important;
+    gap: 1.5rem !important;
+  }
+
+  .mobile-nav-link {
+    padding: 1rem 1.125rem !important;
+    font-size: 1rem !important;
+    min-height: 52px !important;
+    border-radius: var(--radius-md) !important;
+  }
+
+  .mobile-nav-link.active {
+    color: var(--accent-blue) !important;
+    background: var(--accent-blue-dim) !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   SECTION LABELS & TITLES — MOBILE
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  .section-title { font-size: clamp(1.6rem, 7vw, 2rem) !important; }
+  .section-subtitle { font-size: 0.88rem !important; line-height: 1.65 !important; }
+  .section-label { font-size: 0.68rem !important; }
+}
+
+/* ──────────────────────────────────────────────────
+   ABOUT SECTION — MOBILE
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  .about-container {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .about-left,
+  .about-right { transform: none !important; }
+
+  .about-para { font-size: 0.88rem !important; line-height: 1.75 !important; }
+  .about-meta-item { font-size: 0.83rem !important; }
+  .about-bio { gap: 0.85rem !important; margin: 1.25rem 0 !important; }
+}
+
+/* ──────────────────────────────────────────────────
+   SKILLS SECTION — MOBILE
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  .skills-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.9rem !important;
+  }
+
+  .skills-legend {
+    flex-direction: column !important;
+    gap: 0.6rem !important;
+    padding: 1rem !important;
+  }
+
+  .legend-desc { font-size: 0.73rem !important; }
+
+  .skills-filters { gap: 0.4rem !important; }
+  .skills-filter-btn {
+    padding: 0.4rem 0.8rem !important;
+    font-size: 0.8rem !important;
+    min-height: 36px !important;
+  }
+
+  .skill-group { padding: 1.125rem !important; }
+  .skill-group-title { font-size: 0.875rem !important; }
+  .skill-name { font-size: 0.825rem !important; }
+}
+
+/* ──────────────────────────────────────────────────
+   PROJECTS SECTION — MOBILE
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  /* Featured card stacked */
+  .featured-card {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+    direction: ltr !important;
+  }
+
+  .featured-card-reversed { direction: ltr !important; }
+
+  .featured-visual {
+    aspect-ratio: 16/9 !important;
+    border-radius: var(--radius-lg) !important;
+  }
+
+  .featured-title { font-size: 1.25rem !important; }
+  .featured-summary { font-size: 0.875rem !important; }
+
+  .featured-actions {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 0.6rem !important;
+  }
+
+  .featured-actions .btn {
+    flex: 1 1 130px !important;
+    max-width: 180px !important;
+    justify-content: center !important;
+    padding: 0.7rem 1rem !important;
+    font-size: 0.85rem !important;
+    min-height: 44px !important;
+  }
+
+  /* Regular project grid */
+  .projects-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .project-card-body {
+    padding: 1rem 1.125rem 1.25rem !important;
+  }
+
+  .project-card-title { font-size: 1rem !important; }
+  .project-card-summary { font-size: 0.83rem !important; line-height: 1.6 !important; }
+
+  .project-card-footer {
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+    padding-top: 0.65rem !important;
+  }
+
+  .project-card-links .btn-sm {
+    padding: 0.45rem 0.85rem !important;
+    font-size: 0.8rem !important;
+    min-height: 36px !important;
+  }
+
+  /* Filter buttons */
+  .projects-filters { gap: 0.4rem !important; }
+  .projects-filter-btn {
+    padding: 0.4rem 0.8rem !important;
+    font-size: 0.8rem !important;
+    min-height: 36px !important;
+  }
+
+  /* Modal — slide up from bottom */
+  .modal-backdrop {
+    padding: 0 !important;
+    align-items: flex-end !important;
+  }
+
+  .modal-panel {
+    max-height: 92vh !important;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0 !important;
+    animation: modalInMobile 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  }
+
+  .modal-header { padding: 1.25rem 1.25rem 0 !important; }
+  .modal-body   { padding: 1.125rem 1.25rem !important; }
+  .modal-footer { padding: 1rem 1.25rem 1.5rem !important; }
+  .modal-title  { font-size: 1.2rem !important; }
+
+  .modal-footer {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+  }
+
+  .modal-footer .btn {
+    flex: 1 1 120px !important;
+    justify-content: center !important;
+    font-size: 0.875rem !important;
+    min-height: 44px !important;
+  }
+}
+
+@keyframes modalInMobile {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-panel { animation: none !important; }
+}
+
+/* ──────────────────────────────────────────────────
+   EXPERIENCE / CERTIFICATIONS — MOBILE
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  .cert-grid,
+  .achievement-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .cert-card { padding: 1.125rem !important; }
+  .cert-title { font-size: 0.925rem !important; }
+  .cert-issuer { font-size: 0.8rem !important; }
+
+  .exp-header { margin-bottom: 2.5rem !important; }
+}
+
+/* ──────────────────────────────────────────────────
+   DUAL IDENTITY SECTION — MOBILE
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  .dual-toggle {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+  }
+
+  .dual-tab {
+    padding: 0.65rem 1.25rem !important;
+    font-size: 0.85rem !important;
+    min-height: 40px !important;
+  }
+
+  .dual-panels { padding: 0 !important; }
+}
+
+/* ──────────────────────────────────────────────────
+   CONTACT SECTION — MOBILE
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  .contact-container {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .contact-left,
+  .contact-right { transform: none !important; }
+
+  .contact-note {
+    font-size: 0.875rem !important;
+    margin: 1rem 0 1.75rem !important;
+    max-width: 100% !important;
+  }
+
+  .contact-link-item {
+    padding: 0.875rem 1rem !important;
+    min-height: 64px !important;
+  }
+
+  .contact-link-icon { width: 36px !important; height: 36px !important; }
+  .contact-link-label { font-size: 0.68rem !important; }
+  .contact-link-value { font-size: 0.85rem !important; }
+
+  .contact-card { padding: 1.25rem !important; }
+  .contact-form-row { grid-template-columns: 1fr !important; }
+
+  /* Prevent iOS zoom on input focus */
+  .contact-field input,
+  .contact-field textarea {
+    font-size: 1rem !important;
+    padding: 0.65rem 0.875rem !important;
+  }
+
+  .contact-social-row { gap: 0.5rem !important; }
+  .contact-social-btn {
+    font-size: 0.8rem !important;
+    padding: 0.6rem 0.75rem !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   FOOTER — MOBILE
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  .footer-inner {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 1rem !important;
+    padding: 1.5rem 1rem !important;
+  }
+
+  .footer-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+  }
+
+  .footer-copy { font-size: 0.78rem !important; }
+}
+
+/* ──────────────────────────────────────────────────
+   GLOBAL BUTTON TOUCH TARGETS — MOBILE
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  .btn {
+    min-height: 44px !important;
+  }
+
+  /* Smooth press feedback for all buttons */
+  .btn:active,
+  .navbar-icon-btn:active,
+  .mobile-nav-link:active {
+    transform: scale(0.97) !important;
+    opacity: 0.9 !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   CHIPS / TAGS — MOBILE
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  .chip {
+    font-size: 0.68rem !important;
+    padding: 0.18rem 0.5rem !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   HORIZONTAL SCROLL PREVENTION
+   ────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  body,
+  #root,
+  .hero-section,
+  .about-section,
+  .skills-section,
+  .projects-section,
+  .experience-section,
+  .dual-section,
+  .contact-section {
+    overflow-x: hidden !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   320px EXTRA SMALL PHONE
+   ────────────────────────────────────────────────── */
+@media (max-width: 340px) {
+  .hero-name     { font-size: 1.75rem !important; }
+  .hero-headline { font-size: 0.92rem !important; }
+  .hero-sub      { font-size: 0.8rem !important; }
+
+  /* Stack all 3 hero buttons full-width */
+  .hero-btn-primary,
+  .hero-btn-secondary,
+  .share-btn-wrapper--hero,
+  .share-btn-wrapper--hero .share-trigger-btn {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .section-title { font-size: 1.5rem !important; }
+
+  :root {
+    --container-padding: 0.875rem;
+  }
+}
