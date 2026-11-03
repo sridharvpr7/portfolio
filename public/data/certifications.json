@@ -53,7 +53,8 @@
       "title": "MongoDB Basics for Students",
       "issuer": "MongoDB",
       "date": "2026-07-20",
-      "visible": true
+      "visible": true,
+      "certificateFile": "/assets/certificates/mangodb.jpg"
     },
     {
       "id": "github-copilot",

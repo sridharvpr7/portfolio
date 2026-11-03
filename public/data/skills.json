@@ -98,15 +98,6 @@
       ]
     },
     {
-      "id": "vlsi-hdl",
-      "label": "VLSI & HDL",
-      "domain": "hardware",
-      "icon": "layers",
-      "skills": [
-        
-      ]
-    },
-    {
       "id": "embedded-iot",
       "label": "IoT & Embedded Systems",
       "domain": "hardware",

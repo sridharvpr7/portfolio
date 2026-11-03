@@ -1,7 +1,7 @@
 {
   "intro": {
     "enabled": true,
-    "duration": 5000,
+    "duration": 3000,
     "skipOnReturn": true
   },
   "reveals": {

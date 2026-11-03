@@ -9,14 +9,14 @@
   "currentFocus": "Exploring VLSI design and building full-stack web applications",
   "location": "India",
   "resumeUrl": "",
-  "profileImage": "/assets/profile/file_0000000086d471faa5562a122881ec8d",
+  "profileImage": "/assets/profile/profileimage.png",
   "ctaPrimary": {
     "label": "Explore Projects",
     "href": "#projects"
   },
   "ctaSecondary": {
     "label": "View Resume",
-    "href": ""
+    "href": "https://www.google.com/"
   },
   "availability": {
     "show": true,
