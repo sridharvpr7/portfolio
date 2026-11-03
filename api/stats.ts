@@ -1,9 +1,9 @@
 // api/stats.ts
-// Vercel Serverless Function: GET /api/stats
+// GET /api/stats
 // Returns public visitor statistics for the footer counter widget.
 // No personal data exposed — only aggregate counts.
 
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { ApiRequest, ApiResponse } from './lib/response.js';
 import { getDb } from './db/client.js';
 import { isAnalyticsEnabled, getConfig } from './lib/config.js';
 
@@ -15,8 +15,10 @@ export interface StatsResponse {
   enabled: boolean;
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'GET') return res.status(405).end();
+export default async function handler(req: ApiRequest, res: ApiResponse) {
+  if (req.method !== 'GET') {
+    return res.status(405).end();
+  }
 
   if (!isAnalyticsEnabled()) {
     return res.status(200).json({
@@ -77,7 +79,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       todayVisits: today,
     } satisfies StatsResponse);
   } catch (err) {
-    console.error('[stats] DB error:', err);
-    return res.status(500).json({ error: 'Internal server error' });
+    console.error('[stats] Database query error:', err instanceof Error ? (err.stack || err.message) : err);
+    return res.status(500).json({
+      enabled: false,
+      liveVisitors: 0,
+      totalVisits: 0,
+      uniqueVisitors: 0,
+      todayVisits: 0,
+    } satisfies StatsResponse);
   }
 }

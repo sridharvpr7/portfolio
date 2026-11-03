@@ -1,20 +1,19 @@
 // api/auth/google.ts
-// Vercel Serverless Function: POST /api/auth/google
+// POST /api/auth/google
 // Verifies a Google ID token, upserts visitor_account, creates session
 
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { OAuth2Client } from 'google-auth-library';
 import { v4 as uuidv4 } from 'uuid';
+import type { ApiRequest, ApiResponse } from '../lib/response.js';
 import { getDb } from '../db/client.js';
 import { createSession, setSessionCookie } from '../lib/session.js';
 import { rateLimit, maybePruneStore } from '../lib/ratelimit.js';
 import { getConfig } from '../lib/config.js';
-
 import { verifyGoogleIdToken } from '../lib/googleAuth.js';
 
 const client = new OAuth2Client();
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: ApiRequest, res: ApiResponse) {
   // Only POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -34,13 +33,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(429).json({ error: 'Too many requests' });
   }
 
-  const { credential } = req.body as { credential?: string };
+  const { credential } = (req.body || {}) as { credential?: string };
   if (!credential || typeof credential !== 'string') {
     return res.status(400).json({ error: 'Missing credential' });
   }
 
   const clientId = process.env.GOOGLE_CLIENT_ID;
   if (!clientId) {
+    console.error('[auth/google] Server configuration error: GOOGLE_CLIENT_ID is not configured');
     return res.status(500).json({ error: 'Server configuration error' });
   }
 
@@ -55,7 +55,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     email = verified.email;
     name = verified.name;
   } catch (err) {
-    console.error('[auth/google] Token verification failed:', err);
+    console.error('[auth/google] Token verification failed:', err instanceof Error ? (err.stack || err.message) : err);
     return res.status(401).json({ error: 'Token verification failed' });
   }
 
@@ -80,6 +80,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const account = rows[0];
     if (!account) {
+      console.error('[auth/google] Database returned no rows on account upsert');
       return res.status(500).json({ error: 'Database error' });
     }
 
@@ -90,7 +91,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       sessionToken,
     });
 
-    setSessionCookie(res as unknown as import('http').ServerResponse, jwt);
+    setSessionCookie(res, jwt);
 
     return res.status(200).json({
       ok: true,
@@ -99,7 +100,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       isNew: account.total_visits === 1,
     });
   } catch (err) {
-    console.error('[auth/google] DB error:', err);
+    console.error('[auth/google] Database operation failed:', err instanceof Error ? (err.stack || err.message) : err);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

@@ -1,32 +1,36 @@
 // api/email/consent.ts
-// Vercel Serverless Function: POST /api/email/consent
+// POST /api/email/consent
 // Records explicit email-greeting consent and sends the welcome email.
 // Requires an authenticated session.
 
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { ApiRequest, ApiResponse } from '../lib/response.js';
 import { getAuthenticatedVisitor } from '../lib/session.js';
 import { getDb } from '../db/client.js';
 import { sendWelcomeEmail } from '../lib/email.js';
 import { isEmailEnabled, getConfig } from '../lib/config.js';
 import { rateLimit } from '../lib/ratelimit.js';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'POST') return res.status(405).end();
+export default async function handler(req: ApiRequest, res: ApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).end();
+  }
 
   if (!isEmailEnabled()) {
     return res.status(503).json({ error: 'Email greeting is not enabled' });
   }
 
-  const session = await getAuthenticatedVisitor(req as unknown as import('http').IncomingMessage);
+  const session = await getAuthenticatedVisitor(req);
   if (!session) {
     return res.status(401).json({ error: 'Not authenticated' });
   }
 
   // Rate limit per visitor
   const rl = rateLimit(`email:${session.sub}`, 3, 60 * 60_000);
-  if (!rl.allowed) return res.status(429).json({ error: 'Too many requests' });
+  if (!rl.allowed) {
+    return res.status(429).json({ error: 'Too many requests' });
+  }
 
-  const { consent, unsubscribe } = req.body as { consent?: boolean; unsubscribe?: boolean };
+  const { consent, unsubscribe } = (req.body || {}) as { consent?: boolean; unsubscribe?: boolean };
   if (consent === false || unsubscribe === true) {
     // Visitor declined or opted out — update database
     try {
@@ -37,7 +41,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         WHERE id = ${session.sub}
       `;
       return res.status(200).json({ ok: true, sent: false, unsubscribed: true });
-    } catch {
+    } catch (err) {
+      console.error('[email/consent] Error updating opt-out:', err instanceof Error ? (err.stack || err.message) : err);
       return res.status(200).json({ ok: true, sent: false });
     }
   }
@@ -55,7 +60,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       email_unsubscribed: boolean;
       email_consent: boolean;
     }>;
-    if (!rows.length || !rows[0]) return res.status(404).json({ error: 'Account not found' });
+    if (!rows.length || !rows[0]) {
+      return res.status(404).json({ error: 'Account not found' });
+    }
 
     const acc = rows[0];
 
@@ -94,7 +101,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(200).json({ ok: true, sent });
   } catch (err) {
-    console.error('[email/consent] Error:', err);
+    console.error('[email/consent] Database operation failed:', err instanceof Error ? (err.stack || err.message) : err);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

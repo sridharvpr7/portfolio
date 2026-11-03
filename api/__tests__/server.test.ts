@@ -392,3 +392,187 @@ describe('30. HTTP Method Enforcement', () => {
     }
   });
 });
+
+
+// ── 31. Unified Response Adapter (adaptResponse) ──────────────────────────────
+describe('31. Unified Response Adapter (adaptResponse)', () => {
+  it('adapts a native response object with status, json, and send methods', async () => {
+    const { adaptResponse } = await import('../lib/response.ts');
+    const rawRes: any = {
+      statusCode: 200,
+      headers: {},
+      setHeader(name: string, val: string) { this.headers[name.toLowerCase()] = val; return this; },
+      getHeader(name: string) { return this.headers[name.toLowerCase()]; },
+      end(chunk: any) { this.body = chunk; this.writableEnded = true; return this; },
+      writableEnded: false,
+      headersSent: false,
+    };
+
+    const adapted = adaptResponse(rawRes);
+    expect(typeof adapted.status).toBe('function');
+    expect(typeof adapted.json).toBe('function');
+    expect(typeof adapted.send).toBe('function');
+
+    adapted.status(201).json({ success: true });
+    expect(adapted.statusCode).toBe(201);
+    expect((adapted as any)._status).toBe(201);
+    expect(rawRes.headers['content-type']).toBe('application/json; charset=utf-8');
+    expect(JSON.parse(rawRes.body)).toEqual({ success: true });
+  });
+
+  it('prevents double-sending when response has already ended', async () => {
+    const { adaptResponse } = await import('../lib/response.ts');
+    let endCallCount = 0;
+    const rawRes: any = {
+      statusCode: 200,
+      headers: {},
+      setHeader(name: string, val: string) { this.headers[name.toLowerCase()] = val; return this; },
+      getHeader(name: string) { return this.headers[name.toLowerCase()]; },
+      end(chunk: any) {
+        endCallCount++;
+        this.body = chunk;
+        this.writableEnded = true;
+        this.headersSent = true;
+        return this;
+      },
+      writableEnded: false,
+      headersSent: false,
+    };
+
+    const adapted = adaptResponse(rawRes);
+    adapted.status(200).json({ first: true });
+    expect(endCallCount).toBe(1);
+
+    // Second call should safely no-op
+    adapted.status(500).json({ second: true });
+    expect(endCallCount).toBe(1);
+    expect(JSON.parse(rawRes.body)).toEqual({ first: true });
+  });
+
+  it('send() supports strings, buffers, and objects', async () => {
+    const { adaptResponse } = await import('../lib/response.ts');
+    const rawRes: any = {
+      statusCode: 200,
+      headers: {},
+      setHeader(name: string, val: string) { this.headers[name.toLowerCase()] = val; return this; },
+      getHeader(name: string) { return this.headers[name.toLowerCase()]; },
+      end(chunk: any) { this.body = chunk; this.writableEnded = true; return this; },
+      writableEnded: false,
+      headersSent: false,
+    };
+
+    const adapted = adaptResponse(rawRes);
+    adapted.status(200).send('Hello world');
+    expect(rawRes.body).toBe('Hello world');
+    expect(rawRes.headers['content-type']).toBe('text/plain; charset=utf-8');
+  });
+});
+
+// ── 32. Native ServerResponse Dispatching (res.status is not a function fix) ──
+describe('32. Native ServerResponse Dispatching Without res.status TypeError', () => {
+  it('dispatches /api/health to raw Node ServerResponse without error', async () => {
+    const { dispatchApi } = await import('../server-router.ts');
+    let written = '';
+    const rawReq: any = {
+      method: 'GET',
+      url: '/api/health',
+      headers: { host: 'portfolio-0ao8.onrender.com' },
+      on: (_event: string, cb: any) => { if (_event === 'end') cb(); return rawReq; },
+    };
+    // Notice: rawRes does NOT have status() or json() attached beforehand!
+    const rawRes: any = {
+      statusCode: 200,
+      headers: {},
+      setHeader(name: string, val: string) { this.headers[name.toLowerCase()] = val; return this; },
+      getHeader(name: string) { return this.headers[name.toLowerCase()]; },
+      end(chunk: any) { written = chunk ? String(chunk) : ''; this.writableEnded = true; return this; },
+      writableEnded: false,
+      headersSent: false,
+    };
+
+    const handled = await dispatchApi(rawReq, rawRes);
+    expect(handled).toBe(true);
+    expect(rawRes.statusCode).toBe(200);
+    const parsed = JSON.parse(written);
+    expect(parsed.status).toBe('ok');
+    expect(parsed.service).toBe('portfolio-api');
+  });
+
+  it('dispatches /api/stats with raw Node ServerResponse cleanly without TypeError', async () => {
+    const { dispatchApi } = await import('../server-router.ts');
+    const { default: statsHandler } = await import('../stats.ts');
+    let written = '';
+    const rawReq: any = {
+      method: 'GET',
+      url: '/api/stats',
+      headers: { host: 'portfolio-0ao8.onrender.com' },
+      on: (_event: string, cb: any) => { if (_event === 'end') cb(); return rawReq; },
+    };
+    const rawRes: any = {
+      statusCode: 200,
+      headers: {},
+      setHeader(name: string, val: string) { this.headers[name.toLowerCase()] = val; return this; },
+      getHeader(name: string) { return this.headers[name.toLowerCase()]; },
+      end(chunk: any) { written = chunk ? String(chunk) : ''; this.writableEnded = true; return this; },
+      writableEnded: false,
+      headersSent: false,
+    };
+
+    const handlers = makeHandlers({ stats: statsHandler });
+    const handled = await dispatchApi(rawReq, rawRes, handlers);
+    expect(handled).toBe(true);
+    expect([200, 500, 503]).toContain(rawRes.statusCode);
+    expect(written.length).toBeGreaterThan(0);
+    const parsed = JSON.parse(written);
+    expect(typeof parsed).toBe('object');
+  });
+
+  it('dispatches POST /api/track with raw Node ServerResponse cleanly', async () => {
+    const { dispatchApi } = await import('../server-router.ts');
+    const { default: trackHandler } = await import('../track.ts');
+    let written = '';
+    const payload = { pagePath: '/', sessionToken: 'vis_test_123' };
+    const rawReq: any = {
+      method: 'POST',
+      url: '/api/track',
+      headers: {
+        host: 'portfolio-0ao8.onrender.com',
+        'content-type': 'application/json',
+      },
+      body: payload,
+      on: (_event: string, cb: any) => { if (_event === 'end') cb(); return rawReq; },
+    };
+    const rawRes: any = {
+      statusCode: 200,
+      headers: {},
+      setHeader(name: string, val: string) { this.headers[name.toLowerCase()] = val; return this; },
+      getHeader(name: string) { return this.headers[name.toLowerCase()]; },
+      end(chunk: any) { written = chunk ? String(chunk) : ''; this.writableEnded = true; return this; },
+      writableEnded: false,
+      headersSent: false,
+    };
+
+    const handlers = makeHandlers({ track: trackHandler });
+    const handled = await dispatchApi(rawReq, rawRes, handlers);
+    expect(handled).toBe(true);
+    expect([200, 400, 500]).toContain(rawRes.statusCode);
+    expect(written.length).toBeGreaterThan(0);
+  });
+});
+
+// ── 33. Database Connection & Client Checks ───────────────────────────────────
+describe('33. Database Client Connection Check', () => {
+  it('checkDbConnection reports missing DATABASE_URL gracefully', async () => {
+    const { checkDbConnection } = await import('../db/client.ts');
+    const origDb = process.env.DATABASE_URL;
+    delete process.env.DATABASE_URL;
+
+    try {
+      const result = await checkDbConnection();
+      expect(result.ok).toBe(false);
+      expect(result.error).toContain('DATABASE_URL');
+    } finally {
+      if (origDb) process.env.DATABASE_URL = origDb;
+    }
+  });
+});

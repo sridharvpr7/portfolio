@@ -10,10 +10,13 @@
  */
 
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import { adaptResponse, type ApiResponse, type ApiRequest } from './lib/response.js';
+
+export { adaptResponse, type ApiResponse, type ApiRequest };
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-export type ApiHandler = (req: IncomingMessage, res: ServerResponse) => Promise<void> | void;
+export type ApiHandler = (req: ApiRequest, res: ApiResponse) => Promise<void> | void;
 
 export interface ApiHandlers {
   track: ApiHandler;
@@ -96,12 +99,19 @@ export function parseJsonBody(req: IncomingMessage): Promise<Record<string, unkn
 export async function dispatchApi(
   req: IncomingMessage,
   res: ServerResponse,
-  handlers: ApiHandlers
-): Promise<void> {
+  handlers?: Partial<ApiHandlers>
+): Promise<boolean> {
   const url   = new URL(req.url!, 'http://localhost');
   const path  = url.pathname;
 
-  res.setHeader('Cache-Control', 'no-store');
+  const apiReq = req as ApiRequest;
+  if (!apiReq.query) {
+    apiReq.query = Object.fromEntries(url.searchParams.entries());
+  }
+
+  const apiRes = adaptResponse(res);
+
+  apiRes.setHeader('Cache-Control', 'no-store');
 
   // CORS allowed origins configuration
   const allowedOrigins = new Set([
@@ -113,35 +123,50 @@ export async function dispatchApi(
 
   const origin = req.headers.origin;
   if (origin && allowedOrigins.has(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    apiRes.setHeader('Access-Control-Allow-Origin', origin);
+    apiRes.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    apiRes.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    apiRes.setHeader('Access-Control-Allow-Credentials', 'true');
   }
 
   if (req.method === 'OPTIONS') {
-    res.writeHead(204);
-    res.end();
-    return;
+    apiRes.status(204).end();
+    return true;
   }
 
-  // Health-check endpoint — always available, no DB required
+  // Health-check endpoint — always available, reports system & DB status
   if (path === '/api/health') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, ts: new Date().toISOString() }));
-    return;
+    const hasDbUrl = Boolean(process.env.DATABASE_URL);
+    let dbStatus: { ok: boolean; error?: string } | undefined;
+    if (hasDbUrl && apiReq.query?.checkDb === '1') {
+      try {
+        const { checkDbConnection } = await import('./db/client.js');
+        dbStatus = await checkDbConnection();
+      } catch (err) {
+        dbStatus = { ok: false, error: err instanceof Error ? err.message : String(err) };
+      }
+    }
+
+    apiRes.status(200).json({
+      status: 'ok',
+      service: 'portfolio-api',
+      ts: new Date().toISOString(),
+      databaseConfigured: hasDbUrl,
+      ...(dbStatus ? { databaseConnection: dbStatus } : {}),
+    });
+    return true;
   }
 
-  if (path === '/api/track')            { await handlers.track(req, res); return; }
-  if (path === '/api/heartbeat')        { await handlers.heartbeat(req, res); return; }
-  if (path === '/api/stats')            { await handlers.stats(req, res); return; }
-  if (path === '/api/auth/google')      { await handlers.authGoogle(req, res); return; }
-  if (path === '/api/auth/logout')      { await handlers.authLogout(req, res); return; }
-  if (path === '/api/admin/delete')     { await handlers.adminDelete(req, res); return; }
-  if (path === '/api/email/consent')    { await handlers.emailConsent(req, res); return; }
-  if (path === '/api/telegram/webhook') { await handlers.telegramWebhook(req, res); return; }
+  if (path === '/api/track')            { if (handlers?.track) await handlers.track(apiReq, apiRes); return true; }
+  if (path === '/api/heartbeat')        { if (handlers?.heartbeat) await handlers.heartbeat(apiReq, apiRes); return true; }
+  if (path === '/api/stats')            { if (handlers?.stats) await handlers.stats(apiReq, apiRes); return true; }
+  if (path === '/api/auth/google')      { if (handlers?.authGoogle) await handlers.authGoogle(apiReq, apiRes); return true; }
+  if (path === '/api/auth/logout')      { if (handlers?.authLogout) await handlers.authLogout(apiReq, apiRes); return true; }
+  if (path === '/api/admin/delete')     { if (handlers?.adminDelete) await handlers.adminDelete(apiReq, apiRes); return true; }
+  if (path === '/api/email/consent')    { if (handlers?.emailConsent) await handlers.emailConsent(apiReq, apiRes); return true; }
+  if (path === '/api/telegram/webhook') { if (handlers?.telegramWebhook) await handlers.telegramWebhook(apiReq, apiRes); return true; }
 
   // Unknown /api/* path
-  res.writeHead(404, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({ error: 'Not found' }));
+  apiRes.status(404).json({ error: 'Not found' });
+  return false;
 }

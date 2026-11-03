@@ -1,4 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { ApiRequest, ApiResponse } from '../lib/response.js';
 import { getDb } from '../db/client.js';
 import { buildStatsReply, sendTelegram } from '../lib/telegram.js';
 import { isTelegramEnabled, getConfig } from '../lib/config.js';
@@ -17,8 +17,10 @@ const ALLOWED_COMMANDS = [
   'help',
 ];
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'POST') return res.status(405).end();
+export default async function handler(req: ApiRequest, res: ApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).end();
+  }
 
   if (!isTelegramEnabled()) {
     return res.status(503).end();
@@ -33,7 +35,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   }
 
-  const update = req.body as {
+  const update = (req.body || {}) as {
     message?: {
       chat?: { id: number };
       text?: string;
@@ -43,7 +45,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const chatId = update?.message?.chat?.id;
   const text = update?.message?.text?.trim() ?? '';
 
-  if (!chatId || !text) return res.status(200).end();
+  if (!chatId || !text) {
+    return res.status(200).end();
+  }
 
   // Security: only owner can run commands
   const allowedChatId = Number(process.env.TELEGRAM_CHAT_ID);
@@ -73,7 +77,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const reply = buildStatsReply(cmd, stats);
     await sendTelegram(reply);
   } catch (err) {
-    console.error('[telegram/webhook] Error:', err);
+    console.error('[telegram/webhook] Database/processing error:', err instanceof Error ? (err.stack || err.message) : err);
     await sendTelegram('❌ Failed to fetch stats\\. Check server logs\\.');
   }
 

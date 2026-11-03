@@ -1,9 +1,9 @@
 // api/track.ts
-// Vercel Serverless Function: POST /api/track
+// POST /api/track
 // Records a visit event. Called once per session, not on every heartbeat.
 
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { v4 as uuidv4 } from 'uuid';
+import type { ApiRequest, ApiResponse } from './lib/response.js';
 import { getDb } from './db/client.js';
 import { getAuthenticatedVisitor } from './lib/session.js';
 import { rateLimit, maybePruneStore } from './lib/ratelimit.js';
@@ -31,8 +31,10 @@ export function sanitizePath(path: string): string {
   }
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'POST') return res.status(405).end();
+export default async function handler(req: ApiRequest, res: ApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).end();
+  }
 
   maybePruneStore();
 
@@ -42,9 +44,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const ip = String(req.headers['x-forwarded-for'] || 'unknown').split(',')[0].trim();
   const rl = rateLimit(`track:${ip}`, 5, 60_000);
-  if (!rl.allowed) return res.status(429).json({ error: 'Too many requests' });
+  if (!rl.allowed) {
+    return res.status(429).json({ error: 'Too many requests' });
+  }
 
-  const body = req.body as {
+  const body = (req.body || {}) as {
     sessionToken?: string;
     pagePath?: string;
     referrer?: string;
@@ -62,7 +66,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   // Check if authenticated visitor
-  const session = await getAuthenticatedVisitor(req as unknown as import('http').IncomingMessage);
+  const session = await getAuthenticatedVisitor(req);
 
   try {
     const sql = getDb();
@@ -128,8 +132,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(200).json({ ok: true, sessionToken });
   } catch (err) {
-    console.error('[track] DB error:', err);
-    // Never expose DB errors to client
+    console.error('[track] Database operation failed:', err instanceof Error ? (err.stack || err.message) : err);
+    // Never expose raw DB error messages to client
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
