@@ -3,7 +3,6 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './',
   plugins: [react()],
   build: {
     // Raise threshold slightly — Firebase modular imports are tree-shaken;

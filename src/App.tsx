@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { IntroSequence } from './components/IntroSequence';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';

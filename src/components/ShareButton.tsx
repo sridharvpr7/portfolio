@@ -3,9 +3,9 @@ import { Share2, Copy, Check, X } from 'lucide-react';
 import './ShareButton.css';
 
 // ── Constants ──────────────────────────────────────────────────────────────
-const PORTFOLIO_URL  = 'https://sridharvpr7.github.io/Portfolio/';
-const SHARE_TITLE    = 'SRIDHAR M | ECE Student & Web Developer';
-const SHARE_TEXT     = 'Explore the portfolio of Sridhar M, an Electronics and Communication Engineering student and web developer passionate about technology and digital experiences.';
+const PORTFOLIO_URL  = 'https://portfolio-4b2u.onrender.com/';
+const SHARE_TITLE    = 'SRIDHAR VPR | ECE Student & Web Developer';
+const SHARE_TEXT     = 'Explore my portfolio — ECE, VLSI, Embedded Systems and Full-Stack Web Development.';
 const SHARE_TEXT_ENC = encodeURIComponent(SHARE_TEXT + ' ' + PORTFOLIO_URL);
 const SHARE_URL_ENC  = encodeURIComponent(PORTFOLIO_URL);
 

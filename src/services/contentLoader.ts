@@ -1,4 +1,4 @@
-// Central content loader — reads JSON from public/data/
+﻿// Central content loader — reads JSON from public/data/
 // Validates required fields and returns typed data
 
 export async function loadJSON<T>(path: string, fallback: T): Promise<T> {

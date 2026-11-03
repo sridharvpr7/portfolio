@@ -1,11 +1,11 @@
 {
-  "title": "SRIDHAR M | ECE Student & Web Developer",
-  "description": "Explore the portfolio of Sridhar M, an Electronics and Communication Engineering student and web developer passionate about technology and digital experiences.",
+  "title": "SRIDHAR VPR | ECE Student & Web Developer",
+  "description": "ECE engineer and web developer building innovative digital experiences through circuits and code.",
   "keywords": ["ECE", "electronics engineering", "full-stack developer", "Embedded C", "VS code", "web development", "portfolio"],
-  "author": "Sridhar M",
-  "ogTitle": "SRIDHAR M | ECE Student & Web Developer",
-  "ogDescription": "Explore the portfolio of Sridhar M, an Electronics and Communication Engineering student and web developer passionate about technology and digital experiences.",
-  "ogImage": "https://sridharvpr7.github.io/Portfolio/og-image.png",
+  "author": "Sridhar VPR",
+  "ogTitle": "SRIDHAR VPR | ECE Student & Web Developer",
+  "ogDescription": "ECE engineer and web developer building innovative digital experiences through circuits and code.",
+  "ogImage": "/assets/profile/og-image.png",
   "twitterCard": "summary_large_image",
-  "canonicalUrl": "https://sridharvpr7.github.io/Portfolio/"
+  "canonicalUrl": "https://portfolio-4b2u.onrender.com"
 }
