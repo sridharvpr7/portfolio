@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import emailjs from '@emailjs/browser';
 import { Mail, Send, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from '../components/BrandIcons';
+import { ShareButton } from '../components/ShareButton';
 import { useReveal } from '../hooks/useReveal';
 import type { ContactData, SocialLink } from '../services/contentLoader';
 import './ContactSection.css';
@@ -185,6 +186,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ contact, socialL
                 </div>
               </a>
             ))}
+
+            <ShareButton variant="contact" />
           </div>
         </div>
 

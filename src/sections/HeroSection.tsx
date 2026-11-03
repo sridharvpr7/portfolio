@@ -2,6 +2,7 @@ import React from 'react';
 import { ExternalLink, ArrowDown } from 'lucide-react';
 import { GithubIcon } from '../components/BrandIcons';
 import { CircuitBackground } from '../components/CircuitBackground';
+import { ShareButton } from '../components/ShareButton';
 import { useReveal } from '../hooks/useReveal';
 import type { ProfileData, SocialLink } from '../services/contentLoader';
 import './HeroSection.css';
@@ -91,6 +92,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ profile, socialLinks }
                 <ExternalLink size={14} />
               </a>
             )}
+
+            <ShareButton variant="hero" />
           </div>
 
           <div className="hero-social-links" role="list">
