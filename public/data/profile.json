@@ -8,7 +8,7 @@
   "bio": "I'm an Electronics and Communication Engineering student with a deep fascination for both hardware and software. My academic journey has given me a strong foundation in digital electronics, logic design, Verilog, and embedded systems — while my personal projects have pushed me into the world of full-stack web development, building real products with React, TypeScript, and Node.js.\n\nWhat excites me most is the overlap: understanding how signals become data, how circuits become systems, and how systems become experiences. I'm driven to build things that work — from RTL descriptions of logic circuits to full-stack web applications.\n\nCurrently learning advanced VLSI design concepts while continuing to develop my skills in modern web technologies.",
   "currentFocus": "Exploring VLSI design and building full-stack web applications",
   "location": "India",
-  "resumeUrl": "",
+  "resumeUrl": "/assets/resume/resume.pdf",
   "profileImage": "/assets/profile/profileimage.png",
   "ctaPrimary": {
     "label": "Explore Projects",
@@ -16,7 +16,7 @@
   },
   "ctaSecondary": {
     "label": "View Resume",
-    "href": "https://www.google.com/"
+    "href": "/assets/resume/resume.pdf"
   },
   "availability": {
     "show": true,
