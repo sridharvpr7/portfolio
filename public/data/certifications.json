@@ -30,7 +30,7 @@
       "issuer": "Infosys Springboard",
       "date": "2026-08-06",
       "visible": true,
-      "certificateFile": "/assets/certificates/digitalelectronics.jpg"
+      "certificateFile": "/assets/certificates/digitalelectronics.png"
     },
     {
       "id": "vlsi-verilog",
@@ -46,7 +46,7 @@
       "issuer": "Infosys Springboard",
       "date": "2026-05-10",
       "visible": true,
-      "certificateFile": "/assets/certificates/Internet of Things_page-0001"
+      "certificateFile": "/assets/certificates/iot.jpg"
     },
     {
       "id": "mongodb-basics",
