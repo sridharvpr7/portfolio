@@ -180,7 +180,7 @@ export interface AnimationsConfig {
 
 // ── Loader functions ──────────────────────────────────────
 
-const BASE = '/data';
+const BASE = `${import.meta.env.BASE_URL || './'}data`;
 
 export const loadSiteConfig = () =>
   loadJSON<SiteConfig>(`${BASE}/site.json`, {

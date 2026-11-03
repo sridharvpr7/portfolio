@@ -85,7 +85,7 @@ function App() {
   }>({ enabled: false });
 
   useEffect(() => {
-    fetch('/data/notifications.json', { signal: AbortSignal.timeout(3000) })
+    fetch(`${import.meta.env.BASE_URL || './'}data/notifications.json`, { signal: AbortSignal.timeout(3000) })
       .then(r => r.json())
       .then(cfg => setNotificationsConfig(cfg))
       .catch(() => {}); // fail silently
