@@ -6,7 +6,7 @@
       "issuer": "Infosys Springboard",
       "date": "2026-05-12",
       "visible": true,
-      "certificateFile": "/assets/certificates/HTML5 - The Language_page-0001.jpg"
+      "certificateFile": "/assets/certificates/html.jpg"
     },
     {
       "id": "css3",
@@ -30,7 +30,7 @@
       "issuer": "Infosys Springboard",
       "date": "2026-08-06",
       "visible": true,
-      "certificateFile": "/assets/certificates/digital electrinics.png"
+      "certificateFile": "/assets/certificates/digitalelectronics.jpg"
     },
     {
       "id": "vlsi-verilog",
@@ -46,7 +46,7 @@
       "issuer": "Infosys Springboard",
       "date": "2026-05-10",
       "visible": true,
-      "certificateFile": "/assets/certificates/Internet of Things_page-0001.jpg"
+      "certificateFile": "/assets/certificates/Internet of Things_page-0001"
     },
     {
       "id": "mongodb-basics",
