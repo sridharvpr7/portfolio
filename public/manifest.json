@@ -8,9 +8,9 @@
       "sizes": "any"
     },
     {
-      "src": "/assets/profile/og-image.jpg",
-      "type": "image/jpeg",
-      "sizes": "1200x630"
+      "src": "/assets/profile/og-image.png",
+      "type": "image/png",
+      "sizes": "1424x752"
     }
   ],
   "start_url": "https://sridhar-portfolio-gyoy.onrender.com/",
