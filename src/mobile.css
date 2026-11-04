@@ -42,6 +42,8 @@
       0 0 0 2px rgba(83, 167, 255, 0.2),
       0 0 28px rgba(83, 167, 255, 0.18),
       0 0 60px rgba(83, 167, 255, 0.07) !important;
+    object-position: center 36% !important;
+    border-radius: 50% !important;
     animation: morphPhoto 12s ease-in-out infinite,
                mobilePhotoFloat 5s ease-in-out infinite !important;
   }

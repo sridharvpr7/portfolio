@@ -366,7 +366,9 @@
   max-width: 320px;
   aspect-ratio: 1;
   object-fit: cover;
-  border-radius: 38% 62% 50% 50% / 48% 48% 52% 52%;
+  object-position: center 36%;
+  background-color: #05070B;
+  border-radius: 50%;
   border: 3px solid var(--border-light);
   animation: morphPhoto 12s ease-in-out infinite;
   display: block;

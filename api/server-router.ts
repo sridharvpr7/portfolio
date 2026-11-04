@@ -36,6 +36,10 @@ export interface ApiHandlers {
  * Mirrors the rules in vercel.json.
  */
 export function getCacheHeader(urlPath: string): string {
+  if (urlPath.startsWith('/assets/profile/')) {
+    // Profile and social preview images — revalidation supported
+    return 'public, max-age=86400, stale-while-revalidate=604800';
+  }
   if (urlPath.startsWith('/assets/')) {
     // Vite content-hashed bundles — safe to cache indefinitely
     return 'public, max-age=31536000, immutable';

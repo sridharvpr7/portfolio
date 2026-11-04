@@ -8,8 +8,8 @@
       "sizes": "any"
     },
     {
-      "src": "/assets/profile/og-image.png",
-      "type": "image/png",
+      "src": "/assets/profile/og-image.jpg",
+      "type": "image/jpeg",
       "sizes": "1200x630"
     }
   ],
