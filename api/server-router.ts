@@ -115,7 +115,7 @@ export async function dispatchApi(
 
   // CORS allowed origins configuration
   const allowedOrigins = new Set([
-    'https://portfolio-0ao8.onrender.com',
+    'https://sridhar-portfolio-gyoy.onrender.com',
     'http://localhost:5173',
     'http://localhost:3000',
     process.env.APP_BASE_URL,

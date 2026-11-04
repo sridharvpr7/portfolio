@@ -3,7 +3,7 @@ import { Share2, Copy, Check, X } from 'lucide-react';
 import './ShareButton.css';
 
 // ── Constants ──────────────────────────────────────────────────────────────
-const PORTFOLIO_URL  = 'https://portfolio-0ao8.onrender.com/';
+const PORTFOLIO_URL  = 'https://sridhar-portfolio-gyoy.onrender.com/';
 const SHARE_TITLE    = 'SRIDHAR VPR | ECE Student & Web Developer';
 const SHARE_TEXT     = 'Explore my portfolio — ECE, VLSI, Embedded Systems and Full-Stack Web Development.';
 const SHARE_TEXT_ENC = encodeURIComponent(SHARE_TEXT + ' ' + PORTFOLIO_URL);
