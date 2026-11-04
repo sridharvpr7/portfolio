@@ -128,7 +128,7 @@ async function router(req, res, handlers) {
     return;
   }
 
-  // ── Static assets with immutable cache headers ────────────────────────────
+  // ── Static assets with immutable cache headers ────────────────────
   if (!isSpaRoute(path)) {
     // /assets/* (Vite-hashed bundles) or /data/* (JSON content files)
     const filePath = join(DIST_DIR, path);
@@ -180,7 +180,7 @@ async function main() {
     });
   });
 
-  server.listen(PORT, HOST, () => {
+  server.listen(PORT, HOST, async () => {
     console.log(`[server] Listening on http://${HOST}:${PORT}`);
     console.log(`[server] Health-check:  http://${HOST}:${PORT}/api/health`);
     const tgToken = Boolean(process.env.TELEGRAM_BOT_TOKEN);
@@ -188,7 +188,33 @@ async function main() {
     const tgSecret = Boolean(process.env.TELEGRAM_WEBHOOK_SECRET);
     console.log(`[telegram] Integration: Bot token = ${tgToken ? 'CONFIGURED' : 'NOT SET'}, Chat ID = ${tgChat ? 'CONFIGURED' : 'NOT SET'}, Secret = ${tgSecret ? 'CONFIGURED' : 'NOT SET'}`);
     const host = (process.env.APP_BASE_URL || `http://${HOST}:${PORT}`).replace(/\/+$/, '');
-    console.log(`[telegram] Webhook endpoint: ${host}/api/telegram/webhook`);
+    const webhookEndpoint = `${host}/api/telegram/webhook`;
+    console.log(`[telegram] Webhook endpoint: ${webhookEndpoint}`);
+
+    // Auto-register webhook with Telegram if TELEGRAM_BOT_TOKEN is present and host is HTTPS
+    if (tgToken) {
+      try {
+        const { setupTelegramWebhook, getTelegramWebhookInfo } = await import('./api/lib/telegram.ts');
+        if (webhookEndpoint.startsWith('https://')) {
+          const current = await getTelegramWebhookInfo();
+          if (current.ok && current.info?.url !== webhookEndpoint) {
+            console.log(`[telegram] Current Telegram webhook URL is "${current.info?.url || '(none)'}". Registering: ${webhookEndpoint}...`);
+            const res = await setupTelegramWebhook(host, false);
+            console.log(`[telegram] Webhook auto-registration: ${res.ok ? 'SUCCESS' : 'FAILED'} — ${res.description || ''}`);
+          } else if (current.ok && current.info?.url === webhookEndpoint) {
+            console.log(`[telegram] Webhook is already correctly registered on Telegram: ${webhookEndpoint}`);
+          } else {
+            console.warn(`[telegram] Could not query getWebhookInfo (${current.error || 'unknown error'}). Attempting registration...`);
+            const res = await setupTelegramWebhook(host, false);
+            console.log(`[telegram] Webhook registration: ${res.ok ? 'SUCCESS' : 'FAILED'} — ${res.description || ''}`);
+          }
+        } else {
+          console.log(`[telegram] Webhook auto-registration skipped (non-HTTPS URL: ${host}). Configure APP_BASE_URL=https://... in Render.`);
+        }
+      } catch (err) {
+        console.warn('[telegram] Error during webhook auto-registration:', err instanceof Error ? err.message : err);
+      }
+    }
   });
 
   // Graceful shutdown on Render SIGTERM

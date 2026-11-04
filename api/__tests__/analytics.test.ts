@@ -594,4 +594,90 @@ describe('23. Telegram Bot Command Router & Webhook Handling', () => {
     expect(responseData.configured.chatId).toBe(true);
     expect(responseData.activity).toBeDefined();
   });
+
+  it('setupTelegramWebhook sends setWebhook request with expected URL and secret token', async () => {
+    const { setupTelegramWebhook } = await import('../lib/telegram');
+    process.env.TELEGRAM_BOT_TOKEN = 'mock-bot-token';
+    process.env.TELEGRAM_WEBHOOK_SECRET = 'super-secret-token';
+    process.env.APP_BASE_URL = 'https://portfolio-0ao8.onrender.com';
+
+    const origFetch = global.fetch;
+    let requestUrl = '';
+    let requestPayload: any = null;
+
+    global.fetch = vi.fn().mockImplementation(async (url: string, opts: any) => {
+      requestUrl = url;
+      requestPayload = JSON.parse(opts.body);
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, result: true, description: 'Webhook was set' }),
+      };
+    });
+
+    try {
+      const res = await setupTelegramWebhook('https://portfolio-0ao8.onrender.com', false);
+      expect(res.ok).toBe(true);
+      expect(res.webhookUrl).toBe('https://portfolio-0ao8.onrender.com/api/telegram/webhook');
+      expect(requestUrl).toContain('/botmock-bot-token/setWebhook');
+      expect(requestPayload.url).toBe('https://portfolio-0ao8.onrender.com/api/telegram/webhook');
+      expect(requestPayload.secret_token).toBe('super-secret-token');
+      expect(requestPayload.drop_pending_updates).toBe(false);
+    } finally {
+      global.fetch = origFetch;
+      delete process.env.TELEGRAM_WEBHOOK_SECRET;
+    }
+  });
+
+  it('POST /api/telegram/webhook handles incoming update and sends reply', async () => {
+    process.env.TELEGRAM_BOT_TOKEN = 'mock-bot-token';
+    process.env.TELEGRAM_CHAT_ID = '123456789';
+    delete process.env.TELEGRAM_WEBHOOK_SECRET;
+
+    const { default: webhookHandler } = await import('../telegram/webhook');
+    const origFetch = global.fetch;
+    let sentToChatId: any = null;
+    let sentText = '';
+
+    global.fetch = vi.fn().mockImplementation(async (_url: string, opts: any) => {
+      const body = JSON.parse(opts.body);
+      sentToChatId = body.chat_id;
+      sentText = body.text;
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, result: { message_id: 101 } }),
+      };
+    });
+
+    let statusCode = 200;
+    let responseData: any = null;
+
+    const req: any = {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: {
+        update_id: 99999,
+        message: {
+          chat: { id: 123456789 },
+          text: '/help',
+        },
+      },
+    };
+    const res: any = {
+      status(code: number) { statusCode = code; return this; },
+      json(data: any) { responseData = data; return this; },
+    };
+
+    try {
+      await webhookHandler(req, res);
+      expect(statusCode).toBe(200);
+      expect(responseData.ok).toBe(true);
+      expect(responseData.command).toBe('help');
+      expect(sentToChatId).toBe(123456789);
+      expect(sentText).toContain('Portfolio Bot Commands');
+    } finally {
+      global.fetch = origFetch;
+    }
+  });
 });

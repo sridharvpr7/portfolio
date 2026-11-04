@@ -58,11 +58,14 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     let actionResult: Record<string, unknown> | undefined;
 
     if (action === 'setWebhook') {
+      const drop = req.query?.drop === '1' || req.query?.drop === 'true';
       actionResult = await setupTelegramWebhook(
-        (req.query?.url as string) || process.env.APP_BASE_URL
+        (req.query?.url as string) || process.env.APP_BASE_URL,
+        drop
       );
     } else if (action === 'deleteWebhook') {
-      actionResult = await deleteTelegramWebhook();
+      const drop = req.query?.drop === '1' || req.query?.drop === 'true';
+      actionResult = await deleteTelegramWebhook(drop);
     }
 
     // Probe live Telegram Bot API if token is available

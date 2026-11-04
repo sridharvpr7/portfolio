@@ -506,7 +506,7 @@ export async function getTelegramWebhookInfo(): Promise<{ ok: boolean; info?: Re
 
 export async function setupTelegramWebhook(
   baseUrl?: string,
-  dropPendingUpdates = true
+  dropPendingUpdates = false
 ): Promise<{ ok: boolean; description?: string; webhookUrl?: string }> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) return { ok: false, description: 'TELEGRAM_BOT_TOKEN is not configured' };
