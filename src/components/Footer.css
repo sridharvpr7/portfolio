@@ -143,19 +143,6 @@
   border-radius: 2px;
 }
 
-/* Firebase sign-in strip */
-.footer-firebase-strip {
-  border-top: 1px solid var(--border-subtle);
-  padding: 0.6rem 0;
-}
-
-.footer-firebase-inner {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  min-height: 32px;
-}
-
 /* Presence / live count strip */
 .footer-presence {
   padding: 0.4rem 0;
