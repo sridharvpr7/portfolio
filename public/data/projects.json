@@ -1,3 +1,4 @@
+
 {
   "projects": [
     {
@@ -44,6 +45,139 @@
       "liveDemoUrl": "https://elders-veil1.onrender.com",
       "startDate": null,
       "tags": ["web", "full-stack", "comics", "postgresql"]
+    },
+    {
+      "id": "expense-tracker",
+      "title": "Expense Tracker",
+      "shortSummary": "A web application for recording and managing personal expenses.",
+      "problem": "Tracking daily expenses manually makes it difficult to understand spending habits.",
+      "solution": "A browser-based application designed to simplify personal expense tracking.",
+      "features": [
+        "Expense tracking",
+        "Expense recording",
+        "Expense management",
+        "Interactive web interface"
+      ],
+      "technologies": [
+        "HTML5",
+        "CSS3",
+        "JavaScript"
+      ],
+      "category": "frontend",
+      "status": "To Be Verified",
+      "featured": true,
+      "visible": true,
+      "order": 2,
+      "coverImage": "/assets/projects/expense-tracker/ex tracker.png",
+      "gallery": [
+        "/assets/projects/expense tracker/1.png",
+        "/assets/projects/expense tracker/2.png",
+        "/assets/projects/expense tracker/3.png"
+      ],
+      "githubUrl": "https://sridharvpr7.github.io/Expense-Tracker/",
+      "liveDemoUrl": "",
+      "startDate": null,
+      "tags": ["web", "frontend", "javascript", "expense-tracker"]
+    },
+    {
+      "id": "portfolio-manager",
+      "title": "Portfolio Manager",
+      "shortSummary": "A portfolio management application for organizing and presenting portfolio information.",
+      "problem": "Managing portfolio information in an organized way can be challenging.",
+      "solution": "A web application designed to organize and display portfolio-related information.",
+      "features": [
+        "Portfolio management",
+        "Information organization",
+        "Web-based interface"
+      ],
+      "technologies": [],
+      "category": "frontend",
+      "status": "To Be Verified",
+      "featured": false,
+      "visible": true,
+      "order": 3,
+      "coverImage": "/assets/projects/portfolio-manager/portfolio-manager.png",
+      "gallery": [],
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "startDate": null,
+      "tags": ["web", "portfolio", "management"]
+    },
+    {
+      "id": "music-player",
+      "title": "Music Player",
+      "shortSummary": "A web-based music player designed to provide a simple music listening experience.",
+      "problem": "Users need a convenient interface to play and control music.",
+      "solution": "A browser-based music player with a dedicated music playback interface.",
+      "features": [
+        "Music playback",
+        "Playback controls",
+        "Music player interface"
+      ],
+      "technologies": [],
+      "category": "frontend",
+      "status": "To Be Verified",
+      "featured": false,
+      "visible": true,
+      "order": 4,
+      "coverImage": "/assets/projects/music-player/music-player.png",
+      "gallery": [],
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "startDate": null,
+      "tags": ["web", "music", "frontend"]
+    },
+    {
+      "id": "kabbadi-pro",
+      "title": "Kabbadi Pro",
+      "shortSummary": "A web project focused on Kabaddi with a dedicated sports-related interface.",
+      "problem": "Sports enthusiasts need an accessible digital interface for Kabaddi-related content.",
+      "solution": "A web-based Kabaddi project built using HTML, CSS and JavaScript.",
+      "features": [
+        "Kabaddi-focused interface",
+        "Sports-related presentation",
+        "Web-based design"
+      ],
+      "technologies": [
+        "HTML5",
+        "CSS3",
+        "JavaScript"
+      ],
+      "category": "frontend",
+      "status": "To Be Verified",
+      "featured": true,
+      "visible": true,
+      "order": 5,
+      "coverImage": "/assets/projects/kabbadi-pro/kabbadi-pro.png",
+      "gallery": [],
+      "githubUrl": "https://github.com/sridharvpr7/kabbadi-pro",
+      "liveDemoUrl": "",
+      "startDate": null,
+      "tags": ["web", "kabaddi", "sports", "javascript"]
+    },
+    {
+      "id": "converter",
+      "title": "Converter",
+      "shortSummary": "A web-based converter application designed to simplify conversion tasks.",
+      "problem": "Performing conversions manually can take time and lead to calculation errors.",
+      "solution": "A browser-based converter with a simple user interface.",
+      "features": [
+        "Conversion interface",
+        "User-friendly controls",
+        "Conversion functionality"
+      ],
+      "technologies": [],
+      "category": "frontend",
+      "status": "To Be Verified",
+      "featured": false,
+      "visible": true,
+      "order": 6,
+      "coverImage": "/assets/projects/converter/converter.png",
+      "gallery": [],
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "startDate": null,
+      "tags": ["web", "converter", "frontend"]
     }
   ],
   "categories": [
