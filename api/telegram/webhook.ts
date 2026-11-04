@@ -1,93 +1,226 @@
+// api/telegram/webhook.ts
+// POST /api/telegram/webhook — Incoming Telegram Bot webhook update handler
+// GET  /api/telegram/webhook — Safe Telegram integration diagnostics & webhook verification
+
 import type { ApiRequest, ApiResponse } from '../lib/response.js';
 import { getDb } from '../db/client.js';
-import { buildStatsReply, sendTelegram } from '../lib/telegram.js';
-import { isTelegramEnabled, getConfig } from '../lib/config.js';
+import {
+  buildStatsReply,
+  sendTelegram,
+  esc,
+  parseTelegramCommand,
+  getAllowedChatIds,
+  recordTelegramUpdate,
+  recordTelegramCommand,
+  getTelegramActivity,
+  getTelegramWebhookInfo,
+  getTelegramBotInfo,
+  setupTelegramWebhook,
+  deleteTelegramWebhook,
+} from '../lib/telegram.js';
+import { getConfig } from '../lib/config.js';
 import { rateLimit } from '../lib/ratelimit.js';
 import type { VisitorStats } from '../lib/telegram.js';
 
-// All commands the bot understands.
-// "views" is an alias that returns the full expanded report (total, today, unique, top pages).
-const ALLOWED_COMMANDS = [
-  'views',
-  'unique visitor',
-  'live visitors',
-  'total visits',
-  'today',
-  'top pages',
-  'help',
-];
+interface TelegramUpdate {
+  update_id?: number;
+  message?: {
+    message_id?: number;
+    from?: { id?: number; first_name?: string; username?: string };
+    chat?: { id?: number | string; type?: string };
+    date?: number;
+    text?: string;
+  };
+  edited_message?: {
+    message_id?: number;
+    chat?: { id?: number | string };
+    text?: string;
+  };
+  channel_post?: {
+    message_id?: number;
+    chat?: { id?: number | string };
+    text?: string;
+  };
+}
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
+  // ── 1. GET: Diagnostics & Webhook Health Endpoint ───────────────────────────
+  if (req.method === 'GET') {
+    const tokenConfigured = Boolean(process.env.TELEGRAM_BOT_TOKEN);
+    const secretConfigured = Boolean(process.env.TELEGRAM_WEBHOOK_SECRET);
+    const allowedChatIds = getAllowedChatIds();
+    const maskedChatIds = allowedChatIds.map((id) =>
+      id.length > 4 ? `${id.slice(0, 2)}***${id.slice(-2)}` : '***'
+    );
+
+    // Optional query actions: setWebhook / deleteWebhook
+    const action = req.query?.action;
+    let actionResult: Record<string, unknown> | undefined;
+
+    if (action === 'setWebhook') {
+      actionResult = await setupTelegramWebhook(
+        (req.query?.url as string) || process.env.APP_BASE_URL
+      );
+    } else if (action === 'deleteWebhook') {
+      actionResult = await deleteTelegramWebhook();
+    }
+
+    // Probe live Telegram Bot API if token is available
+    let liveBot: Record<string, unknown> | undefined;
+    let liveWebhook: Record<string, unknown> | undefined;
+
+    if (tokenConfigured) {
+      const [botRes, whRes] = await Promise.all([
+        getTelegramBotInfo(),
+        getTelegramWebhookInfo(),
+      ]);
+      if (botRes.ok) liveBot = botRes.bot;
+      if (whRes.ok) liveWebhook = whRes.info;
+    }
+
+    return res.status(200).json({
+      ok: true,
+      service: 'portfolio-telegram-bot',
+      timestamp: new Date().toISOString(),
+      configured: {
+        botToken: tokenConfigured,
+        chatId: allowedChatIds.length > 0,
+        allowedChatIdsCount: allowedChatIds.length,
+        allowedChatIdsMasked: maskedChatIds,
+        webhookSecret: secretConfigured,
+      },
+      webhookEndpoint: `${(process.env.APP_BASE_URL || 'https://portfolio-0ao8.onrender.com').replace(/\/+$/, '')}/api/telegram/webhook`,
+      activity: getTelegramActivity(),
+      ...(liveBot ? { bot: liveBot } : {}),
+      ...(liveWebhook ? { webhookInfo: liveWebhook } : {}),
+      ...(actionResult ? { actionResult } : {}),
+    });
+  }
+
+  // ── 2. Reject unsupported HTTP methods ──────────────────────────────────────
   if (req.method !== 'POST') {
-    return res.status(405).end();
+    return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  if (!isTelegramEnabled()) {
-    return res.status(503).end();
+  // ── 3. Validate Bot Token configuration ─────────────────────────────────────
+  if (!process.env.TELEGRAM_BOT_TOKEN) {
+    console.warn('[telegram/webhook] Update received, but TELEGRAM_BOT_TOKEN is not configured on Render.');
+    return res.status(503).json({ error: 'TELEGRAM_BOT_TOKEN not configured' });
   }
 
-  // Verify webhook secret if configured
+  // ── 4. Verify webhook secret token header if configured ────────────────────
   const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
   if (webhookSecret) {
     const headerSecret = req.headers['x-telegram-bot-api-secret-token'];
     if (headerSecret !== webhookSecret) {
-      return res.status(403).end();
+      console.warn('[telegram/webhook] 403 Forbidden: Secret token header mismatch.');
+      return res.status(403).json({ error: 'Webhook secret mismatch' });
     }
   }
 
-  const update = (req.body || {}) as {
-    message?: {
-      chat?: { id: number };
-      text?: string;
-    };
-  };
+  // ── 5. Record update telemetry & extract message payload ────────────────────
+  recordTelegramUpdate();
 
-  const chatId = update?.message?.chat?.id;
-  const text = update?.message?.text?.trim() ?? '';
+  const update = (req.body || {}) as TelegramUpdate;
+  const message = update?.message || update?.edited_message || update?.channel_post;
+
+  const chatId = message?.chat?.id;
+  const text = message?.text?.trim() ?? '';
 
   if (!chatId || !text) {
-    return res.status(200).end();
+    return res.status(200).json({ ok: true, ignored: 'no_text_or_chat' });
   }
 
-  // Security: only owner can run commands
-  const allowedChatId = Number(process.env.TELEGRAM_CHAT_ID);
-  if (!allowedChatId || chatId !== allowedChatId) {
-    return res.status(200).end(); // silently ignore
-  }
-
-  // Rate limit commands per chat ID: 20 per minute
+  // ── 6. Rate limit commands per chat ID: 20 per minute ───────────────────────
   const rl = rateLimit(`telegram:${chatId}`, 20, 60_000);
   if (!rl.allowed) {
-    return res.status(429).end();
+    console.warn(`[telegram/webhook] Rate limit exceeded for chatId ${chatId}`);
+    await sendTelegram('⏳ Rate limit reached. Please wait a minute before sending more commands.', chatId);
+    return res.status(200).json({ ok: true, status: 'rate_limited' });
   }
 
-  // Normalize command: handles case-insensitivity, leading slashes (/help, /live_visitors, /views)
-  let cmd = text.toLowerCase().replace(/^\//, '').replace(/_/g, ' ').trim();
-  if (cmd === 'start') {
-    cmd = 'help';
+  // ── 7. Authorization check ──────────────────────────────────────────────────
+  const allowedChatIds = getAllowedChatIds();
+
+  // If owner hasn't configured TELEGRAM_CHAT_ID yet, provide friendly discovery notice
+  if (allowedChatIds.length === 0) {
+    console.warn(`[telegram/webhook] Message received from chatId ${chatId}, but TELEGRAM_CHAT_ID is not configured in Render.`);
+    await sendTelegram(
+      `👋 *Welcome to Sridhar\\'s Portfolio Bot\\!*\n\n` +
+      `Your Telegram Chat ID is: \`${esc(String(chatId))}\`\n\n` +
+      `⚠️ *Setup Required:* Add \`TELEGRAM_CHAT_ID=${esc(String(chatId))}\` to your Render Dashboard Environment Variables to authorize analytics commands\\.`,
+      chatId
+    );
+    return res.status(200).json({ ok: true, status: 'setup_notice_sent' });
   }
 
-  if (!ALLOWED_COMMANDS.includes(cmd)) {
-    await sendTelegram(`Unknown command\\. Send \`Help\` for available commands\\.`);
-    return res.status(200).end();
+  // If configured, verify incoming chatId is in allowed list
+  if (!allowedChatIds.includes(String(chatId))) {
+    console.warn(`[telegram/webhook] Unauthorized command from chatId: ${chatId}`);
+    await sendTelegram(
+      `⛔ *Access Denied*\n\n` +
+      `Your Telegram Chat ID is: \`${esc(String(chatId))}\`\\.\n\n` +
+      `This bot provides private analytics for portfolio-0ao8.onrender.com\\. If you are the owner, add your Chat ID to \`TELEGRAM_CHAT_ID\` in Render\\.`,
+      chatId
+    );
+    return res.status(200).json({ ok: true, status: 'unauthorized_notice_sent' });
   }
 
+  // ── 8. Command Parsing & Central Router ──────────────────────────────────────
+  const parsed = parseTelegramCommand(text);
+
+  if (!parsed || !parsed.command) {
+    await sendTelegram(
+      `❓ Unknown command: \`${esc(text)}\`\n\nSend /help to see all available commands\\.`,
+      chatId
+    );
+    return res.status(200).json({ ok: true, status: 'unknown_command' });
+  }
+
+  const cmd = parsed.command;
+  recordTelegramCommand(cmd);
+  console.log(`[telegram/webhook] Routing command /${cmd} for chat ${chatId}`);
+
+  // Instant commands: /start and /help do NOT hit the database
+  if (cmd === 'start' || cmd === 'help') {
+    const reply = buildStatsReply(cmd, {
+      totalVisits: 0,
+      uniqueAccounts: 0,
+      todayVisits: 0,
+      todayUnique: 0,
+      liveCount: 0,
+      liveAuthenticated: 0,
+      liveAnonymous: 0,
+      returningAccounts: 0,
+      newToday: 0,
+      topPages: [],
+    });
+    await sendTelegram(reply, chatId);
+    return res.status(200).json({ ok: true, command: cmd });
+  }
+
+  // Stats commands: /views, /today, /live, /unique, /total, /top
   try {
     const stats = await fetchStats();
     const reply = buildStatsReply(cmd, stats);
-    await sendTelegram(reply);
+    await sendTelegram(reply, chatId);
+    return res.status(200).json({ ok: true, command: cmd });
   } catch (err) {
-    console.error('[telegram/webhook] Database/processing error:', err instanceof Error ? (err.stack || err.message) : err);
-    await sendTelegram('❌ Failed to fetch stats\\. Check server logs\\.');
+    console.error(`[telegram/webhook] Database/processing error for /${cmd}:`, err instanceof Error ? (err.stack || err.message) : err);
+    await sendTelegram(
+      `❌ *Failed to fetch stats from database*\n\n` +
+      `\`${esc(err instanceof Error ? err.message : String(err))}\`\n\n` +
+      `Please check DATABASE_URL connectivity on Render\\.`,
+      chatId
+    );
+    return res.status(200).json({ ok: true, command: cmd, error: 'db_error' });
   }
-
-  return res.status(200).end();
 }
 
 async function fetchStats(): Promise<VisitorStats> {
   const sql = getDb();
   const cfg = getConfig();
-  const timeoutSec = cfg.visitorAnalytics.activeTimeoutSeconds;
+  const timeoutSec = cfg.visitorAnalytics?.activeTimeoutSeconds || 120;
 
   const [liveRows, totalRows, todayRows, uniqueRows, anonRows, topRows] = (await Promise.all([
     sql`
@@ -162,7 +295,7 @@ async function fetchStats(): Promise<VisitorStats> {
     returningAccounts: Number(uniq.returning_accounts) || 0,
     newToday: Number(uniq.new_today) || 0,
     todayUnique: Number(uniq.today_unique) || 0,
-    topPages: topRows.map((r) => ({
+    topPages: (topRows || []).map((r) => ({
       path: r.path,
       count: Number(r.count),
     })),

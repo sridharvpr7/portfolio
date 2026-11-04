@@ -473,3 +473,125 @@ describe('22. Secret Scanning of Built Assets', () => {
     expect(html).not.toContain('DATABASE_URL');
   });
 });
+
+
+// ── 23. Telegram Bot Command Router & Webhook Handling ───────────────
+describe('23. Telegram Bot Command Router & Webhook Handling', () => {
+  it('correctly parses all required BotFather commands and mentions', async () => {
+    const { parseTelegramCommand } = await import('../lib/telegram');
+
+    expect(parseTelegramCommand('/start')?.command).toBe('start');
+    expect(parseTelegramCommand('/help')?.command).toBe('help');
+    expect(parseTelegramCommand('/views')?.command).toBe('views');
+    expect(parseTelegramCommand('/unique')?.command).toBe('unique');
+    expect(parseTelegramCommand('/live')?.command).toBe('live');
+    expect(parseTelegramCommand('/total')?.command).toBe('total');
+    expect(parseTelegramCommand('/today')?.command).toBe('today');
+    expect(parseTelegramCommand('/top')?.command).toBe('top');
+
+    // Mentions: /command@BotUsername
+    expect(parseTelegramCommand('/views@sridhar_portfolio_bot')?.command).toBe('views');
+    expect(parseTelegramCommand('/today@sridhar_portfolio_bot')?.command).toBe('today');
+    expect(parseTelegramCommand('/help@sridhar_portfolio_bot')?.command).toBe('help');
+
+    // Multi-word and underscored commands
+    expect(parseTelegramCommand('/unique_visitor')?.command).toBe('unique');
+    expect(parseTelegramCommand('/live_visitors')?.command).toBe('live');
+    expect(parseTelegramCommand('/top_pages')?.command).toBe('top');
+
+    // Natural text commands
+    expect(parseTelegramCommand('views')?.command).toBe('views');
+    expect(parseTelegramCommand('live visitors')?.command).toBe('live');
+    expect(parseTelegramCommand('top pages')?.command).toBe('top');
+  });
+
+  it('builds valid Markdown replies for all required commands', async () => {
+    const { buildStatsReply } = await import('../lib/telegram');
+    const stats = {
+      totalVisits: 100,
+      uniqueAccounts: 20,
+      uniqueAnonymous: 30,
+      todayVisits: 15,
+      todayUnique: 10,
+      liveCount: 5,
+      liveAuthenticated: 2,
+      liveAnonymous: 3,
+      returningAccounts: 5,
+      newToday: 2,
+      topPages: [{ path: '/projects', count: 50 }],
+    };
+
+    expect(buildStatsReply('start', stats)).toContain('Welcome to Sridhar');
+    expect(buildStatsReply('help', stats)).toContain('Portfolio Bot Commands');
+    expect(buildStatsReply('views', stats)).toContain('Portfolio View Report');
+    expect(buildStatsReply('unique', stats)).toContain('Portfolio Visitor Statistics');
+    expect(buildStatsReply('live', stats)).toContain('Live Visitors');
+    expect(buildStatsReply('total', stats)).toContain('Total Visits');
+    expect(buildStatsReply('today', stats)).toContain("Today's Stats");
+    expect(buildStatsReply('top', stats)).toContain('Top Pages');
+  });
+
+  it('sendTelegram supports target chatId and falls back to plain text if MarkdownV2 fails', async () => {
+    const { sendTelegram } = await import('../lib/telegram');
+    process.env.TELEGRAM_BOT_TOKEN = 'mock-token';
+    process.env.TELEGRAM_CHAT_ID = '123456789';
+
+    const origFetch = global.fetch;
+    let callCount = 0;
+    let lastPayload: any = null;
+
+    global.fetch = vi.fn().mockImplementation(async (_url: string, opts: any) => {
+      callCount++;
+      lastPayload = JSON.parse(opts.body);
+      if (callCount === 1) {
+        return {
+          ok: false,
+          status: 400,
+          json: async () => ({ ok: false, error_code: 400, description: "can't parse entities: Character '.' is reserved" }),
+        };
+      }
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, result: { message_id: 999 } }),
+      };
+    });
+
+    try {
+      const result = await sendTelegram('Test message with unescaped dot.', 987654321);
+      expect(result.ok).toBe(true);
+      expect(callCount).toBe(2);
+      expect(lastPayload.chat_id).toBe(987654321);
+      expect(lastPayload.parse_mode).toBeUndefined();
+    } finally {
+      global.fetch = origFetch;
+    }
+  });
+
+  it('diagnostic GET /api/telegram/webhook returns health and telemetry', async () => {
+    process.env.TELEGRAM_BOT_TOKEN = 'mock-token-12345';
+    process.env.TELEGRAM_CHAT_ID = '987654321';
+
+    const { default: webhookHandler } = await import('../telegram/webhook');
+    let statusCode = 200;
+    let responseData: any = null;
+
+    const req: any = {
+      method: 'GET',
+      headers: {},
+      query: {},
+    };
+    const res: any = {
+      status(code: number) { statusCode = code; return this; },
+      json(data: any) { responseData = data; return this; },
+    };
+
+    await webhookHandler(req, res);
+    expect(statusCode).toBe(200);
+    expect(responseData.ok).toBe(true);
+    expect(responseData.service).toBe('portfolio-telegram-bot');
+    expect(responseData.configured.botToken).toBe(true);
+    expect(responseData.configured.chatId).toBe(true);
+    expect(responseData.activity).toBeDefined();
+  });
+});

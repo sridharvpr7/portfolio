@@ -137,6 +137,8 @@ export async function dispatchApi(
   // Health-check endpoint — always available, reports system & DB status
   if (path === '/api/health') {
     const hasDbUrl = Boolean(process.env.DATABASE_URL);
+    const hasTgToken = Boolean(process.env.TELEGRAM_BOT_TOKEN);
+    const hasTgChat = Boolean(process.env.TELEGRAM_CHAT_ID);
     let dbStatus: { ok: boolean; error?: string } | undefined;
     if (hasDbUrl && apiReq.query?.checkDb === '1') {
       try {
@@ -152,6 +154,8 @@ export async function dispatchApi(
       service: 'portfolio-api',
       ts: new Date().toISOString(),
       databaseConfigured: hasDbUrl,
+      telegramConfigured: hasTgToken,
+      telegramChatConfigured: hasTgChat,
       ...(dbStatus ? { databaseConnection: dbStatus } : {}),
     });
     return true;
@@ -164,7 +168,10 @@ export async function dispatchApi(
   if (path === '/api/auth/logout')      { if (handlers?.authLogout) await handlers.authLogout(apiReq, apiRes); return true; }
   if (path === '/api/admin/delete')     { if (handlers?.adminDelete) await handlers.adminDelete(apiReq, apiRes); return true; }
   if (path === '/api/email/consent')    { if (handlers?.emailConsent) await handlers.emailConsent(apiReq, apiRes); return true; }
-  if (path === '/api/telegram/webhook') { if (handlers?.telegramWebhook) await handlers.telegramWebhook(apiReq, apiRes); return true; }
+  if (path === '/api/telegram/webhook' || path === '/api/telegram/webhook/') {
+    if (handlers?.telegramWebhook) await handlers.telegramWebhook(apiReq, apiRes);
+    return true;
+  }
 
   // Unknown /api/* path
   apiRes.status(404).json({ error: 'Not found' });

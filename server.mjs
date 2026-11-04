@@ -183,6 +183,12 @@ async function main() {
   server.listen(PORT, HOST, () => {
     console.log(`[server] Listening on http://${HOST}:${PORT}`);
     console.log(`[server] Health-check:  http://${HOST}:${PORT}/api/health`);
+    const tgToken = Boolean(process.env.TELEGRAM_BOT_TOKEN);
+    const tgChat = Boolean(process.env.TELEGRAM_CHAT_ID);
+    const tgSecret = Boolean(process.env.TELEGRAM_WEBHOOK_SECRET);
+    console.log(`[telegram] Integration: Bot token = ${tgToken ? 'CONFIGURED' : 'NOT SET'}, Chat ID = ${tgChat ? 'CONFIGURED' : 'NOT SET'}, Secret = ${tgSecret ? 'CONFIGURED' : 'NOT SET'}`);
+    const host = (process.env.APP_BASE_URL || `http://${HOST}:${PORT}`).replace(/\/+$/, '');
+    console.log(`[telegram] Webhook endpoint: ${host}/api/telegram/webhook`);
   });
 
   // Graceful shutdown on Render SIGTERM
