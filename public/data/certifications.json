@@ -1,6 +1,19 @@
 {
   "certifications": [
     {
+      "id": "codec-technologies-vlsi-internship",
+      "title": "Digital Electronics & VLSI Internship",
+      "issuer": "Codec Technologies Pvt. Ltd.",
+      "organization": "Codec Technologies Pvt. Ltd.",
+      "date": "2026-08-20",
+      "isInternship": true,
+      "badge": "Internship Certificate",
+      "description": "Successfully completed a 1-month AICTE & ICAC approved internship program in Digital Electronics & VLSI from 22 July 2026 to 20 August 2026.",
+      "visible": true,
+      "certificateFile": "/assets/certificates/codec-technologies-vlsi-internship.pdf",
+      "thumbnail": "/assets/certificates/codecdlcintern.jpg"
+    },
+    {
       "id": "codealpha-frontend-internship",
       "title": "Frontend Development Internship",
       "issuer": "CodeAlpha",
@@ -11,7 +24,7 @@
       "description": "Selected for a Frontend Development Internship at CodeAlpha.",
       "visible": true,
       "certificateFile": "/assets/certificates/codealpha-frontend-internship-offer.pdf",
-      "thumbnail": "/assets/certificates/codealpha Fend.jpg"
+      "thumbnail": "/assets/certificates/codealphaFend.jpg"
     },
     {
       "id": "html5",
