@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ExternalLink, ChevronRight, X, ChevronLeft } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ExternalLink, ChevronRight, X, ChevronLeft, Maximize2, ZoomIn } from 'lucide-react';
 import { GithubIcon } from '../components/BrandIcons';
 import { useReveal } from '../hooks/useReveal';
 import type { Project, ProjectCategory } from '../services/contentLoader';
@@ -106,6 +106,9 @@ interface CardProps {
 
 const FeaturedProjectCard: React.FC<CardProps> = ({ project, index, onClick }) => {
   const isEven = index % 2 === 0;
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const coverSrc = project.coverImage || project.image;
 
   return (
     <article
@@ -113,29 +116,34 @@ const FeaturedProjectCard: React.FC<CardProps> = ({ project, index, onClick }) =
       style={{ animationDelay: `${index * 0.12}s` }}
       aria-label={`Featured project: ${project.title}`}
     >
-      <div className="featured-visual">
-        {project.coverImage ? (
-          <img
-            src={project.coverImage}
-            alt={`${project.title} screenshot`}
-            className="featured-img"
-            loading="lazy"
-            onError={(e) => {
-              // Fall back to SVG visual on image error
-              const el = e.currentTarget;
-              el.style.display = 'none';
-              const sib = el.nextElementSibling as HTMLElement | null;
-              if (sib) sib.style.display = 'flex';
-            }}
-          />
-        ) : null}
-        <div
-          className={`cat-visual ${['vlsi','embedded','ece'].includes(project.category) ? 'cat-visual-hw' : 'cat-visual-sw'}`}
-          style={{ display: project.coverImage ? 'none' : 'flex' }}
-          aria-hidden="true"
-        >
-          <CategoryVisual category={project.category} />
-        </div>
+      <div className="featured-visual" onClick={onClick} role="button" tabIndex={0} onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onClick()}>
+        {coverSrc && !imageError ? (
+          <>
+            {!imageLoaded && <div className="img-skeleton" aria-hidden="true" />}
+            <img
+              src={coverSrc}
+              alt={`${project.title} screenshot`}
+              className={`featured-img ${imageLoaded ? 'loaded' : 'loading'}`}
+              loading={index === 0 ? 'eager' : 'lazy'}
+              fetchPriority={index === 0 ? 'high' : 'auto'}
+              onLoad={() => setImageLoaded(true)}
+              onError={() => setImageError(true)}
+            />
+            <div className="featured-overlay" aria-hidden="true" />
+            <div className="featured-hover-hint" aria-hidden="true">
+              <ZoomIn size={16} />
+              <span>Explore Gallery</span>
+            </div>
+          </>
+        ) : (
+          <div
+            className={`cat-visual ${['vlsi','embedded','ece'].includes(project.category) ? 'cat-visual-hw' : 'cat-visual-sw'}`}
+            aria-hidden="true"
+          >
+            <CategoryVisual category={project.category} />
+          </div>
+        )}
+
         <div className="featured-category-tag">
           <span className="chip chip-cyan">{getCategoryLabel(project.category)}</span>
           <span className="chip">{project.status}</span>
@@ -203,86 +211,124 @@ const FeaturedProjectCard: React.FC<CardProps> = ({ project, index, onClick }) =
 };
 
 // ── Regular card ──────────────────────────────────────────
-const ProjectCard: React.FC<CardProps> = ({ project, index, onClick }) => (
-  <article
-    className="project-card card"
-    style={{ animationDelay: `${index * 0.08}s` }}
-    role="button"
-    tabIndex={0}
-    onClick={onClick}
-    onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onClick()}
-    aria-label={`Project: ${project.title}`}
-  >
-    {/* Thumbnail strip if available */}
-    {project.coverImage && (
-      <div className="project-card-thumb">
-        <img
-          src={project.coverImage}
-          alt=""
-          className="project-card-thumb-img"
-          loading="lazy"
-          aria-hidden="true"
-          onError={(e) => {
-            const wrap = e.currentTarget.closest('.project-card-thumb') as HTMLElement | null;
-            if (wrap) wrap.style.display = 'none';
-          }}
-        />
-      </div>
-    )}
+const ProjectCard: React.FC<CardProps> = ({ project, index, onClick }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const coverSrc = project.coverImage || project.image;
 
-    <div className="project-card-body">
-      <div className="project-card-top">
-        <div className="project-card-icon" aria-hidden="true">
-          <CategoryIcon category={project.category} />
+  return (
+    <article
+      className="project-card card"
+      style={{ animationDelay: `${index * 0.08}s` }}
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onClick()}
+      aria-label={`Project: ${project.title}`}
+    >
+      {/* Thumbnail strip */}
+      {coverSrc && !imageError ? (
+        <div className="project-card-thumb">
+          {!imageLoaded && <div className="img-skeleton" aria-hidden="true" />}
+          <img
+            src={coverSrc}
+            alt=""
+            className={`project-card-thumb-img ${imageLoaded ? 'loaded' : 'loading'}`}
+            loading="lazy"
+            aria-hidden="true"
+            onLoad={() => setImageLoaded(true)}
+            onError={() => setImageError(true)}
+          />
+          <div className="project-card-thumb-overlay" aria-hidden="true" />
         </div>
-        <div className="project-card-links">
-          {project.githubUrl && (
-            <a href={project.githubUrl} target="_blank" rel="noopener noreferrer"
-              className="navbar-icon-btn" onClick={e => e.stopPropagation()} aria-label="Source code">
-              <GithubIcon size={15} />
-            </a>
-          )}
-          {project.liveDemoUrl && (
-            <a href={project.liveDemoUrl} target="_blank" rel="noopener noreferrer"
-              className="navbar-icon-btn" onClick={e => e.stopPropagation()} aria-label="Live demo">
-              <ExternalLink size={15} />
-            </a>
-          )}
+      ) : (
+        <div className="project-card-fallback-visual">
+          <CategoryVisual category={project.category} />
+        </div>
+      )}
+
+      <div className="project-card-body">
+        <div className="project-card-top">
+          <div className="project-card-icon" aria-hidden="true">
+            <CategoryIcon category={project.category} />
+          </div>
+          <div className="project-card-links">
+            {project.githubUrl && (
+              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer"
+                className="navbar-icon-btn" onClick={e => e.stopPropagation()} aria-label="Source code">
+                <GithubIcon size={15} />
+              </a>
+            )}
+            {project.liveDemoUrl && (
+              <a href={project.liveDemoUrl} target="_blank" rel="noopener noreferrer"
+                className="navbar-icon-btn" onClick={e => e.stopPropagation()} aria-label="Live demo">
+                <ExternalLink size={15} />
+              </a>
+            )}
+          </div>
+        </div>
+
+        <h3 className="project-card-title">{project.title}</h3>
+        <p className="project-card-summary">{project.shortSummary}</p>
+
+        <div className="project-card-techs">
+          {project.technologies.slice(0, 4).map(tech => (
+            <span key={tech} className="chip">{tech}</span>
+          ))}
+        </div>
+
+        <div className="project-card-footer">
+          <span className="chip chip-cyan" style={{ fontSize: '0.68rem' }}>{getCategoryLabel(project.category)}</span>
+          <span style={{ fontSize: '0.78rem', color: 'var(--text-faint)' }}>{project.status}</span>
         </div>
       </div>
+    </article>
+  );
+};
 
-      <h3 className="project-card-title">{project.title}</h3>
-      <p className="project-card-summary">{project.shortSummary}</p>
-
-      <div className="project-card-techs">
-        {project.technologies.slice(0, 4).map(tech => (
-          <span key={tech} className="chip">{tech}</span>
-        ))}
-      </div>
-
-      <div className="project-card-footer">
-        <span className="chip chip-cyan" style={{ fontSize: '0.68rem' }}>{getCategoryLabel(project.category)}</span>
-        <span style={{ fontSize: '0.78rem', color: 'var(--text-faint)' }}>{project.status}</span>
-      </div>
-    </div>
-  </article>
-);
-
-// ── Modal with gallery support ─────────────────────────────
+// ── Modal with gallery & fullscreen lightbox ────────────────
 const ProjectModal: React.FC<{ project: Project; onClose: () => void }> = ({ project, onClose }) => {
   const [galleryIdx, setGalleryIdx] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isMainImgLoaded, setIsMainImgLoaded] = useState(false);
+  const touchStartXRef = useRef<number | null>(null);
 
-  const images: string[] = [
-    ...(project.coverImage ? [project.coverImage] : []),
+  const rawCover = project.coverImage || project.image;
+  const rawList = [
+    ...(rawCover ? [rawCover] : []),
     ...(project.gallery ?? []),
-  ].filter(Boolean);
+  ].filter(Boolean) as string[];
+
+  // Deduplicate preserving order
+  const images = Array.from(new Set(rawList));
   const hasGallery = images.length > 1;
 
-  React.useEffect(() => {
+  const goToNext = React.useCallback(() => {
+    setIsMainImgLoaded(false);
+    setGalleryIdx(i => (i + 1) % images.length);
+  }, [images.length]);
+
+  const goToPrev = React.useCallback(() => {
+    setIsMainImgLoaded(false);
+    setGalleryIdx(i => (i - 1 + images.length) % images.length);
+  }, [images.length]);
+
+  const setIndexDirect = (idx: number) => {
+    setIsMainImgLoaded(false);
+    setGalleryIdx(idx);
+  };
+
+  useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowRight' && hasGallery) setGalleryIdx(i => (i + 1) % images.length);
-      if (e.key === 'ArrowLeft' && hasGallery) setGalleryIdx(i => (i - 1 + images.length) % images.length);
+      if (e.key === 'Escape') {
+        if (isLightboxOpen) {
+          setIsLightboxOpen(false);
+        } else {
+          onClose();
+        }
+      }
+      if (e.key === 'ArrowRight' && hasGallery) goToNext();
+      if (e.key === 'ArrowLeft' && hasGallery) goToPrev();
     };
     window.addEventListener('keydown', handleKey);
     document.body.style.overflow = 'hidden';
@@ -290,144 +336,238 @@ const ProjectModal: React.FC<{ project: Project; onClose: () => void }> = ({ pro
       window.removeEventListener('keydown', handleKey);
       document.body.style.overflow = '';
     };
-  }, [onClose, hasGallery, images.length]);
+  }, [onClose, hasGallery, goToNext, goToPrev, isLightboxOpen]);
+
+  // Touch swipe handling for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null) return;
+    const diff = touchStartXRef.current - e.changedTouches[0].clientX;
+    if (diff > 45 && hasGallery) {
+      goToNext();
+    } else if (diff < -45 && hasGallery) {
+      goToPrev();
+    }
+    touchStartXRef.current = null;
+  };
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label={`Project details: ${project.title}`}>
-      <div className="modal-panel" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <div>
-            <div className="modal-meta">
-              <span className="chip chip-cyan">{getCategoryLabel(project.category)}</span>
-              <span className="chip">{project.status}</span>
+    <>
+      <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label={`Project details: ${project.title}`}>
+        <div className="modal-panel" onClick={e => e.stopPropagation()}>
+          <div className="modal-header">
+            <div>
+              <div className="modal-meta">
+                <span className="chip chip-cyan">{getCategoryLabel(project.category)}</span>
+                <span className="chip">{project.status}</span>
+              </div>
+              <h2 className="modal-title">{project.title}</h2>
             </div>
-            <h2 className="modal-title">{project.title}</h2>
+            <button
+              className="modal-close"
+              onClick={onClose}
+              aria-label="Close project details"
+            >
+              <X size={20} />
+            </button>
           </div>
-          <button
-            className="modal-close"
-            onClick={onClose}
-            aria-label="Close project details"
-          >
-            <X size={20} />
-          </button>
-        </div>
 
-        <div className="modal-body">
-          {/* Gallery */}
-          {images.length > 0 && (
-            <div className="modal-gallery">
-              <div className="modal-gallery-main">
-                <img
-                  src={images[galleryIdx]}
-                  alt={`${project.title} screenshot ${galleryIdx + 1}`}
-                  className="modal-gallery-img"
-                  loading="lazy"
-                />
+          <div className="modal-body">
+            {/* Gallery */}
+            {images.length > 0 && (
+              <div
+                className="modal-gallery"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+              >
+                <div className="modal-gallery-main">
+                  {!isMainImgLoaded && <div className="img-skeleton" aria-hidden="true" />}
+                  <img
+                    src={images[galleryIdx]}
+                    alt={`${project.title} screenshot ${galleryIdx + 1} of ${images.length}`}
+                    className={`modal-gallery-img ${isMainImgLoaded ? 'loaded' : 'loading'}`}
+                    loading="lazy"
+                    onClick={() => setIsLightboxOpen(true)}
+                    onLoad={() => setIsMainImgLoaded(true)}
+                  />
+
+                  {/* Expand button & counter badge */}
+                  <div className="modal-gallery-counter" aria-live="polite">
+                    {galleryIdx + 1} / {images.length}
+                  </div>
+                  <button
+                    className="modal-gallery-expand-btn"
+                    onClick={() => setIsLightboxOpen(true)}
+                    aria-label="View full screen image"
+                    title="Click to expand fullscreen"
+                  >
+                    <Maximize2 size={16} />
+                  </button>
+
+                  {hasGallery && (
+                    <>
+                      <button
+                        className="modal-gallery-arrow modal-gallery-prev"
+                        onClick={goToPrev}
+                        aria-label="Previous screenshot"
+                      >
+                        <ChevronLeft size={18} />
+                      </button>
+                      <button
+                        className="modal-gallery-arrow modal-gallery-next"
+                        onClick={goToNext}
+                        aria-label="Next screenshot"
+                      >
+                        <ChevronRight size={18} />
+                      </button>
+                      <div className="modal-gallery-dots" aria-label="Image thumbnails pagination">
+                        {images.map((_, i) => (
+                          <button
+                            key={i}
+                            className={`modal-gallery-dot ${i === galleryIdx ? 'active' : ''}`}
+                            onClick={() => setIndexDirect(i)}
+                            aria-label={`Go to screenshot ${i + 1}`}
+                            aria-current={i === galleryIdx ? 'true' : undefined}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+
                 {hasGallery && (
-                  <>
-                    <button
-                      className="modal-gallery-arrow modal-gallery-prev"
-                      onClick={() => setGalleryIdx(i => (i - 1 + images.length) % images.length)}
-                      aria-label="Previous image"
-                    >
-                      <ChevronLeft size={18} />
-                    </button>
-                    <button
-                      className="modal-gallery-arrow modal-gallery-next"
-                      onClick={() => setGalleryIdx(i => (i + 1) % images.length)}
-                      aria-label="Next image"
-                    >
-                      <ChevronRight size={18} />
-                    </button>
-                    <div className="modal-gallery-dots" aria-label="Image thumbnails">
-                      {images.map((_, i) => (
-                        <button
-                          key={i}
-                          className={`modal-gallery-dot ${i === galleryIdx ? 'active' : ''}`}
-                          onClick={() => setGalleryIdx(i)}
-                          aria-label={`Go to image ${i + 1}`}
-                          aria-current={i === galleryIdx ? 'true' : undefined}
-                        />
-                      ))}
-                    </div>
-                  </>
+                  <div className="modal-gallery-strip" role="list" aria-label="Screenshot thumbnails">
+                    {images.map((src, i) => (
+                      <button
+                        key={i}
+                        className={`modal-gallery-thumb ${i === galleryIdx ? 'active' : ''}`}
+                        onClick={() => setIndexDirect(i)}
+                        aria-label={`Screenshot ${i + 1}`}
+                        role="listitem"
+                      >
+                        <img src={src} alt="" loading="lazy" />
+                      </button>
+                    ))}
+                  </div>
                 )}
               </div>
-              {hasGallery && (
-                <div className="modal-gallery-strip" role="list">
-                  {images.map((src, i) => (
-                    <button
-                      key={i}
-                      className={`modal-gallery-thumb ${i === galleryIdx ? 'active' : ''}`}
-                      onClick={() => setGalleryIdx(i)}
-                      aria-label={`Image ${i + 1}`}
-                      role="listitem"
-                    >
-                      <img src={src} alt="" loading="lazy" />
-                    </button>
+            )}
+
+            <p className="modal-summary">{project.shortSummary}</p>
+
+            {project.problem && (
+              <div className="modal-block">
+                <h3 className="modal-block-title">The Problem</h3>
+                <p className="modal-block-text">{project.problem}</p>
+              </div>
+            )}
+
+            {project.solution && (
+              <div className="modal-block">
+                <h3 className="modal-block-title">The Solution</h3>
+                <p className="modal-block-text">{project.solution}</p>
+              </div>
+            )}
+
+            {project.features && project.features.length > 0 && (
+              <div className="modal-block">
+                <h3 className="modal-block-title">Key Features</h3>
+                <ul className="modal-features">
+                  {project.features.map((f, i) => (
+                    <li key={i} className="modal-feature">
+                      <span className="modal-feature-dot" aria-hidden="true"/>
+                      {f}
+                    </li>
                   ))}
-                </div>
-              )}
-            </div>
-          )}
+                </ul>
+              </div>
+            )}
 
-          <p className="modal-summary">{project.shortSummary}</p>
-
-          {project.problem && (
             <div className="modal-block">
-              <h3 className="modal-block-title">The Problem</h3>
-              <p className="modal-block-text">{project.problem}</p>
-            </div>
-          )}
-
-          {project.solution && (
-            <div className="modal-block">
-              <h3 className="modal-block-title">The Solution</h3>
-              <p className="modal-block-text">{project.solution}</p>
-            </div>
-          )}
-
-          {project.features && project.features.length > 0 && (
-            <div className="modal-block">
-              <h3 className="modal-block-title">Key Features</h3>
-              <ul className="modal-features">
-                {project.features.map((f, i) => (
-                  <li key={i} className="modal-feature">
-                    <span className="modal-feature-dot" aria-hidden="true"/>
-                    {f}
-                  </li>
+              <h3 className="modal-block-title">Technologies</h3>
+              <div className="modal-techs">
+                {project.technologies.map(tech => (
+                  <span key={tech} className="chip">{tech}</span>
                 ))}
-              </ul>
-            </div>
-          )}
-
-          <div className="modal-block">
-            <h3 className="modal-block-title">Technologies</h3>
-            <div className="modal-techs">
-              {project.technologies.map(tech => (
-                <span key={tech} className="chip">{tech}</span>
-              ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="modal-footer">
-          {project.githubUrl && (
-            <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
-              <GithubIcon size={15} /> Source Code
-            </a>
-          )}
-          {project.liveDemoUrl && (
-            <a href={project.liveDemoUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-              <ExternalLink size={15} /> Live Demo
-            </a>
-          )}
-          {!project.githubUrl && !project.liveDemoUrl && (
-            <span style={{ color: 'var(--text-faint)', fontSize: '0.875rem' }}>Links coming soon</span>
-          )}
+          <div className="modal-footer">
+            {project.githubUrl && (
+              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+                <GithubIcon size={15} /> Source Code
+              </a>
+            )}
+            {project.liveDemoUrl && (
+              <a href={project.liveDemoUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                <ExternalLink size={15} /> Live Demo
+              </a>
+            )}
+            {!project.githubUrl && !project.liveDemoUrl && (
+              <span style={{ color: 'var(--text-faint)', fontSize: '0.875rem' }}>Links coming soon</span>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Fullscreen Lightbox Modal */}
+      {isLightboxOpen && images.length > 0 && (
+        <div
+          className="lightbox-backdrop"
+          onClick={() => setIsLightboxOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Fullscreen screenshot viewer"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div className="lightbox-topbar" onClick={e => e.stopPropagation()}>
+            <div className="lightbox-title">
+              <span>{project.title}</span>
+              <span className="lightbox-badge font-mono">{galleryIdx + 1} / {images.length}</span>
+            </div>
+            <button
+              className="lightbox-close"
+              onClick={() => setIsLightboxOpen(false)}
+              aria-label="Close fullscreen viewer"
+            >
+              <X size={22} />
+            </button>
+          </div>
+
+          <div className="lightbox-content" onClick={e => e.stopPropagation()}>
+            <img
+              src={images[galleryIdx]}
+              alt={`${project.title} fullscreen screenshot ${galleryIdx + 1}`}
+              className="lightbox-img"
+            />
+
+            {hasGallery && (
+              <>
+                <button
+                  className="lightbox-arrow lightbox-prev"
+                  onClick={goToPrev}
+                  aria-label="Previous screenshot"
+                >
+                  <ChevronLeft size={28} />
+                </button>
+                <button
+                  className="lightbox-arrow lightbox-next"
+                  onClick={goToNext}
+                  aria-label="Next screenshot"
+                >
+                  <ChevronRight size={28} />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
@@ -458,7 +598,6 @@ const CategoryVisual: React.FC<{ category: string }> = ({ category }) => {
       <svg viewBox="0 0 240 180" fill="none" width="100%" height="100%">
         {isHW ? (
           <>
-            {/* Circuit board visual */}
             <rect x="20" y="20" width="200" height="140" rx="4" fill="var(--bg-surface-3)" stroke={isHW ? 'var(--accent-blue)' : 'var(--accent-violet)'} strokeWidth="0.8" opacity="0.4"/>
             <line x1="20" y1="60" x2="220" y2="60" stroke="var(--accent-blue)" strokeWidth="0.6" strokeDasharray="4 3" opacity="0.3"/>
             <line x1="20" y1="100" x2="220" y2="100" stroke="var(--accent-blue)" strokeWidth="0.6" strokeDasharray="4 3" opacity="0.3"/>
@@ -468,7 +607,6 @@ const CategoryVisual: React.FC<{ category: string }> = ({ category }) => {
             <text x="120" y="94" textAnchor="middle" fill="var(--accent-blue)" fontSize="10" fontFamily="JetBrains Mono" opacity="0.9">
               {category === 'vlsi' ? 'ALU' : 'MCU'}
             </text>
-            {/* Signal pulse */}
             <circle cx="80" cy="90" r="3" fill="var(--accent-blue)">
               <animate attributeName="cx" values="20;80;80;160;220" keyTimes="0;0.3;0.5;0.7;1" dur="3s" repeatCount="indefinite"/>
               <animate attributeName="cy" values="60;60;90;90;60" keyTimes="0;0.3;0.5;0.7;1" dur="3s" repeatCount="indefinite"/>
@@ -477,20 +615,17 @@ const CategoryVisual: React.FC<{ category: string }> = ({ category }) => {
           </>
         ) : (
           <>
-            {/* Code editor visual */}
             <rect x="20" y="20" width="200" height="140" rx="6" fill="var(--bg-surface-3)" stroke="var(--accent-violet)" strokeWidth="0.8" opacity="0.4"/>
             <rect x="20" y="20" width="200" height="28" rx="6" fill="var(--accent-violet-dim)" opacity="0.5"/>
             <circle cx="38" cy="34" r="5" fill="rgba(255,100,100,0.5)"/>
             <circle cx="55" cy="34" r="5" fill="rgba(255,200,0,0.5)"/>
             <circle cx="72" cy="34" r="5" fill="rgba(100,255,100,0.4)"/>
-            {/* Code lines */}
             <rect x="36" y="60" width="60" height="5" rx="2" fill="var(--accent-violet)" opacity="0.6"/>
             <rect x="36" y="75" width="140" height="5" rx="2" fill="var(--accent-blue)" opacity="0.4"/>
             <rect x="50" y="90" width="100" height="5" rx="2" fill="var(--accent-cyan)" opacity="0.35"/>
             <rect x="50" y="105" width="120" height="5" rx="2" fill="var(--accent-blue)" opacity="0.35"/>
             <rect x="36" y="120" width="80" height="5" rx="2" fill="var(--accent-violet)" opacity="0.45"/>
             <rect x="36" y="135" width="50" height="5" rx="2" fill="var(--accent-blue)" opacity="0.3"/>
-            {/* Cursor blink */}
             <rect x="90" y="135" width="2" height="10" rx="1" fill="var(--accent-blue)">
               <animate attributeName="opacity" values="0;1;0" dur="1.2s" repeatCount="indefinite"/>
             </rect>
