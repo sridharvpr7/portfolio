@@ -177,23 +177,16 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ contact, socialL
       }
 
       // 2. Send Second EmailJS Template: Automatic Visitor Acknowledgement
-      // (Requirement 9: If auto-reply fails, do not report that contact message failed)
+      // (Requirement: Auto-reply template uses {{from_email}} as recipient, {{from_name}} as greeting,
+      // and reply_to: sridharvpr7@gmail.com. Do not pass to_email.)
       if (EMAILJS_AUTOREPLY_TEMPLATE_ID) {
         try {
           const autoReplyParams = {
-            to_name: visitorName,
-            to_email: visitorEmail,
-            from_name: 'Sridhar',
-            from_email: contact.email || 'sridharportfolio19@gmail.com',
-            name: visitorName,
-            email: visitorEmail,
-            user_name: visitorName,
-            user_email: visitorEmail,
-            visitor_name: visitorName,
-            visitor_email: visitorEmail,
+            from_name: visitorName,
+            from_email: visitorEmail,
+            reply_to: 'sridharvpr7@gmail.com',
             subject: messageSubject,
             message: messageBody,
-            reply_to: 'sridharvpr7@gmail.com',
           };
 
           await emailjs.send(
