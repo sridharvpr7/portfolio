@@ -130,6 +130,7 @@ export interface Certification {
   date: string;
   credentialUrl?: string;
   certificateFile?: string;
+  thumbnail?: string;
   visible: boolean;
   isInternship?: boolean;
   badge?: string;

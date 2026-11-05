@@ -89,3 +89,9 @@ services:
 
       - key: TELEGRAM_WEBHOOK_SECRET
         sync: false   # Optional — random string; must match your setWebhook secret_token
+
+      - key: RESEND_API_KEY
+        sync: false   # Resend API Key (from resend.com/api-keys) for transactional contact auto-replies
+
+      - key: EMAIL_FROM_ADDRESS
+        sync: false   # Verified sender address for Resend, e.g. "Sridhar <onboarding@resend.dev>" or custom domain

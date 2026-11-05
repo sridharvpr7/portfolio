@@ -63,16 +63,16 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
               <div className="cert-grid" role="list">
                 {visibleCerts.map((cert) => (
                   <div key={cert.id} className={`cert-card card ${cert.isInternship ? 'cert-card-internship' : ''}`} role="listitem">
-                    {cert.certificateFile && (
+                    {(cert.thumbnail || cert.certificateFile) && (
                       <a
-                        href={cert.certificateFile}
+                        href={cert.certificateFile || cert.thumbnail}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="cert-thumb-link"
                         aria-label={`View certificate: ${cert.title}`}
                       >
                         <img
-                          src={cert.certificateFile}
+                          src={cert.thumbnail || cert.certificateFile}
                           alt={`${cert.title} certificate`}
                           className="cert-thumb"
                           loading="lazy"

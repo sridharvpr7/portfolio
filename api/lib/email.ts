@@ -15,15 +15,23 @@ export interface ContactAutoReplyData {
   submissionId?: string;
 }
 
-export async function sendContactAutoReply(data: ContactAutoReplyData): Promise<boolean> {
+export interface EmailSendResult {
+  ok: boolean;
+  error?: string;
+  id?: string;
+}
+
+export async function sendContactAutoReply(data: ContactAutoReplyData): Promise<EmailSendResult> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM_ADDRESS;
   const replyTo = data.replyTo || 'sridharvpr7@gmail.com';
 
   if (!apiKey || !from) {
-    if (!apiKey) console.warn('[email] RESEND_API_KEY not set; auto-reply email disabled');
-    if (!from) console.warn('[email] EMAIL_FROM_ADDRESS not configured; auto-reply email disabled until verified sender domain is set');
-    return false;
+    const reason = !apiKey
+      ? 'RESEND_API_KEY is not configured on the server'
+      : 'EMAIL_FROM_ADDRESS is not configured on the server';
+    console.warn(`[email] Auto-reply disabled: ${reason}`);
+    return { ok: false, error: reason };
   }
 
   const safeName = escapeHtml(data.name || 'there');
@@ -99,12 +107,14 @@ Portfolio: https://sridhar-portfolio-gyoy.onrender.com`;
     if (!res.ok) {
       const body = await res.text();
       console.error('[email] Resend contact auto-reply error:', body);
-      return false;
+      return { ok: false, error: `Resend error (${res.status}): ${body}` };
     }
-    return true;
+    const resData = (await res.json().catch(() => ({}))) as { id?: string };
+    return { ok: true, id: resData.id };
   } catch (err) {
-    console.error('[email] Resend network error:', err);
-    return false;
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    console.error('[email] Resend network error:', errorMsg);
+    return { ok: false, error: errorMsg };
   }
 }
 

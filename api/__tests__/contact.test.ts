@@ -63,7 +63,7 @@ describe('Contact & Telegram Automation Tests', () => {
         };
       });
 
-      const success = await sendContactAutoReply({
+      const res = await sendContactAutoReply({
         to: 'alex@example.com',
         name: 'Alex Mercer',
         subject: 'Frontend Inquiry',
@@ -71,7 +71,8 @@ describe('Contact & Telegram Automation Tests', () => {
         submissionId: 'sub_test_12345',
       });
 
-      expect(success).toBe(true);
+      expect(res.ok).toBe(true);
+      expect(res.id).toBe('email_123');
       expect(capturedPayload).not.toBeNull();
       expect(capturedPayload?.to).toEqual(['alex@example.com']);
       expect(capturedPayload?.reply_to).toBe('sridharvpr7@gmail.com');
@@ -81,7 +82,7 @@ describe('Contact & Telegram Automation Tests', () => {
       expect((capturedPayload?.text as string)).toContain('https://sridhar-portfolio-gyoy.onrender.com');
     });
 
-    it('gracefully handles missing credentials without throwing', async () => {
+    it('gracefully handles missing credentials without throwing and returns error description', async () => {
       delete process.env.RESEND_API_KEY;
       delete process.env.EMAIL_FROM_ADDRESS;
 
@@ -91,7 +92,28 @@ describe('Contact & Telegram Automation Tests', () => {
         subject: 'Inquiry',
       });
 
-      expect(result).toBe(false);
+      expect(result.ok).toBe(false);
+      expect(result.error).toContain('RESEND_API_KEY');
+    });
+
+    it('captures Resend HTTP error response cleanly', async () => {
+      process.env.RESEND_API_KEY = 're_test_key_123';
+      process.env.EMAIL_FROM_ADDRESS = 'Sridhar <onboarding@resend.dev>';
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: false,
+        status: 403,
+        text: async () => 'Domain not verified',
+      });
+
+      const result = await sendContactAutoReply({
+        to: 'alex@example.com',
+        name: 'Alex',
+        subject: 'Inquiry',
+      });
+
+      expect(result.ok).toBe(false);
+      expect(result.error).toContain('Domain not verified');
     });
   });
 
@@ -167,7 +189,11 @@ describe('Contact & Telegram Automation Tests', () => {
       expect(res.getStatusCode()).toBe(400);
     });
 
-    it('successfully processes valid submission', async () => {
+    it('handles failed email delivery without falsely claiming acknowledgement was sent', async () => {
+      delete process.env.RESEND_API_KEY;
+      delete process.env.EMAIL_FROM_ADDRESS;
+      delete process.env.DATABASE_URL;
+
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         json: async () => ({ ok: true }),
@@ -189,8 +215,71 @@ describe('Contact & Telegram Automation Tests', () => {
       expect(res.getStatusCode()).toBe(200);
       const json = res.getJson() as any;
       expect(json.ok).toBe(true);
-      expect(json.submissionId).toMatch(/^sub_/);
+      expect(json.emailSent).toBe(false);
+      // Explicitly does NOT claim an acknowledgment email was sent
+      expect(json.message).not.toContain('acknowledgment email has been sent');
+      expect(json.message).toContain('delivered to Sridhar');
+    });
+
+    it('confirms acknowledgement email when Resend delivery succeeds', async () => {
+      process.env.RESEND_API_KEY = 're_key_valid';
+      process.env.EMAIL_FROM_ADDRESS = 'Sridhar <onboarding@resend.dev>';
+      delete process.env.DATABASE_URL;
+
+      global.fetch = vi.fn().mockImplementation(async (url: string) => {
+        if (url.includes('telegram')) {
+          return { ok: true, json: async () => ({ ok: true }) };
+        }
+        if (url.includes('resend')) {
+          return { ok: true, json: async () => ({ id: 'email_ok_1' }) };
+        }
+        return { ok: true, json: async () => ({}) };
+      });
+
+      const req = {
+        method: 'POST',
+        headers: { 'x-forwarded-for': '127.0.0.4' },
+        body: {
+          name: 'Marcus Wright',
+          email: 'marcus@example.com',
+          subject: 'Full-Stack Collaboration',
+          message: 'Would love to discuss web and embedded systems.',
+        },
+      };
+      const res = createMockRes();
+
+      await contactHandler(req as any, res as any);
+      expect(res.getStatusCode()).toBe(200);
+      const json = res.getJson() as any;
+      expect(json.ok).toBe(true);
+      expect(json.emailSent).toBe(true);
+      expect(json.message).toContain('acknowledgment email has been sent');
+    });
+
+    it('detects duplicate submission and prevents duplicate processing', async () => {
+      delete process.env.DATABASE_URL;
+
+      const req = {
+        method: 'POST',
+        headers: { 'x-forwarded-for': '127.0.0.5' },
+        body: {
+          name: 'Kyle Reese',
+          email: 'kyle@example.com',
+          subject: 'Timeline Verification',
+          message: 'Can you confirm the internship dates?',
+        },
+      };
+
+      const res1 = createMockRes();
+      await contactHandler(req as any, res1 as any);
+      expect(res1.getStatusCode()).toBe(200);
+
+      const res2 = createMockRes();
+      await contactHandler(req as any, res2 as any);
+      expect(res2.getStatusCode()).toBe(200);
+      const json2 = res2.getJson() as any;
+      expect(json2.duplicate).toBe(true);
+      expect(json2.submissionId).toBe((res1.getJson() as any).submissionId);
     });
   });
 });
-

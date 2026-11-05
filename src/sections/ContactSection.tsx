@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import emailjs from '@emailjs/browser';
 import { Mail, Send, CheckCircle, AlertCircle, Loader, Copy, Check } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from '../components/BrandIcons';
 import { ShareButton } from '../components/ShareButton';
@@ -11,15 +10,6 @@ interface ContactSectionProps {
   contact: ContactData;
   socialLinks: SocialLink[];
 }
-
-// Read EmailJS public credentials from Vite build-time env vars.
-// These are NOT secrets — they are safe to embed in the frontend bundle.
-const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID  as string | undefined;
-const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string | undefined;
-const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY  as string | undefined;
-
-// EmailJS is available when all three vars are set
-const emailjsConfigured = Boolean(EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY);
 
 interface FormFields {
   name: string;
@@ -127,7 +117,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ contact, socialL
     setErrorMsg('');
 
     try {
-      // 1. Submit to portfolio /api/contact endpoint (handles Telegram notification & Resend auto-reply)
+      // Production contact submission flow: always uses /api/contact as primary & only mechanism
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -148,54 +138,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ contact, socialL
         return;
       }
 
-      // If /api/contact returned an error (e.g. static preview hosting without API), attempt EmailJS fallback
-      if (emailjsConfigured) {
-        await emailjs.send(
-          EMAILJS_SERVICE_ID!,
-          EMAILJS_TEMPLATE_ID!,
-          {
-            from_name:  fields.name.trim(),
-            from_email: fields.email.trim(),
-            subject:    fields.subject.trim(),
-            message:    fields.message.trim(),
-            reply_to:   fields.email.trim(),
-          },
-          { publicKey: EMAILJS_PUBLIC_KEY! }
-        );
-
-        setSendStatus('success');
-        setFields({ name: '', email: '', subject: '', message: '', _hp: '' });
-        return;
-      }
-
       setSendStatus('error');
       setErrorMsg(data.error || 'Failed to send message. Please try the email link below or try again.');
     } catch (err) {
       console.error('[contact] Submission error:', err);
-      // Secondary fallback if server request failed and EmailJS is available
-      if (emailjsConfigured) {
-        try {
-          await emailjs.send(
-            EMAILJS_SERVICE_ID!,
-            EMAILJS_TEMPLATE_ID!,
-            {
-              from_name:  fields.name.trim(),
-              from_email: fields.email.trim(),
-              subject:    fields.subject.trim(),
-              message:    fields.message.trim(),
-              reply_to:   fields.email.trim(),
-            },
-            { publicKey: EMAILJS_PUBLIC_KEY! }
-          );
-
-          setSendStatus('success');
-          setFields({ name: '', email: '', subject: '', message: '', _hp: '' });
-          return;
-        } catch {
-          // Fall through to error state below
-        }
-      }
-
       setSendStatus('error');
       setErrorMsg('Failed to send. Please try the email link below or try again later.');
     } finally {
@@ -286,21 +232,16 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ contact, socialL
                 &gt; Send a message
               </div>
               <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                {emailjsConfigured
-                  ? 'Fill out the form below — I\'ll reply within 24 hours.'
-                  : 'The best way to reach me is email. I reply to all genuine messages, usually within 24 hours.'}
+                Fill out the form below — I'll reply within 24 hours.
               </p>
             </div>
 
-            {/* EmailJS contact form — shown when configured */}
-            {emailjsConfigured ? (
-              <>
-                {sendStatus === 'success' ? (
-                  <div className="contact-status success" role="alert">
-                    <CheckCircle size={16} />
-                    Message sent! I'll get back to you soon. Check your inbox for a confirmation email.
-                  </div>
-                ) : (
+            {sendStatus === 'success' ? (
+              <div className="contact-status success" role="alert">
+                <CheckCircle size={16} />
+                Message sent! I'll get back to you soon.
+              </div>
+            ) : (
                   <form
                     ref={formRef}
                     id="contact-form"
@@ -418,20 +359,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ contact, socialL
                     </p>
                   </form>
                 )}
-              </>
-            ) : (
-              /* Fallback: EmailJS not configured — show direct mailto button */
-              <>
-                <a
-                  href={`mailto:${contact.email}?subject=Hello from your portfolio`}
-                  id="contact-email-cta"
-                  className="btn btn-primary contact-email-btn"
-                  aria-label="Open email composer"
-                >
-                  <Mail size={17} />
-                  Compose Email
-                  <Send size={14} />
-                </a>
 
                 <div className="contact-card-divider" aria-hidden="true">
                   <span>or connect on</span>
@@ -452,8 +379,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ contact, socialL
                     </a>
                   ))}
                 </div>
-              </>
-            )}
 
             <div className="contact-availability-note">
               <div className="status-badge" style={{ alignSelf: 'flex-start' }}>
