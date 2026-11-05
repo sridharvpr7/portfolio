@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import emailjs from '@emailjs/browser';
 import { Mail, Send, CheckCircle, AlertCircle, Loader, Copy, Check } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from '../components/BrandIcons';
 import { ShareButton } from '../components/ShareButton';
@@ -10,6 +11,12 @@ interface ContactSectionProps {
   contact: ContactData;
   socialLinks: SocialLink[];
 }
+
+// EmailJS credentials (Public Key is safe in client bundle; template & service IDs configured)
+const EMAILJS_SERVICE_ID = (import.meta.env.VITE_EMAILJS_SERVICE_ID as string | undefined) || 'service_5at7ymm';
+const EMAILJS_OWNER_TEMPLATE_ID = (import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string | undefined);
+const EMAILJS_AUTOREPLY_TEMPLATE_ID = (import.meta.env.VITE_EMAILJS_AUTOREPLY_TEMPLATE_ID as string | undefined) || 'template_sjb2s1d';
+const EMAILJS_PUBLIC_KEY = (import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string | undefined) || 'zAUmn9P-Y0rfjGErT';
 
 interface FormFields {
   name: string;
@@ -63,6 +70,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ contact, socialL
   const formRef = useRef<HTMLFormElement>(null);
   // Prevent duplicate submissions
   const submittingRef = useRef(false);
+  const lastSubmittedKey = useRef<string>('');
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopyEmail = async () => {
@@ -112,34 +120,111 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ contact, socialL
       return;
     }
 
+    // Deduplication check: prevent identical submissions from firing duplicate emails
+    const submissionKey = `${fields.email.trim().toLowerCase()}:${fields.subject.trim()}:${fields.message.trim()}`;
+    if (lastSubmittedKey.current === submissionKey) {
+      setSendStatus('success');
+      return;
+    }
+
     submittingRef.current = true;
     setSendStatus('sending');
     setErrorMsg('');
 
     try {
-      // Production contact submission flow: always uses /api/contact as primary & only mechanism
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: fields.name.trim(),
-          email: fields.email.trim(),
-          subject: fields.subject.trim(),
-          message: fields.message.trim(),
-          _hp: fields._hp,
-        }),
-      });
+      const visitorName = fields.name.trim();
+      const visitorEmail = fields.email.trim();
+      const messageSubject = fields.subject.trim();
+      const messageBody = fields.message.trim();
 
-      const data = await res.json().catch(() => ({}));
+      // 1. Send Primary Owner Notification
+      if (EMAILJS_OWNER_TEMPLATE_ID) {
+        const ownerParams = {
+          from_name: visitorName,
+          from_email: visitorEmail,
+          to_name: 'Sridhar',
+          name: visitorName,
+          email: visitorEmail,
+          subject: messageSubject,
+          message: messageBody,
+          reply_to: visitorEmail,
+        };
 
-      if (res.ok && data.ok) {
-        setSendStatus('success');
-        setFields({ name: '', email: '', subject: '', message: '', _hp: '' });
-        return;
+        await emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_OWNER_TEMPLATE_ID,
+          ownerParams,
+          { publicKey: EMAILJS_PUBLIC_KEY }
+        );
+      } else {
+        // Fallback to /api/contact if owner template ID is not yet defined in env
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: visitorName,
+            email: visitorEmail,
+            subject: messageSubject,
+            message: messageBody,
+            _hp: fields._hp,
+          }),
+        });
+
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) {
+          throw new Error(data.error || 'Failed to submit contact message');
+        }
       }
 
-      setSendStatus('error');
-      setErrorMsg(data.error || 'Failed to send message. Please try the email link below or try again.');
+      // 2. Send Second EmailJS Template: Automatic Visitor Acknowledgement
+      // (Requirement 9: If auto-reply fails, do not report that contact message failed)
+      if (EMAILJS_AUTOREPLY_TEMPLATE_ID) {
+        try {
+          const autoReplyParams = {
+            to_name: visitorName,
+            to_email: visitorEmail,
+            from_name: 'Sridhar',
+            from_email: contact.email || 'sridharportfolio19@gmail.com',
+            name: visitorName,
+            email: visitorEmail,
+            user_name: visitorName,
+            user_email: visitorEmail,
+            visitor_name: visitorName,
+            visitor_email: visitorEmail,
+            subject: messageSubject,
+            message: messageBody,
+            reply_to: 'sridharvpr7@gmail.com',
+          };
+
+          await emailjs.send(
+            EMAILJS_SERVICE_ID,
+            EMAILJS_AUTOREPLY_TEMPLATE_ID,
+            autoReplyParams,
+            { publicKey: EMAILJS_PUBLIC_KEY }
+          );
+        } catch (autoReplyErr) {
+          console.warn('[contact] EmailJS auto-reply delivery warning:', autoReplyErr);
+        }
+      }
+
+      // 3. Optional background telemetry / Telegram notification
+      if (EMAILJS_OWNER_TEMPLATE_ID) {
+        fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: visitorName,
+            email: visitorEmail,
+            subject: messageSubject,
+            message: messageBody,
+            _hp: fields._hp,
+          }),
+        }).catch(() => {});
+      }
+
+      lastSubmittedKey.current = submissionKey;
+      setSendStatus('success');
+      setFields({ name: '', email: '', subject: '', message: '', _hp: '' });
     } catch (err) {
       console.error('[contact] Submission error:', err);
       setSendStatus('error');

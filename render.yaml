@@ -62,7 +62,10 @@ services:
         sync: false   # EmailJS Service ID (from emailjs.com → Email Services)
 
       - key: VITE_EMAILJS_TEMPLATE_ID
-        sync: false   # EmailJS Template ID (from emailjs.com → Email Templates)
+        sync: false   # EmailJS Template ID for owner notifications (from emailjs.com → Email Templates)
+
+      - key: VITE_EMAILJS_AUTOREPLY_TEMPLATE_ID
+        sync: false   # EmailJS Auto-Reply Template ID for visitor acknowledgements (template_sjb2s1d)
 
       - key: VITE_EMAILJS_PUBLIC_KEY
         sync: false   # EmailJS Public Key (from emailjs.com → Account → API Keys)
