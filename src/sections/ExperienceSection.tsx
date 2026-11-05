@@ -101,7 +101,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     <div className="cert-card-content">
                       <div className="cert-card-header">
                         <div className="cert-card-icon" aria-hidden="true">
-                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="12" cy="8" r="6"/>
                             <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
                           </svg>
@@ -110,7 +110,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                           <span className="cert-badge-tag">{cert.badge || 'Internship'}</span>
                         )}
                       </div>
-                      <div>
+                      <div className="cert-card-body">
                         <h4 className="cert-title">{cert.title}</h4>
                         <div className="cert-meta">
                           <span className="cert-issuer">{cert.organization || cert.issuer}</span>
