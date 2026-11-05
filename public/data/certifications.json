@@ -10,7 +10,19 @@
       "badge": "Internship",
       "description": "Completed an AICTE and ICAC approved 1-month internship in Digital Electronics and VLSI Design.",
       "visible": true,
-      "certificateFile": "/assets/certificates/codec-technologies-internship.pdf"
+      "certificateFile": "/assets/certificates/codec dlc intern.jpg"
+    },
+    {
+      "id": "codealpha-frontend-internship",
+      "title": "Frontend Development Internship",
+      "issuer": "CodeAlpha",
+      "organization": "CodeAlpha",
+      "date": "2026-06-28",
+      "isInternship": true,
+      "badge": "Internship Offer",
+      "description": "Selected for a Frontend Development Internship at CodeAlpha from 1 July 2026 to 30 July 2026.",
+      "visible": true,
+      "certificateFile": "/assets/certificates/codealpha Fend.jpg"
     },
     {
       "id": "html5",
