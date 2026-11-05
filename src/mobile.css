@@ -431,7 +431,8 @@
     gap: 1rem !important;
   }
 
-  .cert-card { padding: 1.125rem !important; }
+  .cert-card { padding: 0 !important; }
+  .cert-card-content { padding: 1rem !important; }
   .cert-title { font-size: 0.925rem !important; }
   .cert-issuer { font-size: 0.8rem !important; }
 
