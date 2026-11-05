@@ -1,5 +1,6 @@
-﻿import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { IntroSequence } from './components/IntroSequence';
+import { CustomCursor } from './components/CustomCursor';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { HeroSection } from './sections/HeroSection';
@@ -206,6 +207,7 @@ function App() {
 
   return (
     <>
+      <CustomCursor />
       {showIntro && (
         <IntroSequence
           onComplete={handleIntroComplete}

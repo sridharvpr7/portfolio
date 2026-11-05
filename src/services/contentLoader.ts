@@ -131,6 +131,10 @@ export interface Certification {
   credentialUrl?: string;
   certificateFile?: string;
   visible: boolean;
+  isInternship?: boolean;
+  badge?: string;
+  organization?: string;
+  description?: string;
 }
 
 export interface Achievement {

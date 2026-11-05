@@ -1,0 +1,162 @@
+/* Custom Premium Cinematic Cursor */
+
+.custom-cursor-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none !important;
+  z-index: 999999;
+  overflow: hidden;
+}
+
+/* Hide native cursor only when custom cursor is active on fine-pointer desktop */
+@media (pointer: fine) and (min-width: 769px) {
+  html.has-custom-cursor,
+  html.has-custom-cursor body,
+  html.has-custom-cursor a,
+  html.has-custom-cursor button,
+  html.has-custom-cursor [role="button"] {
+    cursor: none !important;
+  }
+
+  /* Preserve standard text selection cursor for inputs and textareas */
+  html.has-custom-cursor input,
+  html.has-custom-cursor textarea,
+  html.has-custom-cursor select,
+  html.has-custom-cursor [contenteditable="true"] {
+    cursor: text !important;
+  }
+}
+
+/* Center dot */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: #00f2fe;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.8), 0 0 20px rgba(0, 242, 254, 0.4);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.05s ease, background-color 0.2s ease;
+  will-change: transform;
+  z-index: 1000000;
+}
+
+.cursor-dot.visible {
+  opacity: 1;
+}
+
+.cursor-dot.clicking {
+  transform: scale(0.6) !important;
+  background: #4facfe;
+}
+
+/* Outer follower ring */
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 34px;
+  height: 34px;
+  margin-left: -17px;
+  margin-top: -17px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: width 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              height 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              margin 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.25s ease,
+              border-color 0.25s ease,
+              background-color 0.25s ease,
+              box-shadow 0.25s ease;
+  will-change: transform;
+  z-index: 999999;
+}
+
+.cursor-ring-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 242, 254, 0.45);
+  box-shadow: 0 0 14px rgba(0, 242, 254, 0.15);
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cursor-ring.visible {
+  opacity: 1;
+}
+
+/* Hovering over buttons: expand slightly with accent aura */
+.cursor-ring.hover-button {
+  width: 48px;
+  height: 48px;
+  margin-left: -24px;
+  margin-top: -24px;
+}
+
+.cursor-ring.hover-button .cursor-ring-inner {
+  border-color: rgba(79, 172, 254, 0.85);
+  background: rgba(0, 242, 254, 0.1);
+  box-shadow: 0 0 20px rgba(79, 172, 254, 0.35);
+}
+
+/* Hovering over links: stylish focus effect */
+.cursor-ring.hover-link {
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
+  margin-top: -14px;
+}
+
+.cursor-ring.hover-link .cursor-ring-inner {
+  border-color: #00f2fe;
+  background: rgba(0, 242, 254, 0.15);
+  box-shadow: 0 0 16px rgba(0, 242, 254, 0.5);
+}
+
+/* Hovering over cards: subtle wide magnetic aura */
+.cursor-ring.hover-card {
+  width: 60px;
+  height: 60px;
+  margin-left: -30px;
+  margin-top: -30px;
+}
+
+.cursor-ring.hover-card .cursor-ring-inner {
+  border-color: rgba(0, 242, 254, 0.3);
+  background: rgba(0, 242, 254, 0.04);
+  box-shadow: 0 0 24px rgba(0, 242, 254, 0.2);
+}
+
+/* Active click animation */
+.cursor-ring.clicking .cursor-ring-inner {
+  transform: scale(0.8);
+  border-color: #00f2fe;
+  background: rgba(0, 242, 254, 0.25);
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.6);
+}
+
+/* Disable completely on touch devices and small viewports */
+@media (pointer: coarse), (max-width: 768px) {
+  .custom-cursor-container {
+    display: none !important;
+  }
+}
+
+/* Respect user preferences for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-dot,
+  .cursor-ring,
+  .cursor-ring-inner {
+    transition: none !important;
+  }
+}
+

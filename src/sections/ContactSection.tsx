@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import emailjs from '@emailjs/browser';
-import { Mail, Send, CheckCircle, AlertCircle, Loader } from 'lucide-react';
+import { Mail, Send, CheckCircle, AlertCircle, Loader, Copy, Check } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from '../components/BrandIcons';
 import { ShareButton } from '../components/ShareButton';
 import { useReveal } from '../hooks/useReveal';
@@ -73,6 +73,30 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ contact, socialL
   const formRef = useRef<HTMLFormElement>(null);
   // Prevent duplicate submissions
   const submittingRef = useRef(false);
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopyEmail = async () => {
+    const emailToCopy = contact.displayEmail || contact.email || 'sridharvpr7@gmail.com';
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(emailToCopy);
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = emailToCopy;
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2500);
+    } catch (err) {
+      console.warn('Failed to copy email:', err);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -98,39 +122,80 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ contact, socialL
       return;
     }
 
-    // If EmailJS is not configured, show a graceful message
-    if (!emailjsConfigured) {
-      setErrorMsg('The contact form is not configured yet. Please use the email link below.');
-      setSendStatus('error');
-      return;
-    }
-
     submittingRef.current = true;
     setSendStatus('sending');
     setErrorMsg('');
 
     try {
-      // Send the primary contact email to the portfolio owner.
-      // The EmailJS template should define: {{from_name}}, {{from_email}}, {{subject}}, {{message}}.
-      // The auto-reply to the visitor is configured inside the EmailJS dashboard on the same template
-      // by enabling "Auto-Reply" and setting the recipient to {{from_email}}.
-      await emailjs.send(
-        EMAILJS_SERVICE_ID!,
-        EMAILJS_TEMPLATE_ID!,
-        {
-          from_name:    fields.name.trim(),
-          from_email:   fields.email.trim(),
-          subject:      fields.subject.trim(),
-          message:      fields.message.trim(),
-          reply_to:     fields.email.trim(),
-        },
-        { publicKey: EMAILJS_PUBLIC_KEY! }
-      );
+      // 1. Submit to portfolio /api/contact endpoint (handles Telegram notification & Resend auto-reply)
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: fields.name.trim(),
+          email: fields.email.trim(),
+          subject: fields.subject.trim(),
+          message: fields.message.trim(),
+          _hp: fields._hp,
+        }),
+      });
 
-      setSendStatus('success');
-      setFields({ name: '', email: '', subject: '', message: '', _hp: '' });
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.ok) {
+        setSendStatus('success');
+        setFields({ name: '', email: '', subject: '', message: '', _hp: '' });
+        return;
+      }
+
+      // If /api/contact returned an error (e.g. static preview hosting without API), attempt EmailJS fallback
+      if (emailjsConfigured) {
+        await emailjs.send(
+          EMAILJS_SERVICE_ID!,
+          EMAILJS_TEMPLATE_ID!,
+          {
+            from_name:  fields.name.trim(),
+            from_email: fields.email.trim(),
+            subject:    fields.subject.trim(),
+            message:    fields.message.trim(),
+            reply_to:   fields.email.trim(),
+          },
+          { publicKey: EMAILJS_PUBLIC_KEY! }
+        );
+
+        setSendStatus('success');
+        setFields({ name: '', email: '', subject: '', message: '', _hp: '' });
+        return;
+      }
+
+      setSendStatus('error');
+      setErrorMsg(data.error || 'Failed to send message. Please try the email link below or try again.');
     } catch (err) {
-      console.error('[contact] EmailJS error:', err);
+      console.error('[contact] Submission error:', err);
+      // Secondary fallback if server request failed and EmailJS is available
+      if (emailjsConfigured) {
+        try {
+          await emailjs.send(
+            EMAILJS_SERVICE_ID!,
+            EMAILJS_TEMPLATE_ID!,
+            {
+              from_name:  fields.name.trim(),
+              from_email: fields.email.trim(),
+              subject:    fields.subject.trim(),
+              message:    fields.message.trim(),
+              reply_to:   fields.email.trim(),
+            },
+            { publicKey: EMAILJS_PUBLIC_KEY! }
+          );
+
+          setSendStatus('success');
+          setFields({ name: '', email: '', subject: '', message: '', _hp: '' });
+          return;
+        } catch {
+          // Fall through to error state below
+        }
+      }
+
       setSendStatus('error');
       setErrorMsg('Failed to send. Please try the email link below or try again later.');
     } finally {
@@ -152,20 +217,43 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ contact, socialL
 
           <div className="contact-links">
             {contact.email && (
-              <a
-                href={`mailto:${contact.email}`}
-                id="contact-email-link"
-                className="contact-link-item"
-                aria-label={`Email: ${contact.displayEmail}`}
-              >
-                <div className="contact-link-icon">
-                  <Mail size={18} />
-                </div>
-                <div>
-                  <div className="contact-link-label">Email</div>
-                  <div className="contact-link-value">{contact.displayEmail}</div>
-                </div>
-              </a>
+              <div className="contact-email-block">
+                <a
+                  href={`mailto:${contact.email}`}
+                  id="contact-email-link"
+                  className="contact-link-item"
+                  aria-label={`Email: ${contact.displayEmail}`}
+                >
+                  <div className="contact-link-icon">
+                    <Mail size={18} />
+                  </div>
+                  <div>
+                    <div className="contact-link-label">Email</div>
+                    <div className="contact-link-value">{contact.displayEmail}</div>
+                  </div>
+                </a>
+
+                <button
+                  type="button"
+                  id="contact-copy-email-btn"
+                  className={`contact-copy-email-btn ${isCopied ? 'copied' : ''}`}
+                  onClick={handleCopyEmail}
+                  aria-label={isCopied ? 'Email address copied to clipboard' : 'Copy email address'}
+                  aria-live="polite"
+                >
+                  {isCopied ? (
+                    <>
+                      <Check size={14} className="copy-icon-success" aria-hidden="true" />
+                      <span>Email copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={14} aria-hidden="true" />
+                      <span>Copy Email</span>
+                    </>
+                  )}
+                </button>
+              </div>
             )}
 
             {contactLinks.map(link => (

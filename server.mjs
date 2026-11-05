@@ -89,6 +89,7 @@ async function loadHandlers() {
     { default: adminDelete },
     { default: emailConsent },
     { default: telegramWebhook },
+    { default: contact },
   ] = await Promise.all([
     import('./api/track.ts'),
     import('./api/heartbeat.ts'),
@@ -98,9 +99,10 @@ async function loadHandlers() {
     import('./api/admin/delete.ts'),
     import('./api/email/consent.ts'),
     import('./api/telegram/webhook.ts'),
+    import('./api/contact.ts'),
   ]);
 
-  return { track, heartbeat, stats, authGoogle, authLogout, adminDelete, emailConsent, telegramWebhook };
+  return { track, heartbeat, stats, authGoogle, authLogout, adminDelete, emailConsent, telegramWebhook, contact };
 }
 
 // ── Request router ────────────────────────────────────────────────────────────

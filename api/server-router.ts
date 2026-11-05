@@ -27,6 +27,7 @@ export interface ApiHandlers {
   adminDelete: ApiHandler;
   emailConsent: ApiHandler;
   telegramWebhook: ApiHandler;
+  contact?: ApiHandler;
 }
 
 // ── Cache header logic ────────────────────────────────────────────────────────
@@ -172,6 +173,7 @@ export async function dispatchApi(
   if (path === '/api/auth/logout')      { if (handlers?.authLogout) await handlers.authLogout(apiReq, apiRes); return true; }
   if (path === '/api/admin/delete')     { if (handlers?.adminDelete) await handlers.adminDelete(apiReq, apiRes); return true; }
   if (path === '/api/email/consent')    { if (handlers?.emailConsent) await handlers.emailConsent(apiReq, apiRes); return true; }
+  if (path === '/api/contact')          { if (handlers?.contact) await handlers.contact(apiReq, apiRes); return true; }
   if (path === '/api/telegram/webhook' || path === '/api/telegram/webhook/') {
     if (handlers?.telegramWebhook) await handlers.telegramWebhook(apiReq, apiRes);
     return true;

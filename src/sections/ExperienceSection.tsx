@@ -47,82 +47,130 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
         {visibleCerts.length > 0 && (
           <div className="exp-credentials-sub">
             <div className="exp-sub-header">
-              <div className="section-label">Verified Credentials</div>
-              <h3 className="exp-sub-title">Certifications</h3>
+              <div className="exp-sub-header-top">
+                <div>
+                  <div className="section-label">Verified Credentials</div>
+                  <h3 className="exp-sub-title">Certifications &amp; Internships</h3>
+                </div>
+                <div className="cert-scroll-hint">
+                  <span className="cert-count-pill">{visibleCerts.length} Credentials</span>
+                  <span className="cert-scroll-label">Scroll inside to view all ↓</span>
+                </div>
+              </div>
             </div>
-            <div className="cert-grid" role="list">
-              {visibleCerts.map((cert) => (
-                <div key={cert.id} className="cert-card card" role="listitem">
-                  {cert.certificateFile && (
-                    <a
-                      href={cert.certificateFile}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="cert-thumb-link"
-                      aria-label={`View certificate: ${cert.title}`}
-                    >
-                      <img
-                        src={cert.certificateFile}
-                        alt={`${cert.title} certificate`}
-                        className="cert-thumb"
-                        loading="lazy"
-                        onError={(e) => {
-                          (e.currentTarget.closest('.cert-thumb-link') as HTMLElement | null)?.style.setProperty('display', 'none');
-                        }}
-                      />
-                      <div className="cert-thumb-overlay" aria-hidden="true">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                      </div>
-                    </a>
-                  )}
-                  <div className="cert-card-content">
-                    <div className="cert-card-icon" aria-hidden="true">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="8" r="6"/>
-                        <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="cert-title">{cert.title}</h4>
-                      <div className="cert-meta">
-                        <span className="cert-issuer">{cert.issuer}</span>
-                        {cert.date && <span className="cert-date font-mono">{formatDate(cert.date)}</span>}
-                      </div>
-                    </div>
-                    <div className="cert-actions">
-                      {cert.credentialUrl && (
-                        <a
-                          href={cert.credentialUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-ghost btn-sm"
-                        >
-                          Verify
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                            <polyline points="15 3 21 3 21 9"/>
-                            <line x1="10" y1="14" x2="21" y2="3"/>
-                          </svg>
-                        </a>
-                      )}
-                      {cert.certificateFile && (
-                        <a
-                          href={cert.certificateFile}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-ghost btn-sm"
-                        >
-                          View
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+
+            <div className="cert-scroll-container">
+              <div className="cert-grid" role="list">
+                {visibleCerts.map((cert) => (
+                  <div key={cert.id} className={`cert-card card ${cert.isInternship ? 'cert-card-internship' : ''}`} role="listitem">
+                    {cert.certificateFile && (
+                      <a
+                        href={cert.certificateFile}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="cert-thumb-link"
+                        aria-label={`View certificate: ${cert.title}`}
+                      >
+                        <img
+                          src={cert.certificateFile}
+                          alt={`${cert.title} certificate`}
+                          className="cert-thumb"
+                          loading="lazy"
+                          onError={(e) => {
+                            const parent = e.currentTarget.parentElement;
+                            if (parent) {
+                              e.currentTarget.style.display = 'none';
+                              const fallback = parent.querySelector('.cert-thumb-fallback') as HTMLElement | null;
+                              if (fallback) fallback.style.display = 'flex';
+                            }
+                          }}
+                        />
+                        <div className="cert-thumb-fallback" style={{ display: 'none' }} aria-hidden="true">
+                          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                             <polyline points="14 2 14 8 20 8"/>
+                            <circle cx="12" cy="14" r="3"/>
                           </svg>
-                        </a>
-                      )}
+                          <span className="fallback-text">{cert.issuer}</span>
+                        </div>
+                        <div className="cert-thumb-overlay" aria-hidden="true">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        </div>
+                      </a>
+                    )}
+                    <div className="cert-card-content">
+                      <div className="cert-card-header">
+                        <div className="cert-card-icon" aria-hidden="true">
+                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="8" r="6"/>
+                            <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+                          </svg>
+                        </div>
+                        {(cert.isInternship || cert.badge) && (
+                          <span className="cert-badge-tag">{cert.badge || 'Internship'}</span>
+                        )}
+                      </div>
+                      <div>
+                        <h4 className="cert-title">{cert.title}</h4>
+                        <div className="cert-meta">
+                          <span className="cert-issuer">{cert.organization || cert.issuer}</span>
+                          {cert.date && <span className="cert-date font-mono">{formatDate(cert.date)}</span>}
+                        </div>
+                        {cert.description && (
+                          <p className="cert-description">{cert.description}</p>
+                        )}
+                      </div>
+                      <div className="cert-actions">
+                        {cert.credentialUrl && (
+                          <a
+                            href={cert.credentialUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-ghost btn-sm"
+                          >
+                            Verify
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                              <polyline points="15 3 21 3 21 9"/>
+                              <line x1="10" y1="14" x2="21" y2="3"/>
+                            </svg>
+                          </a>
+                        )}
+                        {cert.certificateFile && (
+                          <>
+                            <a
+                              href={cert.certificateFile}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn btn-ghost btn-sm"
+                              aria-label={`View ${cert.title} certificate`}
+                            >
+                              View
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                              </svg>
+                            </a>
+                            <a
+                              href={cert.certificateFile}
+                              download
+                              className="btn btn-ghost btn-sm"
+                              aria-label={`Download ${cert.title} certificate`}
+                            >
+                              Download
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                              </svg>
+                            </a>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         )}

@@ -1,6 +1,18 @@
 {
   "certifications": [
     {
+      "id": "codec-technologies-internship",
+      "title": "Digital Electronics and VLSI Internship",
+      "issuer": "Codec Technologies Pvt. Ltd.",
+      "organization": "Codec Technologies Pvt. Ltd.",
+      "date": "2026-08-20",
+      "isInternship": true,
+      "badge": "Internship",
+      "description": "Completed an AICTE and ICAC approved 1-month internship in Digital Electronics and VLSI Design.",
+      "visible": true,
+      "certificateFile": "/assets/certificates/codec-technologies-internship.pdf"
+    },
+    {
       "id": "html5",
       "title": "HTML5 - The Language",
       "issuer": "Infosys Springboard",

@@ -116,6 +116,52 @@ export function esc(s: string | null | undefined): string {
   return String(s).replace(/([_*[\]()~`>#+\-=|{}.!\\])/g, '\\$1');
 }
 
+// Escape for Telegram HTML parse mode
+export function escapeTgHtml(s: string | null | undefined): string {
+  if (!s) return '—';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+export interface ContactNotificationData {
+  visitorName: string;
+  visitorEmail: string;
+  subject: string;
+  visitorMessage: string;
+  submissionId: string;
+  date?: string;
+  time?: string;
+}
+
+export function formatContactTelegramHtml(data: ContactNotificationData): string {
+  const now = new Date();
+  const dateStr = data.date || now.toLocaleDateString('en-IN', { timeZone: IST_TZ, day: '2-digit', month: 'short', year: 'numeric' });
+  const timeStr = data.time || istNow();
+
+  return [
+    '🚀 <b>NEW PORTFOLIO CONTACT</b>',
+    '━━━━━━━━━━━━━━━━━━',
+    '👤 <b>VISITOR DETAILS</b>',
+    `<b>Name:</b> ${escapeTgHtml(data.visitorName)}`,
+    `<b>Email:</b> ${escapeTgHtml(data.visitorEmail)}`,
+    `<b>Subject:</b> ${escapeTgHtml(data.subject)}`,
+    '━━━━━━━━━━━━━━━━━━',
+    '💬 <b>MESSAGE</b>',
+    escapeTgHtml(data.visitorMessage),
+    '━━━━━━━━━━━━━━━━━━',
+    '📊 <b>SUBMISSION DETAILS</b>',
+    `📅 <b>Date:</b> ${escapeTgHtml(dateStr)}`,
+    `⏰ <b>Time:</b> ${escapeTgHtml(timeStr)}`,
+    '🌐 <b>Source:</b> Portfolio Contact Form',
+    `🔖 <b>Submission ID:</b> <code>${escapeTgHtml(data.submissionId)}</code>`,
+    '━━━━━━━━━━━━━━━━━━',
+    '⚡ <b>BEYOND THE CIRCUIT</b>',
+    'Sridhar | ECE Student &amp; Web Developer',
+  ].join('\n');
+}
+
 // Strip Markdown symbols for safe fallback delivery
 export function stripMarkdown(text: string): string {
   return text
@@ -227,6 +273,32 @@ export async function sendTelegram(
       }
     }
 
+    // If HTML parsing fails, fall back to plain text (strip HTML tags)
+    if (parseMode === 'HTML') {
+      console.warn(`[telegram] HTML failed for chat ${targetChatId} (${errDesc}). Retrying in plain text...`);
+      const fallbackRes = await fetch(`${TG_API}/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: targetChatId,
+          text: message.replace(/<[^>]+>/g, ''),
+          disable_web_page_preview: disablePreview,
+        }),
+      });
+
+      const fallbackData = (await fallbackRes.json().catch(() => ({}))) as {
+        ok?: boolean;
+        description?: string;
+        result?: { message_id?: number };
+      };
+
+      if (fallbackRes.ok && fallbackData.ok) {
+        console.log(`[telegram] Plain text fallback succeeded for chat ${targetChatId}`);
+        recordTelegramReply(true);
+        return { ok: true, messageId: fallbackData.result?.message_id };
+      }
+    }
+
     console.error(`[telegram] sendMessage failed (${data.error_code || res.status}): ${errDesc}`);
     recordTelegramReply(false, errDesc);
     return { ok: false, description: errDesc };
@@ -275,6 +347,11 @@ export async function notifyVisitor(data: VisitorNotificationData): Promise<void
   lines.push(`*Time \\(IST\\):* ${esc(istNow())}`);
 
   await sendTelegram(lines.join('\n'));
+}
+
+export async function notifyContactSubmission(data: ContactNotificationData): Promise<TelegramSendResult> {
+  const html = formatContactTelegramHtml(data);
+  return sendTelegram(html, { parseMode: 'HTML' });
 }
 
 // ── Command Parsing and Normalization ───────────────────
