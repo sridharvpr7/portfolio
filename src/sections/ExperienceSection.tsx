@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { X, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 import { useReveal } from '../hooks/useReveal';
 import type { ExperienceEntry, Certification, Achievement } from '../services/contentLoader';
 import './ExperienceSection.css';
@@ -18,6 +19,57 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
   const sorted = [...entries].sort((a, b) => a.order - b.order);
   const visibleCerts = certifications.filter(c => c.visible !== false);
   const visibleAchievements = achievements.filter(a => a.visible !== false);
+
+  const [activeCert, setActiveCert] = useState<{
+    title: string;
+    image: string;
+    issuer?: string;
+  } | null>(null);
+  const [zoomLevel, setZoomLevel] = useState<number>(1);
+
+  const handleOpenLightbox = (cert: Certification, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const imageCandidate = cert.thumbnail || cert.certificateFile;
+    if (imageCandidate && !imageCandidate.toLowerCase().endsWith('.pdf')) {
+      setActiveCert({
+        title: cert.title,
+        image: imageCandidate,
+        issuer: cert.organization || cert.issuer,
+      });
+      setZoomLevel(1);
+    } else if (cert.certificateFile) {
+      window.open(cert.certificateFile, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleCloseLightbox = () => {
+    setActiveCert(null);
+    setZoomLevel(1);
+  };
+
+  const toggleZoom = () => {
+    setZoomLevel(prev => (prev === 1 ? 1.6 : prev === 1.6 ? 2.2 : 1));
+  };
+
+  useEffect(() => {
+    if (!activeCert) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleCloseLightbox();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [activeCert]);
 
   return (
     <section id="experience" className="section experience-section" aria-labelledby="exp-title">
@@ -64,12 +116,12 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                 {visibleCerts.map((cert) => (
                   <div key={cert.id} className={`cert-card card ${cert.isInternship ? 'cert-card-internship' : ''}`} role="listitem">
                     {(cert.thumbnail || cert.certificateFile) && (
-                      <a
-                        href={cert.certificateFile || cert.thumbnail}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        type="button"
                         className="cert-thumb-link"
-                        aria-label={`View certificate: ${cert.title}`}
+                        onClick={(e) => handleOpenLightbox(cert, e)}
+                        aria-label={`Preview certificate: ${cert.title}`}
+                        title="Click to preview certificate"
                       >
                         <img
                           src={cert.thumbnail || cert.certificateFile}
@@ -94,9 +146,10 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                           <span className="fallback-text">{cert.issuer}</span>
                         </div>
                         <div className="cert-thumb-overlay" aria-hidden="true">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                          <Maximize2 size={22} />
+                          <span className="cert-thumb-overlay-text">Preview</span>
                         </div>
-                      </a>
+                      </button>
                     )}
                     <div className="cert-card-content">
                       <div className="cert-card-header">
@@ -215,6 +268,76 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* Certificate Fullscreen Lightbox Modal */}
+        {activeCert && (
+          <div
+            className="cert-lightbox-backdrop"
+            onClick={handleCloseLightbox}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${activeCert.title} preview`}
+          >
+            <div className="cert-lightbox-topbar" onClick={(e) => e.stopPropagation()}>
+              <div className="cert-lightbox-info">
+                <span className="cert-lightbox-title" title={activeCert.title}>
+                  {activeCert.title}
+                </span>
+                {activeCert.issuer && (
+                  <span className="cert-lightbox-issuer">{activeCert.issuer}</span>
+                )}
+              </div>
+
+              <div className="cert-lightbox-controls">
+                <button
+                  type="button"
+                  className="cert-lightbox-btn cert-lightbox-zoom-btn"
+                  onClick={toggleZoom}
+                  aria-label={`Zoom certificate: currently ${Math.round(zoomLevel * 100)}%`}
+                  title="Toggle Zoom (or click image directly)"
+                >
+                  {zoomLevel > 1 ? <ZoomOut size={16} /> : <ZoomIn size={16} />}
+                  <span className="cert-lightbox-zoom-label font-mono">{Math.round(zoomLevel * 100)}%</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="cert-lightbox-btn cert-lightbox-close"
+                  onClick={handleCloseLightbox}
+                  aria-label="Close certificate preview"
+                  title="Close (Esc)"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+
+            <div className="cert-lightbox-content" onClick={handleCloseLightbox}>
+              <div
+                className={`cert-lightbox-viewport ${zoomLevel > 1 ? 'is-zoomed' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleZoom();
+                }}
+              >
+                <img
+                  src={activeCert.image}
+                  alt={`${activeCert.title} certificate full resolution`}
+                  className="cert-lightbox-img"
+                  style={{
+                    transform: `scale(${zoomLevel})`,
+                    cursor: zoomLevel > 1 ? 'zoom-out' : 'zoom-in',
+                  }}
+                  loading="eager"
+                />
+              </div>
+
+              <div className="cert-lightbox-hint" onClick={(e) => e.stopPropagation()}>
+                {zoomLevel > 1 ? 'Click image or button to zoom out' : 'Click image to zoom in • Click outside to close'}
+              </div>
             </div>
           </div>
         )}
