@@ -120,7 +120,7 @@
         "/images/projects/portfolio-manager/screenshot-06.webp",
         "/images/projects/portfolio-manager/screenshot-07.webp"
       ],
-      "githubUrl": "",
+      "githubUrl": "https://sridharvpr7.github.io/CONVETER",
       "liveDemoUrl": "https://portfolio-manager-quor.onrender.com",
       "startDate": null,
       "tags": ["web", "finance", "stocks", "investments", "sqlite", "render"]
