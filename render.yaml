@@ -13,7 +13,7 @@
 #
 # ── After deploying ───────────────────────────────────────────────────────────
 # 1. Google Cloud Console → OAuth 2.0 Credentials → Authorized JavaScript
-#    origins → add your Render service URL (e.g. https://sridhar-portfolio-gyoy.onrender.com)
+#    origins → add your Render service URL (e.g. https://sridharvpr-portfolio.onrender.com)
 #
 # 2. Register the Telegram webhook (replace YOUR_RENDER_URL and TOKEN):
 #    curl -X POST \
@@ -73,7 +73,7 @@ services:
       # ── Server-side runtime variables (never exposed to the browser) ──
 
       - key: APP_BASE_URL
-        sync: false   # Full URL of this Render service, e.g. https://sridhar-portfolio-gyoy.onrender.com
+        sync: false   # Full URL of this Render service, e.g. https://sridharvpr-portfolio.onrender.com
 
       - key: DATABASE_URL
         sync: false   # Neon PostgreSQL connection string (postgres://user:pw@host/db?sslmode=require)

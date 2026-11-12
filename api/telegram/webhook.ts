@@ -92,7 +92,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
         allowedChatIdsMasked: maskedChatIds,
         webhookSecret: secretConfigured,
       },
-      webhookEndpoint: `${(process.env.APP_BASE_URL || 'https://sridhar-portfolio-gyoy.onrender.com').replace(/\/+$/, '')}/api/telegram/webhook`,
+      webhookEndpoint: `${(process.env.APP_BASE_URL || 'https://sridharvpr-portfolio.onrender.com').replace(/\/+$/, '')}/api/telegram/webhook`,
       activity: getTelegramActivity(),
       ...(liveBot ? { bot: liveBot } : {}),
       ...(liveWebhook ? { webhookInfo: liveWebhook } : {}),
@@ -163,7 +163,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     await sendTelegram(
       `⛔ *Access Denied*\n\n` +
       `Your Telegram Chat ID is: \`${esc(String(chatId))}\`\\.\n\n` +
-      `This bot provides private analytics for sridhar-portfolio-gyoy.onrender.com\\. If you are the owner, add your Chat ID to \`TELEGRAM_CHAT_ID\` in Render\\.`,
+      `This bot provides private analytics for sridharvpr-portfolio.onrender.com\\. If you are the owner, add your Chat ID to \`TELEGRAM_CHAT_ID\` in Render\\.`,
       chatId
     );
     return res.status(200).json({ ok: true, status: 'unauthorized_notice_sent' });

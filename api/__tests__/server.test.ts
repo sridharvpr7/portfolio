@@ -476,7 +476,7 @@ describe('32. Native ServerResponse Dispatching Without res.status TypeError', (
     const rawReq: any = {
       method: 'GET',
       url: '/api/health',
-      headers: { host: 'sridhar-portfolio-gyoy.onrender.com' },
+      headers: { host: 'sridharvpr-portfolio.onrender.com' },
       on: (_event: string, cb: any) => { if (_event === 'end') cb(); return rawReq; },
     };
     // Notice: rawRes does NOT have status() or json() attached beforehand!
@@ -505,7 +505,7 @@ describe('32. Native ServerResponse Dispatching Without res.status TypeError', (
     const rawReq: any = {
       method: 'GET',
       url: '/api/stats',
-      headers: { host: 'sridhar-portfolio-gyoy.onrender.com' },
+      headers: { host: 'sridharvpr-portfolio.onrender.com' },
       on: (_event: string, cb: any) => { if (_event === 'end') cb(); return rawReq; },
     };
     const rawRes: any = {
@@ -536,7 +536,7 @@ describe('32. Native ServerResponse Dispatching Without res.status TypeError', (
       method: 'POST',
       url: '/api/track',
       headers: {
-        host: 'sridhar-portfolio-gyoy.onrender.com',
+        host: 'sridharvpr-portfolio.onrender.com',
         'content-type': 'application/json',
       },
       body: payload,

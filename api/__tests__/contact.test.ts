@@ -79,7 +79,7 @@ describe('Contact & Telegram Automation Tests', () => {
       expect(capturedPayload?.subject).toBe('Thank you for reaching out – Sridhar');
       expect((capturedPayload?.text as string)).toContain('Thank you for reaching out through my portfolio website.');
       expect((capturedPayload?.text as string)).toContain('"Frontend Inquiry"');
-      expect((capturedPayload?.text as string)).toContain('https://sridhar-portfolio-gyoy.onrender.com');
+      expect((capturedPayload?.text as string)).toContain('https://sridharvpr-portfolio.onrender.com');
     });
 
     it('gracefully handles missing credentials without throwing and returns error description', async () => {

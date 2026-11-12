@@ -599,7 +599,7 @@ describe('23. Telegram Bot Command Router & Webhook Handling', () => {
     const { setupTelegramWebhook } = await import('../lib/telegram');
     process.env.TELEGRAM_BOT_TOKEN = 'mock-bot-token';
     process.env.TELEGRAM_WEBHOOK_SECRET = 'super-secret-token';
-    process.env.APP_BASE_URL = 'https://sridhar-portfolio-gyoy.onrender.com';
+    process.env.APP_BASE_URL = 'https://sridharvpr-portfolio.onrender.com';
 
     const origFetch = global.fetch;
     let requestUrl = '';
@@ -616,11 +616,11 @@ describe('23. Telegram Bot Command Router & Webhook Handling', () => {
     });
 
     try {
-      const res = await setupTelegramWebhook('https://sridhar-portfolio-gyoy.onrender.com', false);
+      const res = await setupTelegramWebhook('https://sridharvpr-portfolio.onrender.com', false);
       expect(res.ok).toBe(true);
-      expect(res.webhookUrl).toBe('https://sridhar-portfolio-gyoy.onrender.com/api/telegram/webhook');
+      expect(res.webhookUrl).toBe('https://sridharvpr-portfolio.onrender.com/api/telegram/webhook');
       expect(requestUrl).toContain('/botmock-bot-token/setWebhook');
-      expect(requestPayload.url).toBe('https://sridhar-portfolio-gyoy.onrender.com/api/telegram/webhook');
+      expect(requestPayload.url).toBe('https://sridharvpr-portfolio.onrender.com/api/telegram/webhook');
       expect(requestPayload.secret_token).toBe('super-secret-token');
       expect(requestPayload.drop_pending_updates).toBe(false);
     } finally {

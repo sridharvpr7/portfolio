@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sridhar-portfolio-gyoy.onrender.com/sitemap.xml
+Sitemap: https://sridharvpr-portfolio.onrender.com/sitemap.xml

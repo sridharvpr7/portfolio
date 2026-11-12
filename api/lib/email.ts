@@ -67,7 +67,7 @@ export async function sendContactAutoReply(data: ContactAutoReplyData): Promise<
       <p style="margin: 0.25rem 0 0 0; font-weight: 700; color: #00f2fe; font-size: 1.05rem;">Sridhar</p>
       <p style="margin: 0.2rem 0 0 0; color: #9ca3af; font-size: 0.88rem;">ECE Student &amp; Web Developer</p>
       <p style="margin: 0.5rem 0 0 0; font-size: 0.88rem;">
-        <a href="https://sridhar-portfolio-gyoy.onrender.com" style="color: #4facfe; text-decoration: none;">Portfolio: https://sridhar-portfolio-gyoy.onrender.com</a>
+        <a href="https://sridharvpr-portfolio.onrender.com" style="color: #4facfe; text-decoration: none;">Portfolio: https://sridharvpr-portfolio.onrender.com</a>
       </p>
     </div>
   </div>
@@ -86,7 +86,7 @@ I will review your message and get back to you as soon as possible.
 Best regards,
 Sridhar
 ECE Student & Web Developer
-Portfolio: https://sridhar-portfolio-gyoy.onrender.com`;
+Portfolio: https://sridharvpr-portfolio.onrender.com`;
 
   try {
     const res = await fetch('https://api.resend.com/emails', {

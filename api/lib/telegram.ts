@@ -505,7 +505,7 @@ export function buildStatsReply(cmd: string, stats: VisitorStats): string {
       return [
         `*👋 Welcome to Sridhar\\'s Portfolio Bot\\!*`,
         ``,
-        `Live visitor tracking & analytics for [sridhar\\-portfolio\\-gyoy\\.onrender\\.com](https://sridhar-portfolio-gyoy.onrender.com)\\.`,
+        `Live visitor tracking & analytics for [sridharvpr\\-portfolio\\.onrender\\.com](https://sridharvpr-portfolio.onrender.com)\\.`,
         ``,
         `*Available Commands:*`,
         `• /views — Full combined report`,
@@ -588,7 +588,7 @@ export async function setupTelegramWebhook(
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) return { ok: false, description: 'TELEGRAM_BOT_TOKEN is not configured' };
 
-  const host = baseUrl || process.env.APP_BASE_URL || 'https://sridhar-portfolio-gyoy.onrender.com';
+  const host = baseUrl || process.env.APP_BASE_URL || 'https://sridharvpr-portfolio.onrender.com';
   const webhookUrl = `${host.replace(/\/+$/, '')}/api/telegram/webhook`;
 
   try {
