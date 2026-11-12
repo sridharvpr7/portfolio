@@ -1,0 +1,282 @@
+{
+  "projects": [
+    {
+      "id": "elders-veil",
+      "title": "Elder's Veil",
+      "shortSummary": "A comic and manga reading platform with immersive reading, user accounts, and content management.",
+      "problem": "Readers need a comfortable comic-reading experience without unnecessary interface clutter.",
+      "solution": "Developing a responsive comic platform with comic discovery, reading features, authentication, and administration tools.",
+      "features": [
+        "Comic and manga browsing catalog",
+        "Responsive web comic reader",
+        "Email OTP registration and authentication",
+        "Creator submission and review workflow",
+        "Admin management dashboard",
+        "Exclusive premium membership controls",
+        "Progressive Web App support"
+      ],
+      "technologies": [
+        "JavaScript",
+        "HTML5",
+        "CSS3",
+        "Node.js",
+        "Express.js",
+        "PostgreSQL",
+        "REST API"
+      ],
+      "category": "full-stack",
+      "status": "In Development",
+      "featured": true,
+      "visible": true,
+      "order": 1,
+      "coverImage": "/images/projects/elders-veil/cover.webp",
+      "image": "/images/projects/elders-veil/cover.webp",
+      "gallery": [
+        "/images/projects/elders-veil/screenshot-01.webp",
+        "/images/projects/elders-veil/screenshot-02.webp",
+        "/images/projects/elders-veil/screenshot-03.webp",
+        "/images/projects/elders-veil/screenshot-04.webp",
+        "/images/projects/elders-veil/screenshot-05.webp",
+        "/images/projects/elders-veil/screenshot-06.webp"
+      ],
+      "githubUrl": "https://github.com/sridharvpr7/Elders-veil",
+      "liveDemoUrl": "https://elders-veil1.onrender.com",
+      "startDate": null,
+      "tags": ["web", "full-stack", "comics", "postgresql"]
+    },
+    {
+      "id": "beyond-the-circuit",
+      "title": "Beyond the Circuit",
+      "shortSummary": "Personal digital portfolio built with React 19, TypeScript, and Vite featuring interactive circuit themes and dynamic JSON content.",
+      "problem": "Engineers working across both ECE hardware and web software need a cohesive digital identity that reflects both disciplines.",
+      "solution": "Architected a high-performance portfolio featuring live visitor statistics, circuit animations, and decoupled JSON content configuration.",
+      "features": [
+        "Dual-identity hardware and software project showcase",
+        "Dynamic JSON-driven content architecture",
+        "Realtime visitor presence and interaction counters",
+        "Glassmorphism and custom circuit trace animations",
+        "Optimized WebP image pipeline with zero layout shift",
+        "Dark and light theme support"
+      ],
+      "technologies": [
+        "React 19",
+        "TypeScript",
+        "Vite",
+        "Firebase",
+        "CSS3",
+        "Framer Motion"
+      ],
+      "category": "frontend",
+      "status": "Completed",
+      "featured": true,
+      "visible": true,
+      "order": 2,
+      "coverImage": "/images/projects/beyond-the-circuit/cover.webp",
+      "image": "/images/projects/beyond-the-circuit/cover.webp",
+      "gallery": [
+        "/images/projects/beyond-the-circuit/screenshot-01.webp",
+        "/images/projects/beyond-the-circuit/screenshot-02.webp"
+      ],
+      "githubUrl": "https://github.com/sridharvpr7/portfolio",
+      "liveDemoUrl": "https://sridhar-portfolio-gyoy.onrender.com",
+      "startDate": "2026-11",
+      "tags": ["portfolio", "react", "typescript", "vite", "electronics", "pwa"]
+    },
+    {
+      "id": "portfolio-manager",
+      "title": "Portfolio Manager",
+      "shortSummary": "A comprehensive investment tracking platform for Indian equities, mutual funds, ETFs, and F&O positions with SQLite persistence.",
+      "problem": "Tracking investments across stocks, mutual funds, and fixed assets manually leads to fragmented records and missing portfolio insights.",
+      "solution": "Built a private, modern financial dashboard featuring automated P&L metrics, capital gains reporting, XIRR calculations, and local SQLite database backups.",
+      "features": [
+        "Total Net Worth, P&L, and XIRR annualized return tracking",
+        "NSE & BSE equity holdings management with custom buy price and brokerage logging",
+        "Mutual fund tracking with AMC, SIP, and lump sum recording",
+        "Portfolio analysis with broker and market-cap/sector allocation breakdowns",
+        "Report generation (Portfolio Summary, Capital Gains, Mutual Fund XIRR, CSV exports)",
+        "Light and dark mode themes with local SQLite backup and restore"
+      ],
+      "technologies": [
+        "HTML5",
+        "CSS3",
+        "JavaScript",
+        "Node.js",
+        "SQLite",
+        "REST API"
+      ],
+      "category": "full-stack",
+      "status": "Live",
+      "featured": true,
+      "visible": true,
+      "order": 3,
+      "coverImage": "/images/projects/portfolio-manager/cover.webp",
+      "image": "/images/projects/portfolio-manager/cover.webp",
+      "gallery": [
+        "/images/projects/portfolio-manager/screenshot-01.webp",
+        "/images/projects/portfolio-manager/screenshot-02.webp",
+        "/images/projects/portfolio-manager/screenshot-03.webp",
+        "/images/projects/portfolio-manager/screenshot-04.webp",
+        "/images/projects/portfolio-manager/screenshot-05.webp",
+        "/images/projects/portfolio-manager/screenshot-06.webp",
+        "/images/projects/portfolio-manager/screenshot-07.webp"
+      ],
+      "githubUrl": "https://github.com/sridharvpr7/portfolio-manager.git",
+      "liveDemoUrl": "https://portfolio-manager-quor.onrender.com",
+      "startDate": null,
+      "tags": ["web", "finance", "stocks", "investments", "sqlite", "render"]
+    },
+    {
+      "id": "kabbadi-pro",
+      "title": "Kabbadi Pro",
+      "shortSummary": "A digital Kabaddi tournament management suite with team rosters, player tracking, automated fixtures, and point tables.",
+      "problem": "Tournament organizers face manual scoring delays, paper-based roster chaos, and complex fixture scheduling during competitive matches.",
+      "solution": "Developed a dedicated tournament web application enabling match scheduling, raider/defender points aggregation, coin toss results, and PDF/JSON exports.",
+      "features": [
+        "Tournament setup with venue, organizer, and team registration",
+        "Player roster management with jersey numbers, weight class, and playing positions",
+        "Interactive points table with auto-calculated match standings and won/lost tallies",
+        "Fixture generation for multi-round tournaments with toss results",
+        "Raider, defender, and all-rounder performance analysis breakdowns",
+        "Tournament data export in both JSON and PDF formats"
+      ],
+      "technologies": [
+        "HTML5",
+        "CSS3",
+        "JavaScript",
+        "jsPDF",
+        "Responsive UI"
+      ],
+      "category": "frontend",
+      "status": "Live",
+      "featured": true,
+      "visible": true,
+      "order": 4,
+      "coverImage": "/images/projects/kabbadi-pro/cover.webp",
+      "image": "/images/projects/kabbadi-pro/cover.webp",
+      "gallery": [
+        "/images/projects/kabbadi-pro/screenshot-01.webp",
+        "/images/projects/kabbadi-pro/screenshot-02.webp",
+        "/images/projects/kabbadi-pro/screenshot-03.webp",
+        "/images/projects/kabbadi-pro/screenshot-04.webp",
+        "/images/projects/kabbadi-pro/screenshot-05.webp",
+        "/images/projects/kabbadi-pro/screenshot-06.webp"
+      ],
+      "githubUrl": "https://github.com/sridharvpr7/kabbadi-pro",
+      "liveDemoUrl": "https://sridharvpr7.github.io/Kabbadi-pro/",
+      "startDate": null,
+      "tags": ["web", "kabaddi", "sports", "tournament-manager", "javascript"]
+    },
+    {
+      "id": "expense-tracker",
+      "title": "Expense Tracker",
+      "shortSummary": "A web application for personal expense tracking with budget planning, savings goals, and interactive visual analytics.",
+      "problem": "Tracking daily expenses manually makes it difficult to understand spending patterns and stay within budget limits.",
+      "solution": "A browser-based application designed with income/expense/savings breakdowns, money flow charts, and customizable savings targets.",
+      "features": [
+        "Real-time balance, total income, total expense, and net savings cards",
+        "Interactive budget planner with remaining budget alerts",
+        "Dynamic pie, donut, and money flow bar chart analytics",
+        "Categorized transaction ledger with add and delete capabilities",
+        "Savings goal progress tracker"
+      ],
+      "technologies": [
+        "HTML5",
+        "CSS3",
+        "JavaScript",
+        "Chart.js",
+        "LocalStorage"
+      ],
+      "category": "frontend",
+      "status": "Live",
+      "featured": false,
+      "visible": true,
+      "order": 5,
+      "coverImage": "/images/projects/expense-tracker/cover.webp",
+      "image": "/images/projects/expense-tracker/cover.webp",
+      "gallery": [
+        "/images/projects/expense-tracker/screenshot-01.webp",
+        "/images/projects/expense-tracker/screenshot-02.webp",
+        "/images/projects/expense-tracker/screenshot-03.webp",
+        "/images/projects/expense-tracker/screenshot-04.webp"
+      ],
+      "githubUrl": "https://github.com/sridharvpr7/Expense-Tracker",
+      "liveDemoUrl": "https://sridharvpr7.github.io/Expense-Tracker/",
+      "startDate": null,
+      "tags": ["web", "frontend", "javascript", "expense-tracker", "charts"]
+    },
+    {
+      "id": "music-player",
+      "title": "Nightwave — Music Player",
+      "shortSummary": "A retro-modern web audio player featuring a rotating vinyl turntable arm, waveform scrubber, and custom playlist queue.",
+      "problem": "Standard web music players often feel utilitarian and lack tactile, satisfying visual interaction.",
+      "solution": "A browser-based music experience inspired by vinyl turntables with neon green accents and smooth playback controls.",
+      "features": [
+        "Vinyl turntable arm visualizer with playback state indication",
+        "Real-time track progress scrubber and volume sliders",
+        "Curated playlist queue with active track highlighting",
+        "Shuffle, repeat, and skip playback controls",
+        "Keyboard navigation and responsive mobile interface"
+      ],
+      "technologies": [
+        "HTML5 Audio API",
+        "CSS3 Animations",
+        "JavaScript",
+        "Web Audio"
+      ],
+      "category": "frontend",
+      "status": "Completed",
+      "featured": false,
+      "visible": true,
+      "order": 6,
+      "coverImage": "/images/projects/music-player/cover.webp",
+      "image": "",
+      "gallery": [
+        "/images/projects/music-player/screenshot-01.webp"
+      ],
+      "githubUrl": "https://github.com/sridharvpr7/music-player.git",
+      "liveDemoUrl": "https://sridharvpr7.github.io/music-player",
+      "startDate": null,
+      "tags": ["web", "music", "audio", "vinyl", "frontend"]
+    },
+    {
+      "id": "converter",
+      "title": "Engineering Converter",
+      "shortSummary": "A dedicated conversion utility for electronics engineering, computing number bases, and signal calculations.",
+      "problem": "Performing manual conversions between binary, hexadecimal, and analog frequency units is error-prone and time-consuming.",
+      "solution": "A clean multi-mode conversion engine covering radix conversions, RF signal units, and microcontroller memory addressing.",
+      "features": [
+        "Number base radix conversions (Binary, Octal, Decimal, Hexadecimal, Two's complement)",
+        "ECE signal conversions (Frequency to wavelength, dBm to Watts, Impedance)",
+        "Computing storage conversions (Bits, Bytes, KB, MB, GB, Baud rates)",
+        "Floating point IEEE 754 reference",
+        "Responsive, clean formula documentation"
+      ],
+      "technologies": [
+        "HTML5",
+        "CSS3",
+        "JavaScript",
+        "ECE Formulas"
+      ],
+      "category": "frontend",
+      "status": "In Development",
+      "featured": false,
+      "visible": true,
+      "order": 7,
+      "coverImage": "/images/projects/converter/cover.webp",
+      "image": "/images/projects/converter/cover.webp",
+      "gallery": [],
+      "githubUrl": "https://github.com/sridharvpr7/CONVETER.git",
+      "liveDemoUrl": "",
+      "startDate": null,
+      "tags": ["web", "converter", "electronics", "ece", "math"]
+    }
+  ],
+  "categories": [
+    { "id": "all", "label": "All Projects" },
+    { "id": "full-stack", "label": "Full-Stack" },
+    { "id": "frontend", "label": "Frontend" },
+    { "id": "vlsi", "label": "VLSI & Verilog" },
+    { "id": "embedded", "label": "Embedded" },
+    { "id": "ece", "label": "ECE" }
+  ]
+}

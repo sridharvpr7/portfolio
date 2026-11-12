@@ -1,0 +1,11 @@
+{
+  "items": [
+    { "id": "hero", "label": "Hero", "href": "#hero", "order": 1 },
+    { "id": "about", "label": "About", "href": "#about", "order": 2 },
+    { "id": "skills", "label": "Skills", "href": "#skills", "order": 3 },
+    { "id": "projects", "label": "Projects", "href": "#projects", "order": 4 },
+    { "id": "experience", "label": "Experience", "href": "#experience", "order": 5 },
+    { "id": "certifications", "label": "Certifications", "href": "#certifications", "order": 6 },
+    { "id": "contact", "label": "Contact", "href": "#contact", "order": 7 }
+  ]
+}

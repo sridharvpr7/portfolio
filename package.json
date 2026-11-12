@@ -1,0 +1,42 @@
+{
+  "name": "portfolio",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "build:render": "npm run build",
+    "start": "node --import tsx/esm server.mjs",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:api": "tsc -p tsconfig.api.json --noEmit"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^5.0.3",
+    "@neondatabase/serverless": "^1.2.0",
+    "firebase": "^13.1.0",
+    "framer-motion": "^14.3.0",
+    "google-auth-library": "^11.3.1",
+    "jose": "^6.2.12",
+    "lucide-react": "^1.59.0",
+    "node-fetch": "^3.3.2",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "uuid": "^14.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vercel/node": "^24.0.3",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxlint": "^1.81.0",
+    "sharp": "^0.35.5",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.5"
+  }
+}

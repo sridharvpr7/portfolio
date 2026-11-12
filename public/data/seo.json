@@ -1,0 +1,11 @@
+{
+  "title": "Beyond the Circuit — Sridhar | ECE & Full-Stack Developer",
+  "description": "Electronics & Communication Engineering student building digital hardware and modern web experiences.",
+  "keywords": ["ECE", "electronics engineering", "full-stack developer", "Embedded C", "VS code", "web development", "portfolio"],
+  "author": "Sridhar VPR",
+  "ogTitle": "SRIDHAR VPR | ECE Student & Web Developer",
+  "ogDescription": "Electronics & Communication Engineering student building digital hardware and modern web experiences.",
+  "ogImage": "/assets/profile/og-image.png",
+  "twitterCard": "summary_large_image",
+  "canonicalUrl": "https://sridhar-portfolio-gyoy.onrender.com"
+}

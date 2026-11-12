@@ -1,0 +1,57 @@
+/* src/components/LiveViewerCount.css */
+
+.lvc-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+}
+
+/* Pulse dot */
+.lvc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.lvc-dot-live {
+  background: var(--accent-cyan);
+  animation: lvcPulse 2s ease-in-out infinite;
+}
+
+.lvc-dot-muted {
+  background: var(--text-faint);
+  opacity: 0.5;
+}
+
+@keyframes lvcPulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-cyan); opacity: 1; }
+  50% { box-shadow: 0 0 0 4px transparent; opacity: 0.7; }
+}
+
+.lvc-count {
+  font-weight: 600;
+  color: var(--accent-cyan);
+}
+
+.lvc-text {
+  color: var(--text-faint);
+}
+
+.lvc-live .lvc-text {
+  color: var(--text-muted);
+}
+
+.lvc-offline .lvc-text,
+.lvc-loading .lvc-text {
+  color: var(--text-faint);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .lvc-dot-live { animation: none; }
+}
+

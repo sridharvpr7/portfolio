@@ -1,0 +1,94 @@
+{
+  "certifications": [
+    {
+      "id": "codec-technologies-vlsi-internship",
+      "title": "Digital Electronics & VLSI Internship",
+      "issuer": "Codec Technologies Pvt. Ltd.",
+      "organization": "Codec Technologies Pvt. Ltd.",
+      "date": "2026-08-20",
+      "isInternship": true,
+      "badge": "Internship Certificate",
+      "description": "Successfully completed a 1-month AICTE & ICAC approved internship program in Digital Electronics & VLSI from 22 July 2026 to 20 August 2026.",
+      "visible": true,
+      "certificateFile": "/assets/certificates/codec-technologies-vlsi-internship.pdf",
+      "thumbnail": "/assets/certificates/codecdlcintern.jpg"
+    },
+    {
+      "id": "codealpha-frontend-internship",
+      "title": "Frontend Development Internship",
+      "issuer": "CodeAlpha",
+      "organization": "CodeAlpha",
+      "date": "2026-06-28",
+      "isInternship": true,
+      "badge": "Internship Offer",
+      "description": "Selected for a Frontend Development Internship at CodeAlpha.",
+      "visible": true,
+      "certificateFile": "/assets/certificates/codealpha-frontend-internship-offer.pdf",
+      "thumbnail": "/assets/certificates/codealphaFend.jpg"
+    },
+    {
+      "id": "html5",
+      "title": "HTML5 - The Language",
+      "issuer": "Infosys Springboard",
+      "date": "2026-05-12",
+      "visible": true,
+      "certificateFile": "/assets/certificates/html.jpg"
+    },
+    {
+      "id": "css3",
+      "title": "CSS3",
+      "issuer": "Infosys Springboard",
+      "date": "2026-05-15",
+      "visible": true,
+      "certificateFile": "/assets/certificates/CSS3_page-0001.jpg"
+    },
+    {
+      "id": "javascript",
+      "title": "JavaScript",
+      "issuer": "Infosys Springboard",
+      "date": "2026-06-16",
+      "visible": true,
+      "certificateFile": "/assets/certificates/JavaScript_page-0001.jpg"
+    },
+    {
+      "id": "digital-electronics",
+      "title": "Digital Electronics",
+      "issuer": "Infosys Springboard",
+      "date": "2026-08-06",
+      "visible": true,
+      "certificateFile": "/assets/certificates/digitalelectronics.png"
+    },
+    {
+      "id": "vlsi-verilog",
+      "title": "VLSI Digital Design — Chip Design and Verilog Programming",
+      "issuer": "Infosys Springboard",
+      "date": "2026-08-06",
+      "visible": true,
+      "certificateFile": "/assets/certificates/vlsi.png"
+    },
+    {
+      "id": "iot",
+      "title": "Internet of Things",
+      "issuer": "Infosys Springboard",
+      "date": "2026-05-10",
+      "visible": true,
+      "certificateFile": "/assets/certificates/iot.jpg"
+    },
+    {
+      "id": "mongodb-basics",
+      "title": "MongoDB Basics for Students",
+      "issuer": "MongoDB",
+      "date": "2026-07-20",
+      "visible": true,
+      "certificateFile": "/assets/certificates/mangodb.jpg"
+    },
+    {
+      "id": "github-copilot",
+      "title": "GitHub Copilot — The Complete Guide",
+      "issuer": "Udemy",
+      "date": "2026-08-10",
+      "visible": true,
+      "certificateFile": "/assets/certificates/github.jpg"
+    }
+  ]
+}

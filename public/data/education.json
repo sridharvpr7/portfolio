@@ -1,0 +1,66 @@
+{
+  "entries": [
+    {
+      "id": "edu-1",
+      "institution": "Veludayar Government Aided Higher Secondary School, Thiruvarur",
+      "degree": "Secondary School Leaving Certificate (SSLC)",
+      "field": "General Education",
+      "startYear": 2022,
+      "endYear": 2023,
+      "status": "Completed",
+      "location": "Thiruvarur, Tamil Nadu, India",
+      "description": "Completed 10th Standard under the Tamil Nadu State Board of School Examinations, securing 419 total marks.",
+      "highlights": [
+        "83.8% — Tamil Nadu State Board"
+      ],
+      "type": "education",
+      "order": 1
+    },
+    {
+      "id": "edu-2",
+      "institution": "Veludayar Government Aided Higher Secondary School, Thiruvarur",
+      "degree": "Higher Secondary Certificate — Class XI",
+      "field": "General Education",
+      "startYear": 2023,
+      "endYear": 2024,
+      "status": "Completed",
+      "location": "Thiruvarur, Tamil Nadu, India",
+      "description": "Completed Higher Secondary First Year under the Tamil Nadu State Board, securing 452 total marks.",
+      "highlights": [
+        "75.3% — Tamil Nadu State Board"
+      ],
+      "type": "education",
+      "order": 2
+    },
+    {
+      "id": "edu-3",
+      "institution": "Veludayar Government Aided Higher Secondary School, Thiruvarur",
+      "degree": "Higher Secondary Certificate — Class XII",
+      "field": "Physics, Chemistry, Computer Science & Mathematics",
+      "startYear": 2024,
+      "endYear": 2025,
+      "status": "Completed",
+      "location": "Thiruvarur, Tamil Nadu, India",
+      "description": "Completed Higher Secondary Second Year under the Tamil Nadu State Board, securing 502 total marks. Focus on Physics, Chemistry, Computer Science, and Mathematics.",
+      "highlights": [
+        "83.67% — Tamil Nadu State Board"
+      ],
+      "type": "education",
+      "order": 3
+    },
+    {
+      "id": "edu-3",
+      "institution": "J.N.N. Institute of Engineering",
+      "degree": "Bachelor of Engineering",
+      "field": "Electronics and Communication Engineering",
+      "startYear": 2025,
+      "endYear": 2029,
+      "status": "Pursuing",
+      "location": "Tamil Nadu, India",
+      "description": "Currently pursuing a Bachelor of Engineering in Electronics and Communication Engineering.",
+      "highlights": [],
+      "type": "education",
+      "order": 4
+    }
+  ]
+}

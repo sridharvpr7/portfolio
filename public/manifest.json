@@ -1,0 +1,21 @@
+{
+  "short_name": "Sridhar VPR",
+  "name": "SRIDHAR VPR | ECE Student & Web Developer",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/assets/profile/og-image.png",
+      "type": "image/png",
+      "sizes": "1424x752"
+    }
+  ],
+  "start_url": "https://sridhar-portfolio-gyoy.onrender.com/",
+  "background_color": "#080A0F",
+  "theme_color": "#080A0F",
+  "display": "standalone"
+}
+

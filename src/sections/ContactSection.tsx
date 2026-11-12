@@ -1,0 +1,479 @@
+import React, { useState, useRef } from 'react';
+import emailjs from '@emailjs/browser';
+import { Mail, Send, CheckCircle, AlertCircle, Loader, Copy, Check } from 'lucide-react';
+import { GithubIcon, LinkedinIcon } from '../components/BrandIcons';
+import { ShareButton } from '../components/ShareButton';
+import { useReveal } from '../hooks/useReveal';
+import { useLanguage } from '../hooks/useLanguage';
+import type { ContactData, SocialLink } from '../services/contentLoader';
+import './ContactSection.css';
+
+interface ContactSectionProps {
+  contact: ContactData;
+  socialLinks: SocialLink[];
+}
+
+// EmailJS credentials (Public Key is safe in client bundle; template & service IDs configured)
+const EMAILJS_SERVICE_ID = (import.meta.env.VITE_EMAILJS_SERVICE_ID as string | undefined) || 'service_5at7ymm';
+const EMAILJS_OWNER_TEMPLATE_ID = (import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string | undefined);
+const EMAILJS_AUTOREPLY_TEMPLATE_ID = (import.meta.env.VITE_EMAILJS_AUTOREPLY_TEMPLATE_ID as string | undefined) || 'template_sjb2s1d';
+const EMAILJS_PUBLIC_KEY = (import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string | undefined) || 'zAUmn9P-Y0rfjGErT';
+
+interface FormFields {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  // Honeypot — must remain empty for a real submission
+  _hp: string;
+}
+
+interface FieldErrors {
+  name?: string;
+  email?: string;
+  subject?: string;
+  message?: string;
+}
+
+type SendStatus = 'idle' | 'sending' | 'success' | 'error';
+
+function validateFields(fields: FormFields): FieldErrors {
+  const errors: FieldErrors = {};
+  if (!fields.name.trim()) errors.name = 'Name is required';
+  if (!fields.email.trim()) {
+    errors.email = 'Email is required';
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email.trim())) {
+    errors.email = 'Enter a valid email address';
+  }
+  if (!fields.subject.trim()) errors.subject = 'Subject is required';
+  if (!fields.message.trim()) {
+    errors.message = 'Message is required';
+  } else if (fields.message.trim().length < 10) {
+    errors.message = 'Message must be at least 10 characters';
+  }
+  return errors;
+}
+
+export const ContactSection: React.FC<ContactSectionProps> = ({ contact, socialLinks }) => {
+  const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.1 });
+  const { t, language } = useLanguage();
+  const contactLinks = socialLinks.filter(l => l.visible && l.showInContact);
+
+  const [fields, setFields] = useState<FormFields>({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+    _hp: '',
+  });
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [sendStatus, setSendStatus] = useState<SendStatus>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
+  const formRef = useRef<HTMLFormElement>(null);
+  // Prevent duplicate submissions
+  const submittingRef = useRef(false);
+  const lastSubmittedKey = useRef<string>('');
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopyEmail = async () => {
+    const emailToCopy = contact.displayEmail || contact.email || 'sridharvpr7@gmail.com';
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(emailToCopy);
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = emailToCopy;
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2500);
+    } catch (err) {
+      console.warn('Failed to copy email:', err);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFields(prev => ({ ...prev, [name]: value }));
+    // Clear the error for this field when user starts typing
+    if (name in errors) {
+      setErrors(prev => { const next = { ...prev }; delete next[name as keyof FieldErrors]; return next; });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Honeypot check — bots fill this in
+    if (fields._hp) return;
+
+    // Prevent double-submit
+    if (submittingRef.current) return;
+
+    const fieldErrors = validateFields(fields);
+    if (Object.keys(fieldErrors).length > 0) {
+      setErrors(fieldErrors);
+      return;
+    }
+
+    // Deduplication check: prevent identical submissions from firing duplicate emails
+    const submissionKey = `${fields.email.trim().toLowerCase()}:${fields.subject.trim()}:${fields.message.trim()}`;
+    if (lastSubmittedKey.current === submissionKey) {
+      setSendStatus('success');
+      return;
+    }
+
+    submittingRef.current = true;
+    setSendStatus('sending');
+    setErrorMsg('');
+
+    try {
+      const visitorName = fields.name.trim();
+      const visitorEmail = fields.email.trim();
+      const messageSubject = fields.subject.trim();
+      const messageBody = fields.message.trim();
+
+      // 1. Send Primary Owner Notification
+      if (EMAILJS_OWNER_TEMPLATE_ID) {
+        const ownerParams = {
+          from_name: visitorName,
+          from_email: visitorEmail,
+          to_name: 'Sridhar',
+          name: visitorName,
+          email: visitorEmail,
+          subject: messageSubject,
+          message: messageBody,
+          reply_to: visitorEmail,
+        };
+
+        await emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_OWNER_TEMPLATE_ID,
+          ownerParams,
+          { publicKey: EMAILJS_PUBLIC_KEY }
+        );
+      } else {
+        // Fallback to /api/contact if owner template ID is not yet defined in env
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: visitorName,
+            email: visitorEmail,
+            subject: messageSubject,
+            message: messageBody,
+            _hp: fields._hp,
+          }),
+        });
+
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) {
+          throw new Error(data.error || 'Failed to submit contact message');
+        }
+      }
+
+      // 2. Send Second EmailJS Template: Automatic Visitor Acknowledgement
+      // (Requirement: Auto-reply template uses {{from_email}} as recipient, {{from_name}} as greeting,
+      // and reply_to: sridharvpr7@gmail.com. Do not pass to_email.)
+      if (EMAILJS_AUTOREPLY_TEMPLATE_ID) {
+        try {
+          const autoReplyParams = {
+            from_name: visitorName,
+            from_email: visitorEmail,
+            reply_to: 'sridharvpr7@gmail.com',
+            subject: messageSubject,
+            message: messageBody,
+          };
+
+          await emailjs.send(
+            EMAILJS_SERVICE_ID,
+            EMAILJS_AUTOREPLY_TEMPLATE_ID,
+            autoReplyParams,
+            { publicKey: EMAILJS_PUBLIC_KEY }
+          );
+        } catch (autoReplyErr) {
+          console.warn('[contact] EmailJS auto-reply delivery warning:', autoReplyErr);
+        }
+      }
+
+      // 3. Optional background telemetry / Telegram notification
+      if (EMAILJS_OWNER_TEMPLATE_ID) {
+        fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: visitorName,
+            email: visitorEmail,
+            subject: messageSubject,
+            message: messageBody,
+            _hp: fields._hp,
+          }),
+        }).catch(() => {});
+      }
+
+      lastSubmittedKey.current = submissionKey;
+      setSendStatus('success');
+      setFields({ name: '', email: '', subject: '', message: '', _hp: '' });
+    } catch (err) {
+      console.error('[contact] Submission error:', err);
+      setSendStatus('error');
+      setErrorMsg('Failed to send. Please try the email link below or try again later.');
+    } finally {
+      submittingRef.current = false;
+    }
+  };
+
+  return (
+    <section id="contact" className="section contact-section" aria-labelledby="contact-title">
+      <div className="container contact-container" ref={ref}>
+
+        <div className={`contact-left ${isVisible ? 'revealed' : ''}`}>
+          <div className="section-label">{t('contact_label')}</div>
+          <h2 className="section-title" id="contact-title">
+            {language === 'ta' ? (
+              <>இணைந்து<br/><span className="text-gradient">உருவாக்குவோம்</span></>
+            ) : (
+              <>Let's Build<br/><span className="text-gradient">Something</span></>
+            )}
+          </h2>
+
+          <p className="contact-note">{contact.contactNote}</p>
+
+          <div className="contact-links">
+            {contact.email && (
+              <div className="contact-email-block">
+                <a
+                  href={`mailto:${contact.email}`}
+                  id="contact-email-link"
+                  className="contact-link-item"
+                  aria-label={`Email: ${contact.displayEmail}`}
+                >
+                  <div className="contact-link-icon">
+                    <Mail size={18} />
+                  </div>
+                  <div>
+                    <div className="contact-link-label">Email</div>
+                    <div className="contact-link-value">{contact.displayEmail}</div>
+                  </div>
+                </a>
+
+                <button
+                  type="button"
+                  id="contact-copy-email-btn"
+                  className={`contact-copy-email-btn ${isCopied ? 'copied' : ''}`}
+                  onClick={handleCopyEmail}
+                  aria-label={isCopied ? 'Email address copied to clipboard' : 'Copy email address'}
+                  aria-live="polite"
+                >
+                  {isCopied ? (
+                    <>
+                      <Check size={14} className="copy-icon-success" aria-hidden="true" />
+                      <span>Email copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={14} aria-hidden="true" />
+                      <span>Copy Email</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+
+            {contactLinks.map(link => (
+              <a
+                key={link.id}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-link-item"
+                aria-label={`${link.label} profile`}
+              >
+                <div className="contact-link-icon">
+                  {link.id === 'github' ? <GithubIcon size={18} /> : <LinkedinIcon size={18} />}
+                </div>
+                <div>
+                  <div className="contact-link-label">{link.platform}</div>
+                  <div className="contact-link-value">{link.label}</div>
+                </div>
+              </a>
+            ))}
+
+            <ShareButton variant="contact" />
+          </div>
+        </div>
+
+        <div className={`contact-right ${isVisible ? 'revealed' : ''}`}>
+          <div className="contact-card card">
+            <div className="contact-card-header">
+              <div className="font-mono" style={{ fontSize: '0.7rem', color: 'var(--accent-blue)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                &gt; Send a message
+              </div>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                Fill out the form below — I'll reply within 24 hours.
+              </p>
+            </div>
+
+            {sendStatus === 'success' ? (
+              <div className="contact-status success" role="alert">
+                <CheckCircle size={16} />
+                {t('contact_sent')}
+              </div>
+            ) : (
+                  <form
+                    ref={formRef}
+                    id="contact-form"
+                    className="contact-form"
+                    onSubmit={handleSubmit}
+                    noValidate
+                  >
+                    {/* Honeypot field — hidden from real users, visible to bots */}
+                    <div className="contact-honeypot" aria-hidden="true">
+                      <input
+                        type="text"
+                        name="_hp"
+                        value={fields._hp}
+                        onChange={handleChange}
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
+                    </div>
+
+                    <div className="contact-form-row">
+                      <div className="contact-field">
+                        <label htmlFor="contact-name">{t('contact_name')}</label>
+                        <input
+                          id="contact-name"
+                          name="name"
+                          type="text"
+                          value={fields.name}
+                          onChange={handleChange}
+                          className={errors.name ? 'field-error' : ''}
+                          placeholder={language === 'ta' ? 'உங்கள் பெயர்' : 'Your name'}
+                          autoComplete="name"
+                          disabled={sendStatus === 'sending'}
+                        />
+                        {errors.name && <span className="field-error-msg" role="alert">{errors.name}</span>}
+                      </div>
+                      <div className="contact-field">
+                        <label htmlFor="contact-email">{t('contact_email')}</label>
+                        <input
+                          id="contact-email"
+                          name="email"
+                          type="email"
+                          value={fields.email}
+                          onChange={handleChange}
+                          className={errors.email ? 'field-error' : ''}
+                          placeholder={language === 'ta' ? 'மின்னஞ்சல் முகவரி' : 'you@example.com'}
+                          autoComplete="email"
+                          disabled={sendStatus === 'sending'}
+                        />
+                        {errors.email && <span className="field-error-msg" role="alert">{errors.email}</span>}
+                      </div>
+                    </div>
+
+                    <div className="contact-field">
+                      <label htmlFor="contact-subject">{t('contact_subject')}</label>
+                      <input
+                        id="contact-subject"
+                        name="subject"
+                        type="text"
+                        value={fields.subject}
+                        onChange={handleChange}
+                        className={errors.subject ? 'field-error' : ''}
+                        placeholder={language === 'ta' ? 'பொருள் அல்லது விபரம்' : "What's this about?"}
+                        disabled={sendStatus === 'sending'}
+                      />
+                      {errors.subject && <span className="field-error-msg" role="alert">{errors.subject}</span>}
+                    </div>
+
+                    <div className="contact-field">
+                      <label htmlFor="contact-message">{t('contact_message')}</label>
+                      <textarea
+                        id="contact-message"
+                        name="message"
+                        value={fields.message}
+                        onChange={handleChange}
+                        className={errors.message ? 'field-error' : ''}
+                        placeholder={language === 'ta' ? 'உங்கள் செய்தி அல்லது திட்ட விவரங்கள்...' : "Tell me what you're working on..."}
+                        rows={5}
+                        disabled={sendStatus === 'sending'}
+                      />
+                      {errors.message && <span className="field-error-msg" role="alert">{errors.message}</span>}
+                    </div>
+
+                    {sendStatus === 'error' && (
+                      <div className="contact-status error" role="alert">
+                        <AlertCircle size={16} />
+                        {errorMsg || 'Something went wrong. Please try again.'}
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      id="contact-submit-btn"
+                      className="btn btn-primary contact-submit-btn"
+                      disabled={sendStatus === 'sending'}
+                      aria-label={t('contact_send')}
+                    >
+                      {sendStatus === 'sending' ? (
+                        <>
+                          <Loader size={16} style={{ animation: 'spin 0.8s linear infinite' }} />
+                          {t('contact_sending')}
+                        </>
+                      ) : (
+                        <>
+                          <Send size={16} />
+                          {t('contact_send')}
+                        </>
+                      )}
+                    </button>
+
+                    <p className="contact-fallback">
+                      Prefer direct email?{' '}
+                      <a href={`mailto:${contact.email}?subject=Hello from your portfolio`} id="contact-fallback-mailto">
+                        {contact.displayEmail}
+                      </a>
+                    </p>
+                  </form>
+                )}
+
+                <div className="contact-card-divider" aria-hidden="true">
+                  <span>or connect on</span>
+                </div>
+
+                <div className="contact-social-row">
+                  {contactLinks.map(link => (
+                    <a
+                      key={link.id}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="contact-social-btn"
+                      aria-label={`${link.platform} profile`}
+                    >
+                      {link.id === 'github' ? <GithubIcon size={17} /> : <LinkedinIcon size={17} />}
+                      {link.platform}
+                    </a>
+                  ))}
+                </div>
+
+            <div className="contact-availability-note">
+              <div className="status-badge" style={{ alignSelf: 'flex-start' }}>
+                <span className="status-dot" />
+                Open to Internships &amp; Collaborations
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+};
