@@ -11,6 +11,8 @@ import {
   FolderGit2,
   X,
   Sparkles,
+  Cpu,
+  FileText,
 } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './BrandIcons';
 import type { Project } from '../services/contentLoader';
@@ -89,7 +91,16 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         subtitle: 'Engineering journey, background, and college',
         icon: <Compass size={16} />,
         action: () => navigateTo('about'),
-        keywords: ['about', 'bio', 'education', 'college', 'panimalar'],
+        keywords: ['about', 'bio', 'education', 'college', 'jnn', 'j.n.n'],
+      },
+      {
+        id: 'nav-ece',
+        category: 'Navigation',
+        title: 'ECE Engineering & Digital Hardware',
+        subtitle: 'Digital logic gates, VLSI workflow, Verilog HDL, and protocols',
+        icon: <Cpu size={16} />,
+        action: () => navigateTo('ece'),
+        keywords: ['ece', 'hardware', 'vlsi', 'verilog', 'logic', 'circuit', 'gates', 'converter'],
       },
       {
         id: 'nav-skills',
@@ -138,6 +149,19 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       },
 
       // Actions
+      {
+        id: 'act-view-resume',
+        category: 'Actions',
+        title: 'View Interactive HTML Resume',
+        subtitle: 'Open dynamic JSON-driven ATS-friendly resume page',
+        icon: <FileText size={16} />,
+        action: () => {
+          setIsOpen(false);
+          window.history.pushState({}, '', '/resume');
+          window.dispatchEvent(new PopStateEvent('popstate'));
+        },
+        keywords: ['resume', 'cv', 'html', 'view', 'read'],
+      },
       {
         id: 'act-resume',
         category: 'Actions',

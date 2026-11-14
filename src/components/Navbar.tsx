@@ -18,7 +18,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   items,
   socialLinks,
   activeSection,
-  resumeUrl,
+  resumeUrl: _resumeUrl,
   brandName = 'Sridhar',
   isDark,
   onThemeToggle,
@@ -134,17 +134,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               </a>
             )}
 
-            {resumeUrl && (
-              <a
-                href={resumeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-primary btn-sm navbar-resume-btn"
-                id="nav-resume-btn"
-              >
-                {t('hero_resume')} <ExternalLink size={13} />
-              </a>
-            )}
+            <a
+              href="/resume"
+              onClick={e => {
+                e.preventDefault();
+                window.history.pushState({}, '', '/resume');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
+              className="btn btn-primary btn-sm navbar-resume-btn"
+              id="nav-resume-btn"
+            >
+              {t('hero_resume')} <ExternalLink size={13} />
+            </a>
 
             <button
               className="navbar-icon-btn navbar-mobile-toggle"
@@ -197,11 +198,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>{language === 'en' ? 'தமிழில் காண்க (Tamil)' : 'Switch to English'}</span>
             </button>
 
-            {resumeUrl && (
-              <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                {t('hero_resume')} <ExternalLink size={14} />
-              </a>
-            )}
+            <a
+              href="/resume"
+              onClick={e => {
+                e.preventDefault();
+                setMobileOpen(false);
+                window.history.pushState({}, '', '/resume');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
+              className="btn btn-primary"
+              style={{ width: '100%', justifyContent: 'center' }}
+            >
+              {t('hero_resume')} <ExternalLink size={14} />
+            </a>
             <button
               className="btn btn-secondary"
               onClick={onThemeToggle}

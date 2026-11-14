@@ -1,0 +1,85 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1980 >>
+stream
+BT
+/F1 20 Tf
+50 740 Td
+(Sridhar Vpr - Electronics & Communication Engineering | Full-Stack Developer) Tj
+/F1 10 Tf
+0 -24 Td
+(Email: sridharvpr7@gmail.com | GitHub: github.com/sridharvpr7 | LinkedIn: linkedin.com/in/sridhar-manivannan-468ba035b) Tj
+0 -16 Td
+(Location: Tamil Nadu, India | Portfolio: https://sridharvpr-portfolio.onrender.com) Tj
+/F1 13 Tf
+0 -30 Td
+(EDUCATION) Tj
+/F1 10 Tf
+0 -16 Td
+(J.N.N. Institute of Engineering - Bachelor of Engineering in Electronics and Communication (2025 - 2029)) Tj
+0 -14 Td
+(Coursework: Digital Electronics, VLSI Design, Verilog HDL, Computer Architecture, Embedded Systems) Tj
+/F1 13 Tf
+0 -30 Td
+(TECHNICAL SKILLS) Tj
+/F1 10 Tf
+0 -16 Td
+(Hardware & ECE: Digital Logic, Verilog HDL, RTL Design, CMOS, Microcontrollers, UART, SPI, I2C) Tj
+0 -14 Td
+(Web & Software: React 19, TypeScript, JavaScript, Node.js, Express, PostgreSQL, Firebase, SQLite) Tj
+0 -14 Td
+(Tools: Git, GitHub, VS Code, Vite, Render, ModelSim, EDA Playground) Tj
+/F1 13 Tf
+0 -30 Td
+(INTERNSHIPS & CERTIFICATIONS) Tj
+/F1 10 Tf
+0 -16 Td
+(Codec Technologies - Digital Electronics & VLSI Intern (AICTE & ICAC Approved, July-Aug 2026)) Tj
+0 -14 Td
+(CodeAlpha - Frontend Development Intern (Scheduled July 2026)) Tj
+0 -14 Td
+(Infosys Springboard - VLSI Digital Design: Chip Design & Verilog Programming) Tj
+0 -14 Td
+(Infosys Springboard - Digital Electronics | Internet of Things | JavaScript | HTML5 | CSS3) Tj
+/F1 13 Tf
+0 -30 Td
+(FEATURED PROJECTS) Tj
+/F1 10 Tf
+0 -16 Td
+(Beyond the Circuit - Personal Engineering Portfolio (React 19, TypeScript, Vite, Neon PostgreSQL)) Tj
+0 -14 Td
+(Elder\047s Veil - Full-Stack Comic Reading Platform (JavaScript, Node.js, Express, PostgreSQL)) Tj
+0 -14 Td
+(CONVET PULSE - Engineering Radix & Unit Converter (HTML5, CSS3, JavaScript, Signal Formulas)) Tj
+0 -14 Td
+(Portfolio Manager - Investment Tracking Platform (Node.js, SQLite, XIRR Analytics)) Tj
+0 -14 Td
+(Kabaddi Pro - Digital Tournament Management Suite (JavaScript, jsPDF)) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000002273 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+2343
+%%EOF

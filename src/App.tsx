@@ -6,6 +6,7 @@ import { Footer } from './components/Footer';
 import { HeroSection } from './sections/HeroSection';
 import { DualIdentitySection } from './sections/DualIdentitySection';
 import { AboutSection } from './sections/AboutSection';
+import { EceSection } from './sections/EceSection';
 import { SkillsSection } from './sections/SkillsSection';
 import { ProjectsSection } from './sections/ProjectsSection';
 import { ExperienceSection } from './sections/ExperienceSection';
@@ -19,6 +20,7 @@ import { LanguageProvider } from './hooks/useLanguage';
 // Lazy-load non-critical interactive features (code-split)
 const AiAssistant = lazy(() => import('./components/AiAssistant').then(m => ({ default: m.AiAssistant })));
 const CommandPalette = lazy(() => import('./components/CommandPalette').then(m => ({ default: m.CommandPalette })));
+const ResumePage = lazy(() => import('./pages/ResumePage').then(m => ({ default: m.ResumePage })));
 import {
   loadProfile,
   loadSiteConfig,
@@ -59,7 +61,7 @@ import {
 })();
 
 const INTRO_SESSION_KEY = 'portfolio-intro-seen';
-const SECTION_IDS = ['hero', 'about', 'skills', 'projects', 'github', 'experience', 'certifications', 'contact'];
+const SECTION_IDS = ['hero', 'dual-identity', 'about', 'ece', 'skills', 'projects', 'github', 'experience', 'certifications', 'contact'];
 
 interface AppData {
   site: SiteConfig | null;
@@ -82,6 +84,25 @@ function App() {
   const { isDark, toggle } = useTheme();
   const activeSection = useActiveSection(SECTION_IDS);
   const { stats, analyticsReady, configEnabled } = useAnalytics();
+
+  const [currentPath, setCurrentPath] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const clean = window.location.pathname.replace(/\/+$/, '') || '/';
+      return clean;
+    }
+    return '/';
+  });
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const clean = window.location.pathname.replace(/\/+$/, '') || '/';
+      setCurrentPath(clean);
+      window.scrollTo(0, 0);
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
 
   // Load notifications config for Footer (client-visible settings only)
   const [notificationsConfig, setNotificationsConfig] = useState<{
@@ -211,6 +232,23 @@ function App() {
     );
   }
 
+  if (currentPath === '/resume') {
+    return (
+      <LanguageProvider>
+        <Suspense fallback={
+          <div style={{ minHeight: '100vh', background: '#080A0F', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#38bdf8', fontFamily: 'JetBrains Mono' }}>
+            Loading resume...
+          </div>
+        }>
+          <ResumePage onBack={() => {
+            window.history.pushState({}, '', '/');
+            window.dispatchEvent(new PopStateEvent('popstate'));
+          }} />
+        </Suspense>
+      </LanguageProvider>
+    );
+  }
+
   return (
     <LanguageProvider>
       <CustomCursor />
@@ -244,6 +282,10 @@ function App() {
 
         {site.sections.about?.visible !== false && (
           <AboutSection profile={profile} education={education} />
+        )}
+
+        {site.sections.ece?.visible !== false && (
+          <EceSection />
         )}
 
         {site.sections.skills?.visible !== false && (

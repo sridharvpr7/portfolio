@@ -1,0 +1,199 @@
+{
+  "personalInfo": {
+    "name": "Sridhar Vpr",
+    "title": "Electronics & Communication Engineering Student | Full-Stack Web Developer",
+    "tagline": "Bridging the World of Circuits and Code",
+    "email": "sridharvpr7@gmail.com",
+    "location": "Tamil Nadu, India",
+    "github": "https://github.com/sridharvpr7",
+    "linkedin": "https://linkedin.com/in/sridhar-manivannan-468ba035b",
+    "portfolio": "https://sridharvpr-portfolio.onrender.com",
+    "pdfUrl": "/assets/resume/resume.pdf"
+  },
+  "summary": "Electronics and Communication Engineering undergraduate student with a dual technical foundation across digital hardware logic and modern full-stack web software. Experienced in Digital Electronics, VLSI design concepts, Verilog HDL, and embedded systems, complemented by hands-on full-stack development using React, TypeScript, Node.js, Express, and PostgreSQL. Passionate about bridging hardware architectures with scalable digital web experiences.",
+  "education": [
+    {
+      "institution": "J.N.N. Institute of Engineering",
+      "degree": "Bachelor of Engineering (B.E.)",
+      "field": "Electronics and Communication Engineering",
+      "startYear": 2025,
+      "endYear": 2029,
+      "status": "Pursuing (Expected 2029)",
+      "location": "Tamil Nadu, India",
+      "description": "Undergraduate coursework focusing on Digital Electronics, VLSI Design, Verilog HDL, Microprocessors, Signals & Systems, Computer Architecture, and Circuit Design."
+    },
+    {
+      "institution": "Veludayar Government Aided Higher Secondary School",
+      "degree": "Higher Secondary Certificate (HSC) — Class XII",
+      "field": "Physics, Chemistry, Computer Science & Mathematics",
+      "startYear": 2024,
+      "endYear": 2025,
+      "status": "Completed (83.67%)",
+      "location": "Thiruvarur, Tamil Nadu, India",
+      "description": "Graduated with 502/600 marks focusing on foundational sciences, mathematics, and computer science."
+    },
+    {
+      "institution": "Veludayar Government Aided Higher Secondary School",
+      "degree": "Secondary School Leaving Certificate (SSLC) — Class X",
+      "field": "General Education",
+      "startYear": 2022,
+      "endYear": 2023,
+      "status": "Completed (83.8%)",
+      "location": "Thiruvarur, Tamil Nadu, India",
+      "description": "Graduated with 419/500 marks under Tamil Nadu State Board."
+    }
+  ],
+  "technicalSkills": {
+    "electronicsAndVLSI": [
+      "Digital Electronics & Logic Design",
+      "VLSI Digital Design Flow",
+      "Verilog HDL & RTL Modeling",
+      "Combinational & Sequential Circuits",
+      "Finite State Machines (FSM)",
+      "Computer Organization & Architecture",
+      "CMOS Logic Fundamentals",
+      "Embedded Systems & Microcontroller Interfacing (ESP32/Arduino)",
+      "Communication Protocols (UART, SPI, I2C)"
+    ],
+    "programmingLanguages": [
+      "JavaScript (ES6+)",
+      "TypeScript",
+      "C / C++",
+      "Python",
+      "Verilog HDL",
+      "SQL",
+      "HTML5",
+      "CSS3"
+    ],
+    "webAndFullStack": [
+      "React 19",
+      "Node.js",
+      "Express.js",
+      "RESTful API Architecture",
+      "PostgreSQL (Neon Serverless)",
+      "Firebase Realtime Database & Auth",
+      "SQLite",
+      "Framer Motion",
+      "Responsive Web Design & PWA"
+    ],
+    "toolsAndPlatforms": [
+      "Git & GitHub",
+      "Visual Studio Code",
+      "Vite",
+      "Render",
+      "ModelSim / EDA Tools",
+      "Postman",
+      "Linux / PowerShell"
+    ]
+  },
+  "internships": [
+    {
+      "organization": "Codec Technologies Pvt. Ltd.",
+      "role": "Digital Electronics & VLSI Intern",
+      "period": "July 2026 – August 2026",
+      "location": "Virtual / Approved by AICTE & ICAC",
+      "description": "Completed an intensive 1-month AICTE & ICAC approved internship focused on Digital Electronics, combinational logic design, VLSI design principles, and Verilog HDL module verification.",
+      "certificateFile": "/assets/certificates/codecdlcintern.jpg"
+    },
+    {
+      "organization": "CodeAlpha",
+      "role": "Frontend Development Intern",
+      "period": "Scheduled July 2026",
+      "location": "Virtual",
+      "description": "Selected for a Frontend Development internship program focusing on modern responsive UI architectures, semantic web components, and frontend performance.",
+      "certificateFile": "/assets/certificates/codealphaFend.jpg"
+    }
+  ],
+  "certifications": [
+    {
+      "title": "VLSI Digital Design — Chip Design and Verilog Programming",
+      "issuer": "Infosys Springboard",
+      "date": "August 2026",
+      "credentialUrl": "/assets/certificates/vlsi.png"
+    },
+    {
+      "title": "Digital Electronics",
+      "issuer": "Infosys Springboard",
+      "date": "August 2026",
+      "credentialUrl": "/assets/certificates/digitalelectronics.png"
+    },
+    {
+      "title": "Internet of Things (IoT)",
+      "issuer": "Infosys Springboard",
+      "date": "May 2026",
+      "credentialUrl": "/assets/certificates/iot.jpg"
+    },
+    {
+      "title": "JavaScript (ES6+)",
+      "issuer": "Infosys Springboard",
+      "date": "June 2026",
+      "credentialUrl": "/assets/certificates/JavaScript_page-0001.jpg"
+    },
+    {
+      "title": "CSS3 Styling & Layouts",
+      "issuer": "Infosys Springboard",
+      "date": "May 2026",
+      "credentialUrl": "/assets/certificates/CSS3_page-0001.jpg"
+    },
+    {
+      "title": "HTML5 — The Language",
+      "issuer": "Infosys Springboard",
+      "date": "May 2026",
+      "credentialUrl": "/assets/certificates/html.jpg"
+    },
+    {
+      "title": "MongoDB Basics for Students",
+      "issuer": "MongoDB",
+      "date": "July 2026",
+      "credentialUrl": "/assets/certificates/mangodb.jpg"
+    },
+    {
+      "title": "GitHub Copilot — The Complete Guide",
+      "issuer": "Udemy",
+      "date": "August 2026",
+      "credentialUrl": "/assets/certificates/github.jpg"
+    }
+  ],
+  "projects": [
+    {
+      "title": "Elder's Veil",
+      "category": "Full-Stack Web Application",
+      "techStack": ["JavaScript", "HTML5", "CSS3", "Node.js", "Express.js", "PostgreSQL", "REST API"],
+      "summary": "Immersive comic and manga reading platform featuring clean reading ergonomics, secure OTP authentication, creator submissions, and admin dashboard.",
+      "githubUrl": "https://github.com/sridharvpr7/Elders-veil",
+      "liveUrl": "https://elders-veil1.onrender.com"
+    },
+    {
+      "title": "CONVET PULSE — Engineering Radix & Unit Converter",
+      "category": "Engineering Tool / Frontend",
+      "techStack": ["HTML5", "CSS3", "JavaScript", "ECE Signal Formulas"],
+      "summary": "Specialized conversion suite designed for electronics engineering and computer science: multi-base radix conversions (binary, octal, hex, two's complement), RF signal unit conversions, and computing capacity metrics.",
+      "githubUrl": "https://github.com/sridharvpr7/CONVETER.git",
+      "liveUrl": ""
+    },
+    {
+      "title": "Beyond the Circuit",
+      "category": "Personal Engineering Portfolio",
+      "techStack": ["React 19", "TypeScript", "Vite", "Node.js", "Neon PostgreSQL", "Framer Motion"],
+      "summary": "High-performance cinematic portfolio uniting hardware engineering and software development with interactive circuit simulations, live visitor counter, and serverless PostgreSQL.",
+      "githubUrl": "https://github.com/sridharvpr7/portfolio",
+      "liveUrl": "https://sridharvpr-portfolio.onrender.com"
+    },
+    {
+      "title": "Portfolio Manager",
+      "category": "Finance & Investment Dashboard",
+      "techStack": ["JavaScript", "HTML5", "CSS3", "Node.js", "SQLite", "REST API"],
+      "summary": "Comprehensive investment tracking platform for Indian equities, mutual funds, ETFs, and F&O positions with automated P&L metrics, XIRR returns, and SQLite persistence.",
+      "githubUrl": "https://github.com/sridharvpr7/portfolio-manager.git",
+      "liveUrl": "https://portfolio-manager-quor.onrender.com"
+    },
+    {
+      "title": "Kabaddi Pro",
+      "category": "Tournament Management System",
+      "techStack": ["JavaScript", "HTML5", "CSS3", "jsPDF"],
+      "summary": "Digital tournament management suite with team rosters, point tables, match fixture generation, and automated PDF export.",
+      "githubUrl": "https://github.com/sridharvpr7/kabbadi-pro",
+      "liveUrl": "https://sridharvpr7.github.io/Kabbadi-pro/"
+    }
+  ]
+}

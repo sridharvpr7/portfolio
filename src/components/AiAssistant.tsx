@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bot, X, Minus, Send, Sparkles, User, RefreshCw } from 'lucide-react';
+import { Bot, X, Minus, Send, Sparkles, User, RefreshCw, Copy, Check, ExternalLink } from 'lucide-react';
 import './AiAssistant.css';
 
 interface Message {
@@ -10,59 +10,94 @@ interface Message {
 }
 
 const SUGGESTED_QUESTIONS = [
-  'Tell me about Sridhar.',
-  'What are his ECE skills?',
-  'Show me his VLSI interests.',
-  'What projects has he built?',
-  'What technologies does he use?',
-  'How can I contact him?',
+  'Explore ECE Background',
+  'Explore VLSI Interests',
+  "Tell me about Elder's Veil",
+  'Explain CONVET PULSE',
+  'Web Development Skills',
+  'Open Resume',
+  'Contact Sridhar',
 ];
 
 const WELCOME_MESSAGE: Message = {
   id: 'welcome',
   sender: 'assistant',
-  text: "Hey! Welcome to Beyond the Circuit. I'm your guide to Sridhar's engineering journey. Want to explore his projects, hardware interests, or development work?",
+  text: "Hello! I'm the Beyond the Circuit assistant. I can help you explore Sridhar's engineering interests, development skills, projects, certifications and professional background.\n\n[action:ece:Explore ECE Section] [action:projects:View Projects] [action:resume:Open Resume]",
   timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
 };
 
-// Client-side fallback knowledge engine in case server is unreachable or offline
+// Client-side fallback knowledge engine in case server is offline or unreachable
 function getClientFallbackAnswer(q: string): string {
   const query = q.toLowerCase();
   if (query.includes('ece') || query.includes('hardware') || query.includes('vlsi') || query.includes('verilog') || query.includes('circuit')) {
     return `In hardware engineering, Sridhar focuses on:
-• Digital Electronics & Logic Design
-• Verilog HDL and RTL synthesis
+• Digital Electronics & Logic Design (adders, multiplexers, decoders, flip-flops)
+• Verilog HDL and synthesizable RTL architectures
 • Computer Organization & Architecture
-• Embedded Systems & Microcontroller Interfacing (ESP32/Arduino)
-• CMOS fundamentals and circuit simulation.
-He has hands-on experience designing state machines, ALU logic, and exploring modern chip architecture.`;
+• Embedded Systems & Serial Protocols (UART, SPI, I2C)
+• CMOS fundamentals and VLSI digital design flows.
+Explore the dedicated ECE section for interactive logic gates and Verilog code!
+
+[action:ece:Open ECE Section]`;
+  }
+  if (query.includes("elder's veil") || query.includes('comic') || query.includes('manga')) {
+    return `Elder's Veil is a full-stack comic reading platform built with JavaScript, Node.js, Express.js, and PostgreSQL. It features OTP authentication, creator workflows, and an admin dashboard.
+
+[action:projects:View Elder's Veil]`;
+  }
+  if (query.includes('convet') || query.includes('pulse') || query.includes('converter')) {
+    return `CONVET PULSE is an engineering radix and unit conversion platform covering number bases (binary, octal, hex, two's complement), RF signal wavelength transformations, and data capacity units.
+
+[action:projects:View CONVET PULSE] [action:ece:Try ECE Converter]`;
   }
   if (query.includes('skill') || query.includes('tech') || query.includes('stack') || query.includes('software') || query.includes('react')) {
-    return `Sridhar's technical stack includes:
-• Frontend: React 19, TypeScript, JavaScript (ES6+), Tailwind CSS, Framer Motion
-• Backend: Node.js, Express, REST APIs
-• Databases: PostgreSQL (Neon Serverless), Firebase Realtime DB
-• Hardware & Tools: Verilog HDL, Git, GitHub, Render, Vitest.`;
+    return `Sridhar's technical stack:
+• Frontend: React 19, TypeScript, JavaScript (ES6+), HTML5, CSS3, Framer Motion
+• Backend: Node.js, Express.js, REST APIs
+• Databases: PostgreSQL (Neon Serverless), Firebase Realtime DB, SQLite
+• Tools & DevOps: Git, GitHub, Render, Vite, Vitest.
+
+[action:skills:View Skills Dashboard]`;
   }
   if (query.includes('project') || query.includes('built') || query.includes('portfolio')) {
     return `Sridhar has engineered both hardware and software projects:
-1. Beyond the Circuit: This production React 19 + TypeScript portfolio with real-time analytics, 3D interactive circuits, and serverless PostgreSQL.
-2. RTL Digital Design Modules: Verilog-based ALUs, shift registers, and state machines for digital logic verification.
-3. IoT & Embedded Systems: Sensor telemetry prototypes with ESP32 and microcontrollers.
-4. Full-Stack Web Applications: Interactive data-driven web platforms.
-Check out the Projects section on this page for live demos and code links!`;
+1. Beyond the Circuit — Personal engineering portfolio with live visitor analytics & circuit simulations
+2. Elder's Veil — Comic and manga reading platform (PostgreSQL, Node.js)
+3. CONVET PULSE — Engineering radix and unit conversion platform
+4. Portfolio Manager — Indian investment tracking dashboard (SQLite, XIRR)
+5. Kabaddi Pro — Tournament management web app with automated PDF export.
+
+[action:projects:View Projects Section]`;
+  }
+  if (query.includes('education') || query.includes('college')) {
+    return `Sridhar is pursuing a Bachelor of Engineering (B.E.) in Electronics and Communication Engineering at J.N.N. Institute of Engineering, Tamil Nadu, India (Expected Graduation: 2029).
+
+[action:about:View Education]`;
+  }
+  if (query.includes('internship') || query.includes('experience')) {
+    return `Sridhar's internships:
+• Codec Technologies: Digital Electronics & VLSI Intern (AICTE & ICAC Approved, July-Aug 2026)
+• CodeAlpha: Frontend Development Intern (Scheduled July 2026).
+
+[action:experience:View Experience]`;
   }
   if (query.includes('contact') || query.includes('hire') || query.includes('email') || query.includes('reach')) {
     return `You can reach Sridhar directly:
 • Email: sridharvpr7@gmail.com
 • GitHub: https://github.com/sridharvpr7
-• LinkedIn: https://www.linkedin.com/in/sridhar-vpr
-Or send a message through the contact form at the bottom of this portfolio!`;
+• LinkedIn: https://linkedin.com/in/sridhar-manivannan-468ba035b
+He is open to internship opportunities and technical collaborations!
+
+[action:contact:Open Contact Form]`;
   }
   if (query.includes('resume') || query.includes('cv')) {
-    return `You can download Sridhar VPR's resume directly via the "Resume" button in the Hero section or at /assets/resume/resume.pdf.`;
+    return `You can view Sridhar's JSON-driven HTML resume at /resume or download the official PDF directly from /assets/resume/resume.pdf!
+
+[action:resume:View HTML Resume] [action:download_resume:Download PDF]`;
   }
-  return `Sridhar VPR is an Electronics & Communication Engineering (ECE) student, VLSI enthusiast, and full-stack web developer. His focus is "Where Hardware Meets Software" — bridging low-level silicon logic and RTL design with modern web engineering.`;
+  return `Sridhar Vpr is an Electronics & Communication Engineering (ECE) student and full-stack web developer. His mission is "Bridging the World of Circuits and Code" — connecting silicon hardware logic with modern web applications.
+
+[action:ece:Explore ECE] [action:projects:View Projects] [action:resume:View Resume]`;
 }
 
 export const AiAssistant: React.FC = () => {
@@ -72,10 +107,11 @@ export const AiAssistant: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [hasUnread, setHasUnread] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-scroll chat to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -101,6 +137,43 @@ export const AiAssistant: React.FC = () => {
     setIsMinimized(prev => !prev);
   };
 
+  const handleCopy = (id: string, text: string) => {
+    // Strip action tags before copying
+    const cleanText = text.replace(/\[action:[^\]]+\]/g, '').trim();
+    navigator.clipboard.writeText(cleanText).then(() => {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    });
+  };
+
+  const handleSmartAction = (actionType: string) => {
+    if (actionType === 'resume') {
+      window.history.pushState({}, '', '/resume');
+      window.dispatchEvent(new PopStateEvent('popstate'));
+      setIsOpen(false);
+      return;
+    }
+    if (actionType === 'download_resume') {
+      const a = document.createElement('a');
+      a.href = '/assets/resume/resume.pdf';
+      a.download = 'Sridhar_Vpr_Resume.pdf';
+      a.click();
+      return;
+    }
+
+    // Scroll to section
+    const targetId = actionType.replace('#', '');
+    const el = document.getElementById(targetId);
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: 'smooth' });
+      // On mobile, close to see the section
+      if (window.innerWidth < 640) {
+        setIsOpen(false);
+      }
+    }
+  };
+
   const sendMessage = async (textToSend: string) => {
     const trimmed = textToSend.trim();
     if (!trimmed || isLoading) return;
@@ -117,11 +190,16 @@ export const AiAssistant: React.FC = () => {
     setIsLoading(true);
 
     try {
+      const historyPayload = messages.slice(-4).map(m => ({
+        role: m.sender === 'user' ? 'user' : 'assistant',
+        content: m.text,
+      }));
+
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: trimmed }),
-        signal: AbortSignal.timeout(6000),
+        body: JSON.stringify({ message: trimmed, history: historyPayload }),
+        signal: AbortSignal.timeout(6500),
       });
 
       if (res.ok) {
@@ -137,7 +215,6 @@ export const AiAssistant: React.FC = () => {
         throw new Error('API request failed');
       }
     } catch {
-      // Seamless verified fallback
       const fallbackReply = getClientFallbackAnswer(trimmed);
       const assistantMsg: Message = {
         id: `ai_${Date.now()}`,
@@ -165,6 +242,42 @@ export const AiAssistant: React.FC = () => {
     setMessages([WELCOME_MESSAGE]);
   };
 
+  // Helper to render text with clickable smart action pills
+  const renderMessageContent = (text: string) => {
+    const actionRegex = /\[action:([^:]+):([^\]]+)\]/g;
+    let match;
+
+    const actions: Array<{ type: string; label: string }> = [];
+
+    while ((match = actionRegex.exec(text)) !== null) {
+      actions.push({ type: match[1], label: match[2] });
+    }
+
+    // Strip actions from main prose
+    const cleanText = text.replace(/\[action:[^\]]+\]/g, '').trim();
+
+    return (
+      <div className="ai-bubble-content-wrap">
+        <div className="ai-bubble-text" style={{ whiteSpace: 'pre-line' }}>{cleanText}</div>
+        {actions.length > 0 && (
+          <div className="ai-smart-actions-wrap" style={{ marginTop: '0.65rem', display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+            {actions.map((act, idx) => (
+              <button
+                key={idx}
+                type="button"
+                className="ai-smart-action-chip"
+                onClick={() => handleSmartAction(act.type)}
+              >
+                <span>{act.label}</span>
+                <ExternalLink size={12} />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="ai-assistant-wrapper">
       {/* Floating Trigger Button */}
@@ -172,8 +285,8 @@ export const AiAssistant: React.FC = () => {
         <button
           className="ai-fab-btn"
           onClick={handleOpen}
-          aria-label="Open Beyond AI Assistant"
-          title="Open Beyond AI — Your Guide to Sridhar's Work"
+          aria-label="Open Beyond the Circuit AI Assistant"
+          title="Open Beyond the Circuit AI"
         >
           <div className="ai-fab-glow" />
           <div className="ai-fab-pulse" />
@@ -181,7 +294,7 @@ export const AiAssistant: React.FC = () => {
           {hasUnread && <span className="ai-fab-unread-dot" />}
           <div className="ai-fab-tooltip">
             <Sparkles size={13} className="ai-tooltip-sparkle" />
-            <span>Ask Beyond AI</span>
+            <span>Beyond the Circuit AI</span>
           </div>
         </button>
       )}
@@ -191,7 +304,7 @@ export const AiAssistant: React.FC = () => {
         <div
           className={`ai-chat-card ${isMinimized ? 'minimized' : ''}`}
           role="dialog"
-          aria-label="Beyond AI Portfolio Assistant"
+          aria-label="Beyond the Circuit AI Portfolio Assistant"
         >
           {/* Header Bar */}
           <div className="ai-header">
@@ -201,8 +314,8 @@ export const AiAssistant: React.FC = () => {
                 <span className="ai-status-dot" />
               </div>
               <div className="ai-title-wrap">
-                <span className="ai-title">Beyond AI</span>
-                <span className="ai-subtitle">Guide to Sridhar's Work</span>
+                <span className="ai-title">Beyond the Circuit AI</span>
+                <span className="ai-subtitle">ECE &amp; Full-Stack Engineering Guide</span>
               </div>
             </div>
 
@@ -244,8 +357,23 @@ export const AiAssistant: React.FC = () => {
                       {msg.sender === 'assistant' ? <Bot size={14} /> : <User size={14} />}
                     </div>
                     <div className="ai-bubble">
-                      <div className="ai-bubble-text">{msg.text}</div>
-                      <span className="ai-bubble-time">{msg.timestamp}</span>
+                      {msg.sender === 'assistant' ? renderMessageContent(msg.text) : (
+                        <div className="ai-bubble-text">{msg.text}</div>
+                      )}
+                      <div className="ai-bubble-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.35rem' }}>
+                        <span className="ai-bubble-time">{msg.timestamp}</span>
+                        {msg.sender === 'assistant' && (
+                          <button
+                            type="button"
+                            className="ai-copy-btn"
+                            onClick={() => handleCopy(msg.id, msg.text)}
+                            title="Copy response"
+                            style={{ background: 'transparent', border: 'none', color: 'var(--text-faint)', cursor: 'pointer', padding: '2px 4px', display: 'inline-flex', alignItems: 'center', gap: '3px', fontSize: '0.7rem' }}
+                          >
+                            {copiedId === msg.id ? <><Check size={11} color="#22c55e" /> Copied</> : <><Copy size={11} /> Copy</>}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -268,7 +396,7 @@ export const AiAssistant: React.FC = () => {
               </div>
 
               {/* Suggested Questions Chips */}
-              {messages.length <= 2 && (
+              {messages.length <= 3 && (
                 <div className="ai-suggestions-bar">
                   <span className="ai-suggestions-title">Suggested questions:</span>
                   <div className="ai-chips-scroll">
@@ -292,7 +420,7 @@ export const AiAssistant: React.FC = () => {
                   ref={inputRef}
                   type="text"
                   className="ai-input"
-                  placeholder="Ask about Sridhar's skills, VLSI, projects..."
+                  placeholder="Ask about ECE, VLSI, projects, resume..."
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyDown}
@@ -315,4 +443,3 @@ export const AiAssistant: React.FC = () => {
     </div>
   );
 };
-

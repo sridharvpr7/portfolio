@@ -1,171 +1,205 @@
-# Beyond the Circuit — Portfolio
+# Beyond the Circuit — Personal Engineering Portfolio
 
-A responsive, production-ready portfolio for an Electronics and Communication Engineering student who also builds software.
+[![Production Website](https://img.shields.io/badge/Production%20Website-Live-brightgreen)](https://sridharvpr-portfolio.onrender.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![React 19](https://img.shields.io/badge/React-19-61dafb.svg)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178c6.svg)](https://www.typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-8.3-646cff.svg)](https://vitejs.dev)
+[![Render](https://img.shields.io/badge/Render-Web%20Service-46E3B7.svg)](https://render.com)
 
-## Stack
+**Beyond the Circuit** is a cinematic personal engineering portfolio for **Sridhar Vpr** — an **Electronics & Communication Engineering (ECE)** student at J.N.N. Institute of Engineering and **Full-Stack Web Developer**. 
 
-- **React 19 + TypeScript** via Vite 8
-- **Framer Motion** for animations
-- **Firebase** (optional) — Google Sign-in + live viewer count via Realtime Database
-- **Node.js + Neon PostgreSQL** (optional) — analytics, server-side Telegram webhook (Render web service mode)
-- Content stored in `public/data/*.json` — no CMS, no build step needed to update text
+> *"Bridging the World of Circuits and Code"*
 
----
-
-## Quick Start
-
-```powershell
-# Install dependencies
-npm install
-
-# Start dev server (opens at http://localhost:5173)
-npm run dev
-
-# Production build → outputs to dist/
-npm run build
-
-# Preview the production build locally
-npm run preview
-```
+The portfolio unifies two technical worlds: low-level silicon hardware architectures (Digital Logic, VLSI, Verilog HDL, RTL Design, Embedded Systems) and modern software development (React 19, TypeScript, Node.js, Express, PostgreSQL, Firebase).
 
 ---
 
-## Deployment Options
+## 🌐 Live Deployments & Routes
 
-### Option A — Static Site (Recommended for beginners)
-
-Upload the `dist/` folder to any static host (Netlify, Vercel, Render Static Sites, GitHub Pages, Cloudflare Pages).
-
-| Setting | Value |
-|---------|-------|
-| Build command | `npm run build` |
-| Publish directory | `dist` |
-| Environment variables | See `.env.example` (only Firebase vars needed for sign-in / live count) |
-
-Analytics and Telegram notifications are not available in static mode (they require the Node.js server).
-
-### Option B — Render Web Service (Full features)
-
-Runs `server.mjs`, which serves `dist/` and exposes API routes under `/api/`.
-
-| Setting | Value |
-|---------|-------|
-| Environment | Node |
-| Build command | `npm ci && npm run build` |
-| Start command | `npm start` |
-| Environment variables | See `.env.example` (all vars) |
-
-This enables:
-- Visitor analytics via Neon PostgreSQL
-- Telegram new-visitor notifications
-- Server-side auth verification
+- **Production Portfolio:** [https://sridharvpr-portfolio.onrender.com](https://sridharvpr-portfolio.onrender.com)
+- **Interactive HTML Resume:** [https://sridharvpr-portfolio.onrender.com/resume](https://sridharvpr-portfolio.onrender.com/resume)
+- **Direct PDF Download:** `/assets/resume/resume.pdf`
+- **GitHub Profile:** [https://github.com/sridharvpr7](https://github.com/sridharvpr7)
+- **LinkedIn Profile:** [https://linkedin.com/in/sridhar-manivannan-468ba035b](https://linkedin.com/in/sridhar-manivannan-468ba035b)
 
 ---
 
-## Firebase Setup (Optional)
+## ⚡ Main Features
 
-Firebase enables **Google Sign-In** in the footer and a **live viewer counter** (Realtime Database presence).
+### 1. Dedicated ECE Engineering Experience
+- **Interactive Digital Logic Simulator:** Live interactive gate simulator (AND, OR, NOT, NAND, NOR, XOR, XNOR) with dynamic IEEE logic gate symbols, interactive inputs (A, B), and mathematically calculated outputs.
+- **Dynamic Truth Table:** Live row highlighting reflecting the current logic gate state.
+- **Radix & Number Systems Converter:** Real-time conversion across Decimal (Base 10), Binary (Base 2), Hexadecimal (Base 16), and 8-bit Two's Complement.
+- **VLSI Digital IC Design Flow:** Step-by-step interactive ASIC/FPGA digital synthesis workflow (Spec → RTL Modeling → Verification → Logic Synthesis → Physical Design & Tapeout).
+- **Verilog HDL Hardware Descriptions:** Genuine educational RTL modules with syntax highlighting (2-to-1 Multiplexer, 1-bit Full Adder, D Flip-Flop with asynchronous reset, 4-bit Synchronous Up-Counter, and Finite State Machine).
+- **Embedded Protocols:** Technical breakdown of UART, SPI, and I2C serial protocols.
+- **Applied ECE Project Showcase:** Academic simulation modules and engineering tools.
 
-The portfolio works fully without Firebase — these features are simply hidden when unconfigured.
+### 2. Interactive JSON-Driven HTML Resume (`/resume`)
+- Dynamically rendered from `public/data/resume.json`.
+- Clean editorial ATS-friendly layout on a light paper surface with dark typography and blue accents.
+- Dedicated action toolbar with **Back to Portfolio**, **Print / Save as PDF**, and explicit **Download Resume (PDF)**.
+- Full respect for browser print stylesheets (`@media print`) and zero automatic downloads upon opening the page.
+- Direct PDF downloads link to `/assets/resume/resume.pdf` for seamless replacement.
 
-### Steps
+### 3. "Beyond the Circuit AI" Portfolio Assistant
+- Upgraded conversational assistant with conversation history context and rate-limiting.
+- Grounded in verified portfolio facts covering education (J.N.N. Institute of Engineering, 2025–2029), VLSI skills, web development stack, and project architectures.
+- Smart interactive action chips inside responses that smoothly navigate to corresponding portfolio sections or open the resume page.
+- Copy response button with quick clipboard feedback.
+- Gemini 1.5 Flash integration with a local verified knowledge engine fallback when no API key is provided.
 
-1. Go to [console.firebase.google.com](https://console.firebase.google.com) and create a project.
-2. Enable **Authentication → Sign-in method → Google**.
-3. Enable **Realtime Database → Create database** (start in locked mode).
-4. Go to **Project Settings → General → Your apps → Add web app**.
-5. Copy the `firebaseConfig` values into your `.env` file (see `.env.example`).
-6. Apply the security rules from [`firebase-rules.md`](firebase-rules.md).
+### 4. Project Showcase & Case Studies
+- In-depth case studies with real WebP screenshots, problem statements, technical architecture, and live links:
+  - **Elder's Veil:** Comic and manga reading platform (Node.js, Express, PostgreSQL, OTP auth).
+  - **CONVET PULSE:** Engineering radix and unit conversion platform for electronics students.
+  - **Beyond the Circuit:** Personal portfolio with live visitor analytics and circuit simulations.
+  - **Portfolio Manager:** Financial investment tracking platform with SQLite persistence and XIRR calculations.
+  - **Kabaddi Pro:** Tournament management suite with automated fixture generator and PDF exports.
 
-> **Note:** Firebase web config keys (API key, project ID, etc.) are safe to include in frontend bundles. Firebase Security Rules — not the API key — protect your data. Never put service account credentials, Telegram tokens, or database passwords in `.env` for the frontend.
-
----
-
-## Environment Variables
-
-Copy `.env.example` to `.env` and fill in the values you need.
-
-```powershell
-Copy-Item .env.example .env
-```
-
-See comments inside `.env.example` for what each variable does and which deployment mode needs it.
-
----
-
-## Content Editing
-
-All portfolio content lives in `public/data/`. You can edit JSON files directly — no rebuild needed for static hosts (just re-deploy), and the dev server hot-reloads them automatically.
-
-See [`CONTENT-EDITING.md`](CONTENT-EDITING.md) for a full field-by-field guide.
-
-### Asset locations
-
-| Asset | Where to put it |
-|-------|----------------|
-| Profile photo | `public/assets/profile/profile.jpg` |
-| Resume PDF | `public/assets/resume/resume.pdf` |
-| Project images | `public/assets/projects/<project-id>/` |
-| Certificate images | `public/assets/certificates/` |
-
-After adding your resume PDF, update `profile.json`:
-```json
-"resumeUrl": "/assets/resume/resume.pdf"
-```
+### 5. Production Backend & Serverless Integrations
+- **Node.js HTTP Server (`server.mjs`):** Unified web service on Render with SPA fallback to `dist/index.html` (supporting direct refreshes on `/resume`).
+- **Neon PostgreSQL:** Visitor analytics and presence tracking via `@neondatabase/serverless`.
+- **Telegram Bot Webhook:** Real-time notifications for incoming enquiries and bot command router.
+- **Contact Workflow:** Validation, spam protection, duplicate submission prevention, and transactional auto-replies via Resend with EmailJS client-side fallback.
 
 ---
 
-## Project Structure
+## 🛠️ Technology Stack
+
+| Layer | Technologies |
+|-------|-------------|
+| **Frontend** | React 19, TypeScript 6, Vite 8, Framer Motion, Lucide Icons |
+| **Styling** | Custom CSS3 design tokens (`#080A0F`, `#10141D`, `#151B26`, `#38BDF8`), Dark/Light themes |
+| **Backend** | Node.js, TypeScript runtime via `tsx`, RESTful API dispatching |
+| **Databases** | Neon Serverless PostgreSQL, Firebase Realtime Database & Google OAuth |
+| **Hardware / EDA** | Verilog HDL, ModelSim, EDA Playground |
+| **Email & Alerts** | Resend API, Telegram Bot API, EmailJS |
+| **Deployment** | Render Web Service (`render.yaml`), Node 22 |
+
+---
+
+## 📁 Repository Structure
 
 ```
 portfolio/
+├── api/                        # Backend REST endpoints & serverless handlers
+│   ├── ai/chat.ts              # Beyond the Circuit AI endpoint with Gemini & local engine
+│   ├── auth/                   # Google OAuth & session management
+│   ├── db/                     # Neon PostgreSQL client & migrations
+│   ├── lib/                    # Telegram bot, email, rate-limiting, session utilities
+│   ├── contact.ts              # Contact form handler (Resend + Telegram alerts)
+│   ├── server-router.ts        # Request routing & caching headers
+│   ├── stats.ts                # Visitor count & live analytics API
+│   └── track.ts                # Pageview tracking endpoint
 ├── public/
-│   ├── data/           ← JSON content files (edit these)
-│   ├── assets/         ← Images, PDFs, certificates
-│   └── sitemap.xml
+│   ├── assets/
+│   │   ├── certificates/       # Verified certificates (Infosys, Codec, CodeAlpha, etc.)
+│   │   ├── profile/            # Profile photo & Open Graph image (og-image.png)
+│   │   └── resume/             # Official resume PDF (resume.pdf)
+│   ├── data/                   # JSON content architecture
+│   │   ├── resume.json         # JSON data source for /resume HTML page
+│   │   ├── profile.json        # Owner biography, headline, and contacts
+│   │   ├── projects.json       # Project case studies and metadata
+│   │   ├── skills.json         # ECE & software technical skills
+│   │   ├── education.json      # Verified academic history
+│   │   ├── certifications.json # Verified certifications
+│   │   └── navigation.json     # Navbar routes & anchor links
+│   └── images/projects/        # Processed WebP project screenshots
 ├── src/
-│   ├── components/     ← React UI components
-│   ├── firebase/       ← Firebase auth + presence hooks
-│   ├── hooks/          ← Custom React hooks
-│   ├── sections/       ← Page sections (Hero, About, Skills…)
-│   └── services/       ← Content loader, analytics service
-├── api/                ← Serverless API routes (Render web service mode)
-├── server.mjs          ← Node.js server (Render web service mode)
-├── firebase-rules.md   ← Firebase Realtime DB security rules
-├── CONTENT-EDITING.md  ← Guide to editing JSON content
-└── vite.config.ts
+│   ├── components/             # Reusable UI components (Navbar, Footer, AiAssistant, CommandPalette)
+│   ├── pages/
+│   │   └── ResumePage.tsx      # Interactive JSON-driven HTML resume page (/resume)
+│   ├── sections/               # Page sections (Hero, Ece, DualIdentity, About, Skills, Projects...)
+│   │   └── EceSection.tsx      # Standalone ECE Engineering Section (Logic simulator, VLSI flow, Verilog)
+│   ├── services/               # Content loader & analytics services
+│   └── App.tsx                 # Main application with SPA routing
+├── server.mjs                  # Production Node.js server for Render
+├── render.yaml                 # Render Blueprint specification
+└── vite.config.ts              # Vite build configuration with chunk splitting
 ```
 
 ---
 
-## What Needs Your Content
+## 🚀 Getting Started
 
-| Item | File / Location | Status |
-|------|----------------|--------|
-| Profile photo | `public/assets/profile/profile.jpg` | ⚠️ Add your photo |
-| Resume PDF | `public/assets/resume/resume.pdf` | ⚠️ Add your resume |
-| Project images | `public/assets/projects/*/` | ⚠️ Add per-project |
-| Certificate images | `public/assets/certificates/` | ⚠️ Add your certs |
-| Contact email | `public/data/contact.json` | ✏️ Edit |
-| EmailJS keys | `.env` → `VITE_EMAILJS_*` | ⚠️ Configure |
-| Firebase config | `.env` → `VITE_FIREBASE_*` | ⚠️ Optional |
-| Neon DB URL | `.env` → `DATABASE_URL` | ⚠️ Optional (web service) |
-| Telegram token | `.env` → `TELEGRAM_BOT_TOKEN` | ⚠️ Optional (web service) |
+### Prerequisites
+- Node.js (v20 or v22 recommended)
+- npm (v10+)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/sridharvpr7/portfolio.git
+cd portfolio
+
+# Install dependencies
+npm install
+```
+
+### Running Locally
+
+```bash
+# Start Vite development server (frontend only)
+npm run dev
+
+# Or build and start the full production server (frontend + API endpoints)
+npm run build
+npm start
+```
+
+Open `http://localhost:5173` for Vite dev server, or `http://localhost:3000` for the Node.js production server.
+
+### Running Quality Checks & Tests
+
+```bash
+# Run unit & integration tests
+npm test
+
+# Run API TypeScript checks
+npm run test:api
+
+# Run production build
+npm run build
+```
 
 ---
 
-## Scripts
+## 🔐 Environment Variables
 
-| Command | What it does |
-|---------|-------------|
-| `npm run dev` | Start Vite dev server |
-| `npm run build` | Production build → `dist/` |
-| `npm run preview` | Preview production build |
-| `npm start` | Start Node.js web service (after build) |
-| `npm run lint` | Run ESLint |
+Copy `.env.example` to `.env` for local testing:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Scope | Description |
+|----------|-------|-------------|
+| `PORT` | Server | Port for the Node.js server (Render assigns this automatically, defaults to `3000`) |
+| `APP_BASE_URL` | Server | Full production URL (`https://sridharvpr-portfolio.onrender.com`) |
+| `DATABASE_URL` | Server | Neon PostgreSQL connection string (`postgres://...`) |
+| `TELEGRAM_BOT_TOKEN` | Server | Optional Telegram bot token for real-time visitor alerts |
+| `TELEGRAM_CHAT_ID` | Server | Your numeric Telegram chat ID |
+| `RESEND_API_KEY` | Server | Resend API key for transactional email auto-replies |
+| `EMAIL_FROM_ADDRESS` | Server | Verified sender address for Resend |
+| `GEMINI_API_KEY` | Server | Optional Gemini API key for Beyond the Circuit AI |
+| `VITE_GOOGLE_CLIENT_ID`| Client | Google OAuth 2.0 Web Client ID |
+| `VITE_EMAILJS_*` | Client | Optional EmailJS credentials for client-side fallback |
 
 ---
 
-## License
+## 📄 Updating the Resume
 
-Personal portfolio — all rights reserved. Code structure is MIT-compatible for reference, but the personal content (bio, projects, designs) belongs to the portfolio owner.
+1. **HTML Resume Content:** Edit `public/data/resume.json`. The `/resume` page immediately reflects any changes.
+2. **PDF Resume File:** Place or overwrite your PDF at `public/assets/resume/resume.pdf`. The **Download Resume** buttons automatically download this PDF without code changes.
+
+---
+
+## 📬 Contact & Connect
+
+- **Email:** [sridharvpr7@gmail.com](mailto:sridharvpr7@gmail.com)
+- **LinkedIn:** [Sridhar Manivannan](https://linkedin.com/in/sridhar-manivannan-468ba035b)
+- **GitHub:** [@sridharvpr7](https://github.com/sridharvpr7)
+- **Portfolio:** [Beyond the Circuit](https://sridharvpr-portfolio.onrender.com)

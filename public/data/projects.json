@@ -240,8 +240,8 @@
     },
     {
       "id": "converter",
-      "title": "Engineering Converter",
-      "shortSummary": "A dedicated conversion utility for electronics engineering, computing number bases, and signal calculations.",
+      "title": "CONVET PULSE — Engineering Radix & Unit Converter",
+      "shortSummary": "A dedicated conversion utility for electronics engineering, computing number bases, RF signal calculations, and storage metrics.",
       "problem": "Performing manual conversions between binary, hexadecimal, and analog frequency units is error-prone and time-consuming.",
       "solution": "A clean multi-mode conversion engine covering radix conversions, RF signal units, and microcontroller memory addressing.",
       "features": [

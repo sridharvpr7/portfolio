@@ -101,9 +101,20 @@ export const DualIdentitySection: React.FC<DualIdentitySectionProps> = ({ skillG
               <div className="font-mono" style={{ fontSize: '0.72rem', color: 'var(--text-faint)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
                 Current Focus
               </div>
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
                 Deepening VLSI design knowledge — from RTL Verilog to the physical layer. Understanding how billions of transistors become computation.
               </p>
+              <a
+                href="#ece"
+                className="btn btn-primary btn-sm"
+                onClick={e => {
+                  e.preventDefault();
+                  const el = document.getElementById('ece');
+                  if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+                }}
+              >
+                Explore Dedicated ECE Section &rarr;
+              </a>
             </div>
           </div>
 
@@ -154,9 +165,20 @@ export const DualIdentitySection: React.FC<DualIdentitySectionProps> = ({ skillG
               <div className="font-mono" style={{ fontSize: '0.72rem', color: 'var(--text-faint)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
                 Current Building
               </div>
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
                 Building full-stack applications with React and Node.js. Learning TypeScript and database design while deploying on Vercel and exploring modern authentication patterns.
               </p>
+              <a
+                href="#projects"
+                className="btn btn-secondary btn-sm"
+                onClick={e => {
+                  e.preventDefault();
+                  const el = document.getElementById('projects');
+                  if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+                }}
+              >
+                Explore Web Projects &rarr;
+              </a>
             </div>
           </div>
         </div>

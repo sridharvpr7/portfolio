@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowDown, Send, Download } from 'lucide-react';
+import { ArrowDown, Send, Download, FileText, Cpu } from 'lucide-react';
 import { GithubIcon } from '../components/BrandIcons';
 import { CircuitBackground } from '../components/CircuitBackground';
 import { ShareButton } from '../components/ShareButton';
@@ -118,6 +118,49 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ profile, socialLinks }
             </a>
 
             <a
+              href="#ece"
+              id="hero-ece-btn"
+              className="btn hero-cta-btn btn-secondary hero-btn-ece"
+              onClick={e => {
+                e.preventDefault();
+                const el = document.getElementById('ece');
+                if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+              }}
+            >
+              <Cpu size={15} />
+              <span>Explore ECE</span>
+            </a>
+
+            <a
+              href="/resume"
+              id="hero-view-resume-btn"
+              className="btn hero-cta-btn btn-ghost hero-btn-view-resume"
+              onClick={e => {
+                e.preventDefault();
+                window.history.pushState({}, '', '/resume');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
+              title="View Interactive HTML Resume"
+            >
+              <FileText size={15} />
+              <span>View Resume</span>
+            </a>
+
+            {profile.resumeUrl && (
+              <a
+                href={profile.resumeUrl}
+                download="Sridhar_Vpr_Resume.pdf"
+                id="hero-resume-btn"
+                className="btn hero-cta-btn btn-ghost hero-btn-resume"
+                title="Download Sridhar VPR Resume (PDF)"
+                aria-label="Download Resume PDF"
+              >
+                <Download size={15} />
+                <span>Download PDF</span>
+              </a>
+            )}
+
+            <a
               href="#contact"
               id="hero-contact-btn"
               className="btn hero-cta-btn btn-secondary hero-btn-secondary"
@@ -126,20 +169,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ profile, socialLinks }
               <Send size={15} />
               <span>Contact Me</span>
             </a>
-
-            {profile.resumeUrl && (
-              <a
-                href={profile.resumeUrl}
-                download
-                id="hero-resume-btn"
-                className="btn hero-cta-btn btn-ghost hero-btn-resume"
-                title="Download Sridhar VPR Resume"
-                aria-label="Download Resume"
-              >
-                <Download size={15} />
-                <span>Resume</span>
-              </a>
-            )}
 
             <ShareButton variant="hero" />
           </div>
