@@ -156,7 +156,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ profile, socialLinks }
                 aria-label="Download Resume PDF"
               >
                 <Download size={15} />
-                <span>Download PDF</span>
+                <span>Download Resume</span>
               </a>
             )}
 
