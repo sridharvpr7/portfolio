@@ -10,7 +10,7 @@
     "hero": { "visible": true },
     "dualIdentity": { "visible": true },
     "about": { "visible": true },
-    "ece": { "visible": true },
+    "ece": { "visible": false },
     "skills": { "visible": true },
     "projects": { "visible": true },
     "experience": { "visible": true },
